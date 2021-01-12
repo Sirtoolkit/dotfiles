@@ -1,0 +1,13 @@
+alias zshconfig="nvim ~/.zshrc"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias v="nvim"
+alias gp='git add . && git commit -m "auto push" && git push'
+alias config='ranger ~/.config'
+alias repos='ranger ~/Repos'
+alias zsource='source ~/.zshrc'
+alias set_python_path="source set_python_path"
+alias i3-logout="i3-msg exit"
+alias random_background="feh --bg-fill --randomize ~/Pics/wallpapers/*"
+alias sk="screenkey -s small --scr 1"
+alias skk="killall screenkey"
+alias vim="vim -u ~/.config/nvim"

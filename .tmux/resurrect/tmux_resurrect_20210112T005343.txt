@@ -1,0 +1,4 @@
+pane	0	0	:dotfile/config	1	:*	0	:/home/sirpicsa	0	zsh	:
+pane	0	0	:dotfile/config	1	:*	1	:/home/sirpicsa/dotfiles	1	zsh	:
+window	0	0	1	:*	6fe3,151x40,0,0{75x40,0,0,8,75x40,76,0,9}
+state	0	
