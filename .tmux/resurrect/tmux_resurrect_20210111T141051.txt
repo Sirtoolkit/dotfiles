@@ -1,3 +1,0 @@
-pane	0	0	:nvim	1	:*	0	:/home/sirpicsa/.config/nvim	1	zsh	:
-window	0	0	1	:*	ac3d,151x40,0,0,0
-state	0	

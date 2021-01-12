@@ -1,5 +1,0 @@
-pane	0	0	:config	1	:*	0	:/home/sirpicsa/workspace/web/web2	1	zsh	:
-pane	0	2	:dotfile	0	:-	0	:/home/sirpicsa	1	zsh	:
-window	0	0	1	:*	ac45,151x40,0,0,8
-window	0	2	0	:-	ac44,151x40,0,0,7
-state	0	

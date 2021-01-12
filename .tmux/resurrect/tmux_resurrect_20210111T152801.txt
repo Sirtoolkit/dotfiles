@@ -1,7 +1,0 @@
-pane	0	0	:nvim	0	:-	0	:/home/sirpicsa/.config/nvim	1	nvim	:nvim
-pane	0	1	:Flutter	0	:M	0	:/home/sirpicsa/workspace/flutter/flutter_components	1	nvim	:nvim
-pane	0	2	:dotfile	1	:*	0	:/home/sirpicsa	1	zsh	:
-window	0	0	0	:-	ac3d,151x40,0,0,0
-window	0	1	0	:M	ac40,151x40,0,0,3
-window	0	2	1	:*	ac44,151x40,0,0,7
-state	0	
