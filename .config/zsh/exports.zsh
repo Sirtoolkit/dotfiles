@@ -18,11 +18,6 @@ export MANPAGER='nvim +Man!'
 export MANWIDTH=999
 
 plugins=(git flutter node npm tmux archlinux zsh-autosuggestions zsh-syntax-highlighting)
-# fnm
-# export PATH=/home/$USER/.local/bin/fnm:$PATH
-# export PATH=/home/$USER/.cargo/bin$PATH
-# eval "`fnm env --multi`"
-# eval "$(zoxide init zsh)"
 
 # export PATH=$PATH:$HOME/Neovim/nvim-linux64/bin
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
