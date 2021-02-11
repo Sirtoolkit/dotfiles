@@ -21,6 +21,7 @@ plugins=(git flutter node npm tmux archlinux zsh-autosuggestions zsh-syntax-high
 
 # export PATH=$PATH:$HOME/Neovim/nvim-linux64/bin
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
+export PATH="$PATH:$HOME/npm/bin"
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
