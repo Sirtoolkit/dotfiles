@@ -20,7 +20,12 @@ export MANWIDTH=999
 plugins=(git flutter node npm tmux archlinux zsh-autosuggestions zsh-syntax-highlighting)
 
 # export PATH=$PATH:$HOME/Neovim/nvim-linux64/bin
+export JAR=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.0.v20200915-1508.jar
+export GRADLE_HOME=$HOME/gradle
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
+export JDTLS_CONFIG=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
+export WORKSPACE=$HOME/workspace
+
 export PATH="$PATH:$HOME/npm/bin"
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
