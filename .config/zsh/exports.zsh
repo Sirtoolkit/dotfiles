@@ -24,9 +24,10 @@ export JAR=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plu
 export GRADLE_HOME=$HOME/gradle
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
 export JDTLS_CONFIG=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
-export WORKSPACE=$HOME/workspace
+export WORKSPACE=$HOME/workspace/java/main
 
 export PATH="$PATH:$HOME/npm/bin"
+export PATH="$PATH:$HOME/spring-2.4.3/bin"
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
