@@ -17,17 +17,23 @@ export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
 export MANPAGER='nvim +Man!'
 export MANWIDTH=999
 
-plugins=(git flutter node npm tmux archlinux zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(sudo git flutter node npm tmux archlinux zsh-autosuggestions zsh-syntax-highlighting)
 
-# export PATH=$PATH:$HOME/Neovim/nvim-linux64/bin
-export JAR=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.0.v20200915-1508.jar
+export PATH=$PATH:$HOME/development/nvim-linux64/bin
+export PATH=$PATH:$HOME/development/Postman/app
+export PATH=$PATH:$HOME/development/flutter/bin/
+export PATH=$PATH:$HOME/development/gradle-6.8.2/bin
+export PATH=$PATH:$HOME/development/heroku/bin
+export PATH=$PATH:$HOME/development/node-v14.15.5-linux-x64/bin
+export PATH=$PATH:$HOME/development/spring-2.4.3/bin
+
+export JAR=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.0.v20200915-1508.jar
 export GRADLE_HOME=$HOME/gradle
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
-export JDTLS_CONFIG=$HOME/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
+export JDTLS_CONFIG=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
 export WORKSPACE=$HOME/workspace/java/main
 
 export PATH="$PATH:$HOME/npm/bin"
-export PATH="$PATH:$HOME/spring-2.4.3/bin"
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
