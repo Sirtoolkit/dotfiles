@@ -39,4 +39,3 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/lastet/bin
 export PATH=$PATH:$HOME/Flutter/flutter/bin
-export PATH=$PATH:$HOME/var/lib/snapd/snap/bin

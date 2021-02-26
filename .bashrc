@@ -137,11 +137,33 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-export PATH=$PATH:$HOME/Neovim/nvim-linux64/bin
-alias v="nvim"
+export PATH=$PATH:$HOME/development/nvim-linux64/bin
+export PATH=$PATH:$HOME/development/Postman/app
+export PATH=$PATH:$HOME/development/flutter/bin/
+export PATH=$PATH:$HOME/development/gradle-6.8.2/bin
+export PATH=$PATH:$HOME/development/heroku/bin
+export PATH=$PATH:$HOME/development/node-v14.15.5-linux-x64/bin
+export PATH=$PATH:$HOME/development/spring-2.4.3/bin
+
+export JAR=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.0.v20200915-1508.jar
+export GRADLE_HOME=$HOME/gradle
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk/"
+export JDTLS_CONFIG=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
+export WORKSPACE=$HOME/workspace/java/main
+
+export PATH="$PATH:$HOME/npm/bin"
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/lastet/bin
 export PATH=$PATH:$HOME/Flutter/flutter/bin
-export PATH=$PATH:$HOME/var/lib/snapd/snap/bin 
+
+alias zshconfig="nvim ~/.config/zsh"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias v="nvim"
+alias gp='git add . && git commit -m "auto push" && git push'
+alias zsource='source ~/.zshrc'
+alias set_python_path="source set_python_path"
+alias vim="nvim ~/.config/nvim"
+alias sprm="spring init --dependencies=web --build=maven --java-version=1.8"
+alias sprg="spring init --dependencies=web --build=gradle --java-version=1.8"
