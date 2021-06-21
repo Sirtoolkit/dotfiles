@@ -34,7 +34,8 @@ export PATH=$PATH:$HOME/development/heroku/bin
 # NodeJs 
 export PATH=$PATH:$HOME/development/node-v14.15.5-linux-x64/bin
 # Npm
-export PATH="$PATH:$HOME/npm/bin"
+export PATH="$HOME/.npm/bin:$PATH"
+export PATH=$(npm prefix -g)/bin:$PATH
 
 # Spring 
 export PATH=$PATH:$HOME/development/spring-2.4.3/bin
