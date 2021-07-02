@@ -58,6 +58,7 @@ export PATH=$PATH:$ANDROID_HOME/cmdline-tools/lastet/bin
 # Flutter 
 export PATH=$PATH:$HOME/development/flutter/bin
 export PATH=$PATH:$HOME/development/flutter/bin/cache/dart-sdk/bin
+export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 # Chrome 
 export CHROME_EXECUTABLE=/opt/google/chrome/chrome
