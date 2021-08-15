@@ -34,26 +34,28 @@ export PATH=$PATH:$HOME/development/heroku/bin
 # NodeJs 
 export PATH=$PATH:$HOME/development/node-v14.15.5-linux-x64/bin
 # Npm
-export PATH="$HOME/.npm/bin:$PATH"
-export PATH=$(npm prefix -g)/bin:$PATH
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
 
 # Spring 
-export PATH=$PATH:$HOME/development/spring-2.4.3/bin
+export PATH=$PATH:$HOME/development/spring-2.5.3/bin
 
 # Java 
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 export JAR=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
 export GRADLE_HOME="$HOME/development/gradle-6.8.2"
-export JAVA_HOME="/usr/lib/jvm/java-11-openjdk"
 export JDTLS_CONFIG=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
 export WORKSPACE=$HOME/workspace/java/main
+export PATH="$PATH":$JAVA_HOME/bin
 
-# Android Studio
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools/lastet/bin
+
+# # Android Studio
+export ANDROID_SDK_ROOT="$HOME/.android-sdk"
+export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
+export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools"
+export PATH="$PATH:$ANDROID_SDK_ROOT/tools"
+# export ANDROID_ADB_SERVER_PORT=6565
+# export ANDROID_ADB_SERVER_ADDRESS=192.168.0.24
 
 # Flutter 
 export PATH=$PATH:$HOME/development/flutter/bin
@@ -61,4 +63,4 @@ export PATH=$PATH:$HOME/development/flutter/bin/cache/dart-sdk/bin
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 # Chrome 
-export CHROME_EXECUTABLE=/opt/google/chrome/chrome
+# export CHROME_EXECUTABLE=/opt/google/chrome/chrome
