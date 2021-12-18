@@ -41,8 +41,7 @@ export PATH="$PATH:$NPM_PACKAGES/bin"
 export PATH=$PATH:$HOME/development/spring-2.5.3/bin
 
 # Java 
-#export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
-export JAVA_HOME=/opt/jdk-17
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
 export JAR=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.100.v20201223-0822.jar
 export GRADLE_HOME="$HOME/development/gradle-6.8.2"
 export JDTLS_CONFIG=$HOME/development/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux
@@ -51,7 +50,7 @@ export PATH="$PATH":$JAVA_HOME/bin
 
 
 # # Android Studio
-export ANDROID_SDK_ROOT="$HOME/Applications/android"
+export ANDROID_SDK_ROOT="$HOME/.android-sdk"
 export PATH="$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
 export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools"
 export PATH="$PATH:$ANDROID_SDK_ROOT/tools"
@@ -59,10 +58,9 @@ export PATH="$PATH:$ANDROID_SDK_ROOT/tools"
 # export ANDROID_ADB_SERVER_ADDRESS=192.168.0.24
 
 # Flutter 
-#export PATH=$PATH:$HOME/development/flutter/bin
-#export PATH=$PATH:$HOME/development/flutter/bin/cache/dart-sdk/bin
-#export PATH="$PATH":"$HOME/.pub-cache/bin"
-export PATH=$HOME/Applications/flutter/bin:$PATH
+export PATH=$PATH:$HOME/development/flutter/bin
+export PATH=$PATH:$HOME/development/flutter/bin/cache/dart-sdk/bin
+export PATH="$PATH":"$HOME/.pub-cache/bin"
 
 # Chrome 
 # export CHROME_EXECUTABLE=/opt/google/chrome/chrome
