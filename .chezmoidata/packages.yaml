@@ -1,0 +1,76 @@
+packages:
+  brews:
+    - bash
+    - bash-completion@2
+    - bat
+    - carapace
+    - chezmoi
+    - cloc
+    - commitizen
+    - coreutils
+    - findutils
+    - fzf
+    - gh
+    - git
+    - grep
+    - jq
+    - kdoctor
+    - ktlint
+    - mas
+    - mise
+    - platformio
+    - swiftformat
+    - swiftlint
+    - tldr
+    - topgrade
+    - trash
+    - tree
+    - neovim
+    - wget
+    - zoxide
+    - zsh
+    - eza 
+    - starship 
+    - tmux
+  casks:
+    # - ledger-live
+    # - iina
+    # - adguard
+    # - parallels
+    # - setapp
+    # - sf-symbols
+    # - rectangle
+    # - love
+    # - microsoft-excel
+    # - brave-browser
+    # - godot
+    # - arduino-ide
+    # - warp
+    - 1password
+    - 1password-cli
+    - android-commandlinetools
+    - android-platform-tools
+    - android-studio
+    - ghostty
+    - arc
+    - imageoptim
+    - keka
+    - obsidian
+    - ollama
+    - openmtp
+    - orbstack
+    - raindropio
+    - raycast
+    - transmission
+    - cursor
+    - xcodes
+    - font-caskaydia-cove-nerd-font
+    - minisim
+    - slack
+    - whatsapp
+    - yaak
+    - jordanbaird-ice
+    - discord
+    - devpod
+    - datagrip
+    - google-cloud-sdk

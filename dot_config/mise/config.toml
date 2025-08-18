@@ -1,0 +1,18 @@
+[tools]
+node = "lts"
+yarn = "latest"
+ruby = "latest"
+deno = "latest"
+flutter = "latest"
+terraform = "latest"
+rust = "latest"
+usage = "latest"
+dart = "latest"
+python = "latest"
+uv = "latest"
+
+[settings]
+experimental = true
+disable_hints = ["false"]
+python.uv_venv_auto = true
+idiomatic_version_file_enable_tools = []

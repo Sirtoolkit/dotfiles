@@ -1,0 +1,27 @@
+[ ! -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/profile.sh" ] || source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/profile.sh"
+
+# Configure Homebrew completions
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"
+  autoload -Uz compinit
+  compinit
+fi
+
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git docker flutter eza starship terraform mise docker-compose aliases zsh-autosuggestions zoxide aws gcloud azure direnv brew ssh git-flow history xcode ansible pod yarn npm chezmoi)
+source $ZSH/oh-my-zsh.sh
+
+# Configure fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export CARAPACE_BRIDGES='zsh,fish,bash,argcomplete' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+source <(carapace _carapace)
+
+dgrep() {
+  als | grep "$@"
+}
