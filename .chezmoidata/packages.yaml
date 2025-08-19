@@ -32,7 +32,7 @@ packages:
     - eza 
     - starship 
     - tmux
-    - gdu-go
+    - gdu
   casks:
     # - ledger-live
     # - iina
