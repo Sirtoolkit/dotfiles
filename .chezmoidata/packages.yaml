@@ -47,6 +47,8 @@ packages:
     # - godot
     # - arduino-ide
     # - warp
+    # - visual-studio-code
+    - cursor
     - 1password
     - 1password-cli
     - android-commandlinetools
@@ -63,7 +65,6 @@ packages:
     - raindropio
     - raycast
     - transmission
-    - cursor
     - xcodes
     - font-caskaydia-cove-nerd-font
     - minisim
