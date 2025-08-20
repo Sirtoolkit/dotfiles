@@ -12,10 +12,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Added by Toolbox App
 export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
 
-# export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 export FLUTTER_ROOT=$(mise where flutter)
 
 # Configure ANDROID common paths
+# export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 # export PATH="$ANDROID_HOME/tools:$PATH"
 # export PATH="$ANDROID_HOME/tools/bin:$PATH"
 # export PATH="$ANDROID_HOME/platform-tools:$PATH"
