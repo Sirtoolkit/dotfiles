@@ -1,15 +1,21 @@
 #!/bin/sh
 
-# Solo se ejecuta si el comando 'cursor' está disponible
 if command -v cursor >/dev/null 2>&1; then
-  echo "📦 Instalando extensiones de Cursor..."
+  echo "📦 Verificando e instalando extensiones de Cursor..."
 
   EXTENSIONS_FILE="${HOME}/.cursor_extensions.txt"
 
   if [ -f "$EXTENSIONS_FILE" ]; then
-      # Lee el archivo línea por línea e instala cada extensión
-      cat "$EXTENSIONS_FILE" | xargs -L 1 cursor --install-extension
-      echo "✅ Extensiones de Cursor instaladas."
+      while IFS= read -r extension; do
+          [ -z "$extension" ] || [ "${extension#\#}" != "$extension" ] && continue
+          if cursor --list-extensions | grep -q "^$extension$"; then
+              echo "✓ $extension ya está instalada"
+          else
+              echo "📥 Instalando $extension..."
+              cursor --install-extension "$extension"
+          fi
+      done < "$EXTENSIONS_FILE"
+      echo "✅ Verificación de extensiones de Cursor completada."
   else
       echo "⚠️  Archivo de extensiones no encontrado en $EXTENSIONS_FILE"
   fi

@@ -12,14 +12,14 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Added by Toolbox App
 export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
 
-export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+# export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 export FLUTTER_ROOT=$(mise where flutter)
 
 # Configure ANDROID common paths
-export PATH="$ANDROID_HOME/tools:$PATH"
-export PATH="$ANDROID_HOME/tools/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$ANDROID_HOME/emulator:$PATH"
+# export PATH="$ANDROID_HOME/tools:$PATH"
+# export PATH="$ANDROID_HOME/tools/bin:$PATH"
+# export PATH="$ANDROID_HOME/platform-tools:$PATH"
+# export PATH="$ANDROID_HOME/emulator:$PATH"
 
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
@@ -98,6 +98,3 @@ brew-purge-all() {
         echo "\n\033[1;32mOperación cancelada.\033[0m No se ha eliminado nada."
     fi
 }
-
-# Alias que llama a la función
-alias brew-purge-all='brew-purge-all'
