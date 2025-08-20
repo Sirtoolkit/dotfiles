@@ -9,6 +9,9 @@ fi
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# Added by Toolbox App
+export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
+
 export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 export FLUTTER_ROOT=$(mise where flutter)
 
@@ -27,3 +30,33 @@ export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+export PATH="$HOME/.local/bin:$PATH"
+
+### cd aliases
+alias Applications='cd $HOME/Applications'
+alias Cloud='cd $HOME/Cloud'
+alias Config='cd $HOME/.config'
+alias Desktop='cd $HOME/Desktop'
+alias Downloads='cd $HOME/Downloads'
+alias Library='cd $HOME/Library'
+alias Local='cd $HOME/.local'
+alias Movies='cd $HOME/Movies'
+alias Music='cd $HOME/Music'
+alias Pictures='cd $HOME/Pictures'
+alias Public='cd $HOME/Public'
+
+alias zshconfig="nvim ~/.zshrc"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias v="nvim"
+alias zsource='source ~/.zshrc'
+alias gdu='gdu-go'
+
+alias dbb="flutter clean && dart run build_runner build -d"
+alias dbw="flutter clean && dart run build_runner watch -d"
+
+alias mkdir='mkdir -pv'
+
+dgrep() {
+  als | grep "$@"
+}

@@ -1,7 +1,4 @@
-# Added by Toolbox App
-export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
+[ ! -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/profile.sh" ] || source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/profile.sh"
 
 # Bash completion (autocompletado)
 if [ -f /opt/homebrew/etc/bash_completion ]; then
@@ -22,51 +19,3 @@ fi
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 eval "$(starship init bash)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-alias zshconfig="nvim ~/.zshrc"
-alias ohmyzsh="nvim ~/.oh-my-zsh"
-alias v="nvim"
-alias zsource='source ~/.zshrc'
-alias gdu='gdu-go'
-
-alias ls="eza -l --icons=always -m -n -l"
-alias l="eza -l --icons=always -m -n -l -a"
-alias ll="eza -l --icons=always -m -n -l"
-
-alias dbb="flutter clean && dart run build_runner build -d"
-alias dbw="flutter clean && dart run build_runner watch -d"
-
-alias mkdir='mkdir -pv'
-
-### cd aliases
-alias Applications='cd $HOME/Applications'
-alias Cloud='cd $HOME/Cloud'
-alias Config='cd $HOME/.config'
-alias Desktop='cd $HOME/Desktop'
-alias Downloads='cd $HOME/Downloads'
-alias Library='cd $HOME/Library'
-alias Local='cd $HOME/.local'
-alias Movies='cd $HOME/Movies'
-alias Music='cd $HOME/Music'
-alias Pictures='cd $HOME/Pictures'
-alias Public='cd $HOME/Public'
-
-# Set PATH, MANPATH, etc., for Homebrew.
-
-export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
-export FLUTTER_ROOT=$(mise where flutter)
-
-# Configure ANDROID common paths
-export PATH="$ANDROID_HOME/tools:$PATH"
-export PATH="$ANDROID_HOME/tools/bin:$PATH"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-export PATH="$ANDROID_HOME/emulator:$PATH"
-
-# Dart
-export PATH="$HOME/.pub-cache/bin:$PATH"
-
-dgrep() {
-  als | grep "$@"
-}
-export PATH="$HOME/.local/bin:$PATH"
