@@ -34,6 +34,7 @@ packages:
     - tmux
     - gdu
     - ollama
+    - sshs 
   casks:
     # - ledger-live
     # - iina
@@ -48,7 +49,7 @@ packages:
     # - warp
     # - visual-studio-code
     - google-chrome
-    - adguard
+    - postman
     - cursor
     - 1password
     - 1password-cli
@@ -70,7 +71,6 @@ packages:
     - minisim
     - slack
     - whatsapp
-    - yaak
     - jordanbaird-ice
     - discord
     - devpod
