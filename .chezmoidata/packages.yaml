@@ -1,8 +1,8 @@
 packages:
   brews:
-    - bash
     - bash-completion@2
     - bat
+    - btop
     - carapace
     - chezmoi
     - cloc
