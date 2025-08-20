@@ -60,3 +60,44 @@ alias mkdir='mkdir -pv'
 dgrep() {
   als | grep "$@"
 }
+
+# Alias seguro para eliminar todos los paquetes y aplicaciones de Homebrew (VERSIÓN CORREGIDA PARA ZSH/BASH)
+brew-purge-all() {
+    # Muestra un mensaje de advertencia claro
+    echo "\n\033[1;31mADVERTENCIA:\033[0m Estás a punto de eliminar TODOS los paquetes y aplicaciones instalados con Homebrew."
+    echo "Esta acción no se puede deshacer."
+    
+    # Pide confirmación al usuario (forma compatible con Zsh y Bash)
+    echo -n "¿Estás seguro de que quieres continuar? (escribe 'si' para confirmar): "
+    read CONFIRM
+    
+    # Comprueba si la confirmación es correcta
+    if [[ "$CONFIRM" == "si" ]]; then
+        echo "\nProcediendo con la eliminación..."
+        
+        # Elimina las fórmulas
+        echo "\n\033[1;33m=> Desinstalando Fórmulas...\033[0m"
+        if brew list --formula &>/dev/null; then
+            brew remove --force $(brew list --formula)
+        else
+            echo "No hay fórmulas para desinstalar."
+        fi
+        
+        # Elimina los casks
+        echo "\n\033[1;33m=> Desinstalando Casks (Aplicaciones)...\033[0m"
+        if brew list --cask &>/dev/null; then
+            brew uninstall --cask --force $(brew list --cask)
+        else
+            echo "No hay casks para desinstalar."
+        fi
+
+        echo "\n\033[1;32m¡Proceso completado!\033[0m"
+        echo "Se recomienda ejecutar 'brew cleanup' para borrar archivos en caché."
+
+    else
+        echo "\n\033[1;32mOperación cancelada.\033[0m No se ha eliminado nada."
+    fi
+}
+
+# Alias que llama a la función
+alias brew-purge-all='brew-purge-all'

@@ -34,7 +34,6 @@ ms-vscode-remote.remote-ssh-edit
 ms-vscode.remote-explorer
 naumovs.color-highlight
 pkief.material-icon-theme
-postman.postman-for-vscode
 redhat.vscode-yaml
 robert-brunhage.flutter-riverpod-snippets
 sdras.vue-vscode-snippets
