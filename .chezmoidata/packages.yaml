@@ -33,21 +33,22 @@ packages:
     - starship 
     - tmux
     - gdu
+    - ollama
   casks:
     # - ledger-live
     # - iina
-    # - adguard
     # - parallels
     # - setapp
     # - sf-symbols
     # - rectangle
     # - love
     # - microsoft-excel
-    # - brave-browser
     # - godot
     # - arduino-ide
     # - warp
     # - visual-studio-code
+    - google-chrome
+    - adguard
     - cursor
     - 1password
     - 1password-cli
@@ -59,7 +60,6 @@ packages:
     - imageoptim
     - keka
     - obsidian
-    - ollama
     - openmtp
     - orbstack
     - raindropio
