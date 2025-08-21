@@ -34,6 +34,8 @@ packages:
     - gdu
     - ollama
     - sshs
+    - lazygit 
+    - lazydocker
   casks:
     # - ledger-live
     # - iina
