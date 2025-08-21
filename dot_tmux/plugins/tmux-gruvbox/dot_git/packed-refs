@@ -1,0 +1,30 @@
+# pack-refs with: peeled fully-peeled sorted 
+e97f8136853116f698f9155cabe289e82443d478 refs/remotes/origin/add-changelog-file
+18f34e2b213454ff4b070525281f6fe24f42013c refs/remotes/origin/add-github-actions
+da240cd16451a7a68279cdbd1d12a31cd26dfbea refs/remotes/origin/add-support-for-16-bit-colors
+c5ced5c6bf51e40ca2827654dd9becd479f7d21b refs/remotes/origin/add-tests-for-linux
+93bf0bf6efdbc8ad7123fa437665e70273e0303c refs/remotes/origin/add-transparent-background
+655dfb06d31b04752009a92711433500f795205d refs/remotes/origin/add-vagrant
+f2de4db0ec829332ead9d968ab2debf70091604a refs/remotes/origin/customizable-statusbar
+16ae62370e49c886a7c1b2b4c7396a41b1855d98 refs/remotes/origin/dark-theme-doesnt-work-on-tmux-v2-9-0
+ed4430b0b50d0e059d8bd253fc9c8f8cdd3523f5 refs/remotes/origin/enhance-code-quality
+5298053a681783402de1e3b37962b5406c00dc9a refs/remotes/origin/gruvbox-light-theme-version
+f84127efbdd09b685520b0d07297e73135894c66 refs/remotes/origin/improving-window-status-from-aksoo
+aeb30c7172a8ed8663409207814cf47d9df10d15 refs/remotes/origin/main
+60fd88f680d00a522a16fcf551361e21b9881c1e refs/remotes/origin/migration-guide-v1-to-v2
+29f189fbf5baed616ca46f7e076e7e17f2f6caf3 refs/remotes/origin/reduce-repo-weight
+5eba9e515a6c36e08c1cae635278cb18b05f87c8 refs/remotes/origin/release-v1.1
+1086709b52634a3bc903a49da5d312fec66690d1 refs/remotes/origin/release/v2-0-0
+65d5df09095b93e787942f1246f2f7f557496560 refs/remotes/origin/update-changelog-after-release-v2-0-0
+f555bbcaf24016d23cef1f38e7c67c14eb34e94c refs/remotes/origin/update-migration-guide-v1-to-v2
+a7ddc7029f8ce4e51a98dd48fa9a5be8d78ac2f7 refs/remotes/origin/update-readme
+6d7a9343b7d98d44d9e99a7697c7c46edd5c224c refs/remotes/origin/zoomed-pane-indicator
+437299dc3c8eebfe0be05fd6a8ea59f2c69343a5 refs/tags/v0.0.0
+^9b93dd6ada81484af55aa2dee7ca2db3cc0bc95d
+1113d181363810ad9b7510250ae7276d21deb1bd refs/tags/v1.0.0
+^f030a057ca5a99774ffc86cc0e5bd339632900d2
+04f056109974ac2e67ff7d82cd8a059082bf882b refs/tags/v1.1.0
+^35f911f5e2cecb7e479130d47b7fe317d24203b3
+f9f129354659b6a4c5c5a7ce850d671ab44181f8 refs/tags/v2.0.0
+^c7653229c7f7e5beb1f9f4ba298b3b1c39ffd8ce
+aeb30c7172a8ed8663409207814cf47d9df10d15 refs/tags/v2.0.1

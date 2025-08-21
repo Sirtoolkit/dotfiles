@@ -4,7 +4,6 @@ packages:
     - bat
     - btop
     - carapace
-    - chezmoi
     - cloc
     - commitizen
     - coreutils
@@ -29,12 +28,12 @@ packages:
     - wget
     - zoxide
     - zsh
-    - eza 
-    - starship 
+    - eza
+    - starship
     - tmux
     - gdu
     - ollama
-    - sshs 
+    - sshs
   casks:
     # - ledger-live
     # - iina
