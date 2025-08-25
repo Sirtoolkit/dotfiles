@@ -3,7 +3,11 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 ### Directory Colors
 if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lscolors.sh" ]; then
-  . "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lscolors.sh"
+	. "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lscolors.sh"
+fi
+
+if command -v tmux &>/dev/null && [ -z "$TMUX" ]; then
+	tmux attach-session -t default || tmux new-session -s default
 fi
 
 # Set PATH, MANPATH, etc., for Homebrew.
