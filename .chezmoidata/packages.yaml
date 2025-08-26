@@ -64,7 +64,6 @@ packages:
     - obsidian
     - openmtp
     - orbstack
-    - raindropio
     - raycast
     - transmission
     - xcodes
@@ -77,3 +76,4 @@ packages:
     - devpod
     - datagrip
     - google-cloud-sdk
+    - gitkraken-cli
