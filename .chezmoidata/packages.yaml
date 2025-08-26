@@ -36,6 +36,7 @@ packages:
     - sshs
     - lazygit 
     - lazydocker
+    - cocoapods
   casks:
     # - ledger-live
     # - iina
