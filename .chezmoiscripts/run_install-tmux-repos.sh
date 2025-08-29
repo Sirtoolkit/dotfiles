@@ -2,7 +2,7 @@
 
 set -e
 
-PLUGINS_DIR="$HOME/.tmux/plugins"
+PLUGINS_DIR="$HOME/.config/tmux/plugins"
 
 TPM_DIR="$PLUGINS_DIR/tpm"
 TPM_REPO="https://github.com/tmux-plugins/tpm.git"
