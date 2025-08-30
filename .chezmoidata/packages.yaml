@@ -1,4 +1,14 @@
 packages:
+  taps:
+    - dashlane/tap
+    - rsteube/homebrew-tap
+    - gromgit/brewtils
+    - jorgerojas26/lazysql
+    - mobile-dev-inc/tap
+    - kopecmaciej/vi-mongo
+    # - osx-cross/arm
+    # - osx-cross/avr
+    - qmk/qmk
   brews:
     - bash-completion@2
     - bat
@@ -36,8 +46,13 @@ packages:
     - sshs
     - lazygit 
     - lazydocker
+    - lazysql
     - cocoapods
     - aicommits
+    - taproom
+    - qmk 
+    - dashlane-cli 
+    - vi-mongo
   casks:
     # - ledger-live
     # - iina

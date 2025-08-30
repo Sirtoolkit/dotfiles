@@ -10,6 +10,7 @@ usage = "latest"
 dart = "latest"
 python = "latest"
 uv = "latest"
+java = "17"
 
 [settings]
 experimental = true

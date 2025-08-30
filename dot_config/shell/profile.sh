@@ -13,6 +13,9 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
 export FLUTTER_ROOT=$(mise where flutter)
 
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
 # Configure ANDROID common paths
 # export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 # export PATH="$ANDROID_HOME/tools:$PATH"
