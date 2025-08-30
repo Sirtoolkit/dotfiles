@@ -53,6 +53,8 @@ packages:
     - qmk 
     - dashlane-cli 
     - vi-mongo
+    - fastlane
+    - sops
   casks:
     # - ledger-live
     # - iina
