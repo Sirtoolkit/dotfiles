@@ -11,8 +11,6 @@ alias ll="eza -l --icons=always -m -n -l"
 alias dbb="flutter clean && dart run build_runner build -d"
 alias dbw="flutter clean && dart run build_runner watch -d"
 
-alias gkc="/opt/homebrew/bin/gk"
-
 alias mkdir='mkdir -pv'
 
 alias Applications='cd $HOME/Applications'

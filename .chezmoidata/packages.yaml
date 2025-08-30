@@ -37,6 +37,7 @@ packages:
     - lazygit 
     - lazydocker
     - cocoapods
+    - aicommits
   casks:
     # - ledger-live
     # - iina
@@ -77,4 +78,3 @@ packages:
     - devpod
     - datagrip
     - google-cloud-sdk
-    - gitkraken-cli
