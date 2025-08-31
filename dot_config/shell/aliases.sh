@@ -206,21 +206,69 @@ mas-purge-all() {
 }
 
 create-emulator() {
-    # Check if SDK tools exist
+  # Check if SDK tools exist
     if ! command -v sdkmanager &>/dev/null || ! command -v avdmanager &>/dev/null; then
         echo "❌ Error: Android SDK command-line tools not found."
         echo "   Make sure the tools are in your \$PATH."
         return 1
     fi
 
-    # --- STEP 1: SELECT SYSTEM IMAGE ---
-    echo "➡️  Step 1: Choose a system image."
+    # --- STEP 0: PRE-CONFIGURATION ---
+    local arch_filter device_type_filter
+
+    echo "➡️  Step 0: Let's configure your new emulator."
+    PS3="   Please choose the CPU architecture (Intel is faster on most PCs): "
+    select arch_choice in "Intel (x86_64)" "ARM (arm64-v8a)"; do
+        if [[ "$arch_choice" == "Intel (x86_64)" ]]; then
+            arch_filter="x86_64"
+            break
+        elif [[ "$arch_choice" == "ARM (arm64-v8a)" ]]; then
+            arch_filter="arm64-v8a"
+            break
+        else
+            echo "   Invalid option. Try again."
+        fi
+    done
+
+    PS3="   What type of device do you want to create? "
+    select device_type_choice in "Phone" "Tablet"; do
+        if [[ -n "$device_type_choice" ]]; then
+            device_type_filter="$device_type_choice"
+            break
+        else
+            echo "   Invalid option. Try again."
+        fi
+    done
+    echo "---"
+
+    # --- STEP 1: SELECT SYSTEM IMAGE (FILTERED) ---
+    echo "➡️  Step 1: Choose a system image (filtered for '$arch_filter' and '$device_type_filter')."
+    
+    # First, get the base list of all stable, Play Store images
+    local base_image_list
+    base_image_list=$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space:]]*system-images;/ && /google_apis_playstore/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' | sort -V | uniq)
+
+    # Now, pipe that list through our dynamic filters
+    local filtered_list
+    filtered_list=$(echo "$base_image_list" | grep "$arch_filter")
+
+    if [[ "$device_type_filter" == "Tablet" ]]; then
+        filtered_list=$(echo "$filtered_list" | grep "tablet")
+    else
+        # For phones, explicitly exclude tablet images
+        filtered_list=$(echo "$filtered_list" | grep -v "tablet")
+    fi
+    
+    # ✅ CORRECTION HERE: This is the correct Zsh syntax to split a variable by newlines into an array.
     local -a system_images
-system_images=(${(f)"$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space:]]*system-images;/ && /google_apis_playstore/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' | sort -V | uniq)"})
+    system_images=(${(f)filtered_list})
+
     if [ ${#system_images[@]} -eq 0 ]; then
-        echo "❌ No system images found."
+        echo "❌ No system images found with the selected criteria."
         return 1
     fi
+
+    local selected_image
     PS3="   Please choose a number: "
     select selected_image in "${system_images[@]}"; do
         if [[ -n "$selected_image" ]]; then
@@ -231,26 +279,51 @@ system_images=(${(f)"$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space
         fi
     done
     echo "   Installing '$selected_image' if necessary..."
-    sdkmanager "$selected_image"
+    yes | sdkmanager "$selected_image" > /dev/null
     echo "---"
 
-    # --- STEP 2: SELECT DEVICE (USING ID) ---
-    echo "➡️  Step 2: Choose a device profile."
+    # --- STEP 2: SELECT DEVICE (FILTERED) ---
+    echo "➡️  Step 2: Choose a device profile (filtered for '$device_type_filter')."
     local -a device_ids device_names
+    local current_id current_name
+
     while IFS= read -r line; do
         if [[ "$line" =~ 'id: '([0-9]+)' or "'(.*)'"' ]]; then
-            device_ids+=("$match[1]")
+            current_id=$match[1]
+            current_name="" # Reset for the next pair
         elif [[ "$line" =~ 'Name: '(.*) ]]; then
-            device_names+=("$match[1]")
+            current_name=$match[1]
+            
+            # Now we have a full ID/Name pair, let's filter it
+            local is_match=0
+            if [[ "$device_type_filter" == "Tablet" ]]; then
+                # For tablets, look for keywords like Tablet or Fold
+                if [[ "$current_name" == *"Tablet"* || "$current_name" == *"Fold"* ]]; then
+                    is_match=1
+                fi
+            else # Phone
+                # For phones, exclude other form factors
+                if [[ "$current_name" != *"Tablet"* && "$current_name" != *"Fold"* && "$current_name" != *"TV"* && "$current_name" != *"Wear"* && "$current_name" != *"Automotive"* ]]; then
+                    is_match=1
+                fi
+            fi
+
+            if [[ $is_match -eq 1 ]]; then
+                device_ids+=("$current_id")
+                device_names+=("$current_name")
+            fi
         fi
     done < <(avdmanager list device)
+
     if [ ${#device_names[@]} -eq 0 ]; then
-        echo "❌ No device profiles found."
+        echo "❌ No device profiles found for the selected type."
         return 1
     fi
-    local selected_device_id
+
+    local selected_device_id device_display_name
     select device_display_name in "${device_names[@]}"; do
         if [[ -n "$device_display_name" ]]; then
+            # In Zsh, array indices start at 1, which matches $REPLY from select
             selected_device_id=${device_ids[$REPLY]}
             echo "   You selected: $device_display_name (ID: $selected_device_id)"
             break
@@ -260,18 +333,26 @@ system_images=(${(f)"$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space
     done
     echo "---"
 
-    # --- STEP 3: NAME THE EMULATOR ---
+    # --- STEP 3: NAME THE EMULATOR (WITH SUGGESTION) ---
     local avd_name
     echo "➡️  Step 3: Give your new emulator a name."
-    read "avd_name?   Name (e.g., Pixel_Test_API31): "
-    while [[ -z "$avd_name" ]]; do
-        echo "   The name cannot be empty."
-        read "avd_name?   Name (e.g., Pixel_Test_API31): "
-    done
+
+    # Create a helpful suggested name
+    local api_level=$(echo "$selected_image" | sed -n 's/.*android-\([0-9]*\).*/\1/p')
+    local device_name_sanitized=$(echo "$device_display_name" | tr ' ' '_')
+    local suggested_name="${device_name_sanitized}_API${api_level}_${arch_filter}"
+    echo "   Suggested name: $suggested_name"
+
+    read "avd_name?   Name: "
+    # If the user just hits Enter, use the suggestion
+    if [[ -z "$avd_name" ]]; then
+        avd_name="$suggested_name"
+        echo "   Using suggested name: $avd_name"
+    fi
     echo "---"
 
     # --- STEP 4: CREATE AND LAUNCH ---
-    echo "⏳ Creating emulator '$avd_name' with device ID '$selected_device_id'..."
+    echo "⏳ Creating emulator '$avd_name'..."
     echo "no" | avdmanager create avd --name "$avd_name" --package "$selected_image" --device "$selected_device_id" --force
     
     if [ $? -eq 0 ]; then
@@ -281,7 +362,7 @@ system_images=(${(f)"$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space
             echo "🚀 Launching '$avd_name' in the background..."
             nohup emulator @"$avd_name" > /dev/null 2>&1 &
         else
-            echo "👍 Okay. You can launch it later with: launch-emulator"
+            echo "👍 Okay. You can launch it later with 'emulator @$avd_name'"
         fi
     else
         echo "❌ An error occurred while creating the emulator."
