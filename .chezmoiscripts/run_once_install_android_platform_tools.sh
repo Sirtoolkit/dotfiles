@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Script para instalar Android Platform Tools solo si no están instalados
+# Se ejecuta una sola vez con chezmoi
+
+set -e  # Salir si hay error
+
+echo "🔍 Verificando instalación de Android Platform Tools..."
+
+# Verificar si ADB ya está instalado y funcionando
+if command -v adb &> /dev/null; then
+    echo "✅ ADB ya está instalado: $(adb version 2>/dev/null | head -n1 || echo 'versión no disponible')"
+    exit 0
+fi
+
+echo "📦 ADB no encontrado. Procediendo con la instalación..."
+
+echo "⬇️  Descargando Android Platform Tools..."
+
+# Aceptar licencias automáticamente e instalar platform-tools
+yes | sdkmanager --licenses > /dev/null 2>&1 || true
+sdkmanager "platform-tools"
+
+# Verificar que la instalación fue exitosa
+if [ -f "$ANDROID_HOME/platform-tools/adb" ]; then
+    echo "✅ Android Platform Tools instaladas correctamente"
+else
+    echo "❌ Error: No se pudo instalar Android Platform Tools"
+    exit 1
+fi
