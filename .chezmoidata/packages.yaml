@@ -73,9 +73,6 @@ packages:
     - cursor
     - 1password
     - 1password-cli
-    - android-commandlinetools
-    - android-platform-tools
-    - android-studio
     - ghostty
     - arc
     - imageoptim
@@ -95,3 +92,4 @@ packages:
     - devpod
     - datagrip
     - google-cloud-sdk
+    - android-commandlinetools

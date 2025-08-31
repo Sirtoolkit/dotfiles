@@ -13,15 +13,11 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$PATH:/Users/cesarleonardo/Library/Application Support/JetBrains/Toolbox/scripts"
 export FLUTTER_ROOT=$(mise where flutter)
 
-export ANDROID_HOME=$HOME/Library/Android/sdk
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-# Configure ANDROID common paths
-# export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
-# export PATH="$ANDROID_HOME/tools:$PATH"
-# export PATH="$ANDROID_HOME/tools/bin:$PATH"
-# export PATH="$ANDROID_HOME/platform-tools:$PATH"
-# export PATH="$ANDROID_HOME/emulator:$PATH"
+export PATH=$PATH:$ANDROID_HOME/emulator
 
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
