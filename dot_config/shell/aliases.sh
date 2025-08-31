@@ -216,7 +216,7 @@ create-emulator() {
     # --- STEP 1: SELECT SYSTEM IMAGE ---
     echo "➡️  Step 1: Choose a system image."
     local -a system_images
-    system_images=(${(f)"$(sdkmanager --list | grep system-images | cut -d'|' -f1 | sed 's/^[ \t]*//;s/[ \t]*$//' | uniq)"})
+system_images=(${(f)"$(sdkmanager --list --verbose 2>/dev/null | awk '/^[[:space:]]*system-images;/ && /google_apis_playstore/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' | sort -V | uniq)"})
     if [ ${#system_images[@]} -eq 0 ]; then
         echo "❌ No system images found."
         return 1
