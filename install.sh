@@ -30,23 +30,13 @@ log_step() {
     echo "\n${BLUE}🚀 $1${NC}"
 }
 
-# Detectar sistema operativo
-detect_os() {
-    case "$(uname -s)" in
-        Darwin*) echo "macos" ;;
-        Linux*) echo "linux" ;;
-        *) echo "unknown" ;;
-    esac
-}
-
-OS=$(detect_os)
-
-if [ "$OS" = "unknown" ]; then
-    log_error "Sistema operativo no soportado"
+# Verificar que estamos en macOS
+if [ "$(uname -s)" != "Darwin" ]; then
+    log_error "Este script solo funciona en macOS"
     exit 1
 fi
 
-log_info "Detectado sistema operativo: $OS"
+log_info "Detectado sistema operativo: macOS"
 
 # Función para verificar herramientas mínimas
 check_basic_tools() {
@@ -107,7 +97,7 @@ apply_chezmoi_config() {
     fi
     
     log_info "Inicializando y aplicando desde: $script_dir"
-    log_info "Chezmoi ejecutará scripts en orden: Homebrew → mise + Java → Android → extensiones"
+    log_info "Chezmoi ejecutará scripts en orden perfecto: 01-Homebrew → 02-Paquetes → 03-1Password → 04-TouchID → 05-mise → 06-Android → 07-tmux → 08-Cursor"
     
     # Dejar que chezmoi haga todo su trabajo en orden
     "$chezmoi_bin" init --apply --source="$script_dir"
@@ -161,12 +151,15 @@ show_summary() {
     log_step "🎉 ¡Instalación completada!"
     
     echo "\n${GREEN}✅ Instalación exitosa de tu entorno de desarrollo${NC}"
-    echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden):${NC}"
-    echo "  1️⃣ Homebrew y paquetes básicos"
-    echo "  2️⃣ mise y herramientas (incluyendo Java)"
-    echo "  3️⃣ Extensiones de Cursor"
-    echo "  4️⃣ Android Platform Tools (con Java disponible)"
-    echo "  5️⃣ Configuración de tmux y plugins"
+    echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden perfecto):${NC}"
+    echo "  1️⃣ Homebrew installation"
+    echo "  2️⃣ Homebrew packages (mise, tools, etc.)"
+    echo "  3️⃣ 1Password agent setup"
+    echo "  4️⃣ macOS TouchID for sudo"
+    echo "  5️⃣ mise tools (Java, Node, Python, etc.)"
+    echo "  6️⃣ Android Platform Tools (con Java disponible)"
+    echo "  7️⃣ tmux plugins y configuración"
+    echo "  8️⃣ Cursor extensions"
     echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
     
     echo "\n${YELLOW}📝 Próximos pasos:${NC}"
@@ -177,25 +170,23 @@ show_summary() {
     echo "  • Ejecuta: chezmoi apply"
     echo "  • Para herramientas específicas: mise install"
     
-    if [ "$OS" = "macos" ]; then
-        echo "\n${BLUE}💡 Comandos útiles:${NC}"
-        echo "  • purge-config          - Limpiar configuraciones"
-        echo "  • purge-all-mobile-dev-cache - Limpiar caché de desarrollo"
-        echo "  • mise-purge-all        - Limpiar herramientas de mise"
-        echo "  • brew-purge-formula    - Limpiar paquetes de Homebrew"
-        echo "  • brew-purge-cask       - Limpiar aplicaciones de Homebrew"
-    fi
+    echo "\n${BLUE}💡 Comandos útiles:${NC}"
+    echo "  • purge-config          - Limpiar configuraciones"
+    echo "  • purge-all-mobile-dev-cache - Limpiar caché de desarrollo"
+    echo "  • mise-purge-all        - Limpiar herramientas de mise"
+    echo "  • brew-purge-formula    - Limpiar paquetes de Homebrew"
+    echo "  • brew-purge-cask       - Limpiar aplicaciones de Homebrew"
     
     echo "\n${GREEN}🚀 ¡Tu entorno está listo para usar!${NC}\n"
 }
 
 # Función principal
 main() {
-    log_step "🔧 Iniciando instalación completa del entorno de desarrollo"
+    log_step "🍎 Iniciando instalación completa del entorno de desarrollo para macOS"
     
-    # Verificar permisos si es necesario
-    if [ "$OS" = "linux" ] && [ "$EUID" -eq 0 ]; then
-        log_warning "No ejecutes este script como root. Algunos pasos necesitan permisos de usuario normal."
+    # Verificar que no se ejecute como root
+    if [ "$EUID" -eq 0 ]; then
+        log_warning "No ejecutes este script como root."
         exit 1
     fi
     
