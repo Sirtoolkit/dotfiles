@@ -260,14 +260,26 @@ create-emulator() {
     local -a installed_images=(${(f)"$(filter_image_list "$installed_block")"})
     local -a available_images=(${(f)"$(filter_image_list "$available_block")"})
 
-    # ✅ --- NUEVO MENÚ MANUAL SIN NÚMEROS EN LOS TÍTULOS ---
+    # ✅ --- NUEVO FILTRO PARA ELIMINAR DUPLICADOS ---
+    # Crea una nueva lista de "disponibles" que excluye las que ya están instaladas.
+    local -a unique_available_images
+    for img in "${available_images[@]}"; do
+        # El operador (Ie) de Zsh busca si el elemento existe en el array.
+        # Si no (!) existe, lo añadimos a la lista de únicos.
+        if (( ! ${installed_images[(Ie)$img]} )); then
+            unique_available_images+=("$img")
+        fi
+    done
+    # Reemplaza la lista original de disponibles con la lista ya filtrada.
+    available_images=("${unique_available_images[@]}")
+    # ✅ --- FIN DEL FILTRO ---
+
     format_image_name_zsh() {
         local path=$1
         local temp=${path#*android-}
         echo "Android API ${temp%%;*} (${path##*;})"
     }
 
-    # Combinar todas las imágenes en un solo array para una selección simple por índice
     local -a all_images=("${installed_images[@]}" "${available_images[@]}")
 
     if [ ${#all_images[@]} -eq 0 ]; then
@@ -275,7 +287,6 @@ create-emulator() {
         return 1
     fi
 
-    # Imprimir el menú manualmente
     local counter=1
     if [ ${#installed_images[@]} -gt 0 ]; then
         echo "--- INSTALLED (Ready to use) ---"
@@ -292,12 +303,10 @@ create-emulator() {
         done
     fi
 
-    # Reemplazar 'select' con un bucle 'read' para tener control total
     local choice
     local selected_image
     while true; do
         read "choice?    Please choose a number: "
-        # Validar que la entrada es un número y está en el rango correcto
         if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#all_images[@]} )); then
             selected_image=${all_images[$choice]}
             echo "    You selected: $(format_image_name_zsh "$selected_image") ($selected_image)"
@@ -306,8 +315,7 @@ create-emulator() {
             echo "    Invalid option. Please enter a number between 1 and ${#all_images[@]}."
         fi
     done
-    # ✅ --- FIN DEL MENÚ MANUAL ---
-
+    
     echo "    Installing '$selected_image' if necessary..."
     yes | sdkmanager "$selected_image" > /dev/null
     echo "---"
