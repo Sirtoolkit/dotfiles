@@ -1,11 +1,29 @@
--- AstroCommunity: import any community modules here
--- We import this file in `lazy_setup.lua` before the `plugins/` folder.
--- This guarantees that the specs are processed before any user plugins.
-
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.pack.lua" },
+  { import = "astrocommunity.pack.dart" },
+  { import = "astrocommunity.pack.typescript" },
+  { import = "astrocommunity.pack.terraform" },
+  { import = "astrocommunity.pack.yaml" },
+  { import = "astrocommunity.pack.php" },
+  { import = "astrocommunity.pack.tailwindcss" },
+  { import = "astrocommunity.pack.prisma" },
+  { import = "astrocommunity.pack.nginx" },
+  { import = "astrocommunity.pack.docker" },
+  { import = "astrocommunity.pack.kotlin" },
+  { import = "astrocommunity.pack.java" },
+  { import = "astrocommunity.pack.json" },
+  { import = "astrocommunity.pack.spring-boot" },
+  { import = "astrocommunity.editing-support.auto-save-nvim" },
+  { import = "astrocommunity.pack.prettier" },
+  { import = "astrocommunity.pack.eslint" },
+  { import = "astrocommunity.pack.swift" },
+  { import = "astrocommunity.pack.chezmoi" },
+  { import = "astrocommunity.pack.xml" },
+  { import = "astrocommunity.editing-support.multiple-cursors-nvim" },
+  { import = "astrocommunity.terminal-integration.toggleterm-manager-nvim" },
+  { import = "astrocommunity.docker.lazydocker" },
   { import = "astrocommunity.colorscheme.gruvbox-nvim" },
-  { import = "astrocommunity.colorscheme.everforest" },
+  { import = "astrocommunity.search.grug-far-nvim" },
 }

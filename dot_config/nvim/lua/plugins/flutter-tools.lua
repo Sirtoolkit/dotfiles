@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   { "akinsho/flutter-tools.nvim", lazy = true }, -- add lsp plugin
   {
@@ -9,10 +10,12 @@ return {
 
       opts = require("astrocore").extend_tbl(opts, {
         setup_handlers = {
+          -- add custom handler
           dartls = function(_, dartls_opts) require("flutter-tools").setup { lsp = dartls_opts } end,
         },
         config = {
           dartls = {
+            -- any changes you want to make to the LSP setup, for example
             color = {
               enabled = true,
             },
