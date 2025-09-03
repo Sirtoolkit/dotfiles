@@ -105,81 +105,6 @@ apply_chezmoi_config() {
     log_success "Chezmoi completado - archivos y scripts aplicados"
 }
 
-# Función para configurar shell
-setup_shell() {
-    log_step "Configurando shell..."
-    
-    # Cambiar shell por defecto a zsh si no lo es ya
-    if [ "$SHELL" != "/bin/zsh" ] && [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/opt/homebrew/bin/zsh" ]; then
-        if command -v zsh >/dev/null 2>&1; then
-            log_info "Cambiando shell por defecto a zsh..."
-            chsh -s "$(which zsh)"
-            log_success "Shell cambiado a zsh"
-        else
-            log_warning "zsh no está disponible, manteniendo shell actual"
-        fi
-    else
-        log_success "zsh ya es el shell por defecto"
-    fi
-}
-
-# Función para configuración final
-final_setup() {
-    log_step "Configuración final..."
-    
-    # Cambiar shell por defecto a zsh si no lo es ya
-    if [ "$SHELL" != "/bin/zsh" ] && [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/opt/homebrew/bin/zsh" ]; then
-        if command -v zsh >/dev/null 2>&1; then
-            log_info "Cambiando shell por defecto a zsh..."
-            chsh -s "$(which zsh)"
-            log_success "Shell cambiado a zsh"
-        else
-            log_warning "zsh no está disponible, manteniendo shell actual"
-        fi
-    else
-        log_success "zsh ya es el shell por defecto"
-    fi
-    
-    # Información final
-    if [ -f "$HOME/.zshrc" ]; then
-        log_success "Configuración lista - abre una nueva terminal o ejecuta: source ~/.zshrc"
-    fi
-}
-
-# Función para mostrar resumen final
-show_summary() {
-    log_step "🎉 ¡Instalación completada!"
-    
-    echo "\n${GREEN}✅ Instalación exitosa de tu entorno de desarrollo${NC}"
-    echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden perfecto):${NC}"
-    echo "  1️⃣ Homebrew installation"
-    echo "  2️⃣ Homebrew packages (mise, tools, etc.)"
-    echo "  3️⃣ 1Password agent setup"
-    echo "  4️⃣ macOS TouchID for sudo"
-    echo "  5️⃣ mise tools (Java, Node, Python, etc.)"
-    echo "  6️⃣ Android Platform Tools (con Java disponible)"
-    echo "  7️⃣ tmux plugins y configuración"
-    echo "  8️⃣ Cursor extensions"
-    echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
-    
-    echo "\n${YELLOW}📝 Próximos pasos:${NC}"
-    echo "  1. Abre una nueva terminal o ejecuta: source ~/.zshrc"
-    echo "  2. ¡Todo está listo para usar!"
-    
-    echo "\n${YELLOW}💡 Si algo falló:${NC}"
-    echo "  • Ejecuta: chezmoi apply"
-    echo "  • Para herramientas específicas: mise install"
-    
-    echo "\n${BLUE}💡 Comandos útiles:${NC}"
-    echo "  • purge-config          - Limpiar configuraciones"
-    echo "  • purge-all-mobile-dev-cache - Limpiar caché de desarrollo"
-    echo "  • mise-purge-all        - Limpiar herramientas de mise"
-    echo "  • brew-purge-formula    - Limpiar paquetes de Homebrew"
-    echo "  • brew-purge-cask       - Limpiar aplicaciones de Homebrew"
-    
-    echo "\n${GREEN}🚀 ¡Tu entorno está listo para usar!${NC}\n"
-}
-
 # Función principal
 main() {
     log_step "🍎 Iniciando instalación completa del entorno de desarrollo para macOS"
@@ -199,11 +124,7 @@ main() {
     # Aplicar todo con chezmoi (archivos + scripts en orden correcto)
     apply_chezmoi_config
     
-    # Configuración final
-    final_setup
-    
-    # Mostrar resumen
-    show_summary
+    log_success "Configuración base de chezmoi aplicada. Los pasos finales se ejecutarán dentro de chezmoi."
 }
 
 # Ejecutar función principal

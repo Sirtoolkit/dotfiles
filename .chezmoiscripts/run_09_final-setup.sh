@@ -1,0 +1,114 @@
+#!/bin/sh
+
+set -e
+
+# Colores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Función para logging con colores
+log_info() {
+    echo "${BLUE}ℹ️  $1${NC}"
+}
+
+log_success() {
+    echo "${GREEN}✅ $1${NC}"
+}
+
+log_warning() {
+    echo "${YELLOW}⚠️  $1${NC}"
+}
+
+log_error() {
+    echo "${RED}❌ $1${NC}"
+}
+
+log_step() {
+    echo "\n${BLUE}🚀 $1${NC}"
+}
+
+# Verificar que estamos en macOS
+if [ "$(uname -s)" != "Darwin" ]; then
+    log_error "Este script solo funciona en macOS"
+    exit 1
+fi
+
+# Función para configuración final
+final_setup() {
+    log_step "Configuración final..."
+    
+    # Cambiar shell por defecto a zsh si no lo es ya
+    if [ "$SHELL" != "/bin/zsh" ] && [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/opt/homebrew/bin/zsh" ]; then
+        if command -v zsh >/dev/null 2>&1;
+        then
+            log_info "Cambiando shell por defecto a zsh..."
+            chsh -s "$(which zsh)"
+            log_success "Shell cambiado a zsh"
+        else
+            log_warning "zsh no está disponible, manteniendo shell actual"
+        fi
+    else
+        log_success "zsh ya es el shell por defecto"
+    fi
+    
+    # Información final
+    if [ -f "$HOME/.zshrc" ]; then
+        log_success "Configuración lista - abre una nueva terminal o ejecuta: source ~/.zshrc"
+    fi
+}
+
+# Función para mostrar resumen final
+show_summary() {
+    log_step "🎉 ¡Instalación completada!"
+    
+    echo "\n${GREEN}✅ Instalación exitosa de tu entorno de desarrollo${NC}"
+    echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden perfecto):${NC}"
+    echo "  1️⃣ Homebrew installation"
+    echo "  2️⃣ Homebrew packages (mise, tools, etc.)"
+    echo "  3️⃣ 1Password agent setup"
+    echo "  4️⃣ macOS TouchID for sudo"
+    echo "  5️⃣ mise tools (Java, Node, Python, etc.)"
+    echo "  6️⃣ Android Platform Tools (con Java disponible)"
+    echo "  7️⃣ tmux plugins y configuración"
+    echo "  8️⃣ Cursor extensions"
+    echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
+    
+    echo "\n${YELLOW}📝 Próximos pasos:${NC}"
+    echo "  1. Abre una nueva terminal o ejecuta: source ~/.zshrc"
+    echo "  2. ¡Todo está listo para usar!"
+    
+    echo "\n${YELLOW}💡 Si algo falló:${NC}"
+    echo "  • Ejecuta: chezmoi apply"
+    echo "  • Para herramientas específicas: mise install"
+    
+    echo "\n${BLUE}💡 Comandos útiles:${NC}"
+    echo "  • purge-config          - Limpiar configuraciones"
+    echo "  • purge-all-mobile-dev-cache - Limpiar caché de desarrollo"
+    echo "  • mise-purge-all        - Limpiar herramientas de mise"
+    echo "  • brew-purge-formula    - Limpiar paquetes de Homebrew"
+    echo "  • brew-purge-cask       - Limpiar aplicaciones de Homebrew"
+    
+    echo "\n${GREEN}🚀 ¡Tu entorno está listo para usar!${NC}\n"
+}
+
+# Función principal
+main() {
+    log_step "🍎 Iniciando configuración final y resumen"
+    
+    # Verificar que no se ejecute como root
+    if [ "$EUID" -eq 0 ]; then
+        log_warning "No ejecutes este script como root."
+    fi
+    
+    # Configuración final
+    final_setup
+    
+    # Mostrar resumen
+    show_summary
+}
+
+# Ejecutar función principal
+main "$@"
