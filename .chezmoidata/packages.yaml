@@ -44,17 +44,18 @@ packages:
     - gdu
     - ollama
     - sshs
-    - lazygit 
+    - lazygit
     - lazydocker
     - lazysql
     - cocoapods
     - aicommits
     - taproom
-    - qmk 
-    - dashlane-cli 
+    - qmk
+    - dashlane-cli
     - vi-mongo
     - fastlane
     - sops
+    - gemini-cli
   casks:
     # - ledger-live
     # - iina
