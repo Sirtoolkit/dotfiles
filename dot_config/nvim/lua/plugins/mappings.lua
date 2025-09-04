@@ -12,8 +12,8 @@ return {
 
           -- Ejecución y Recarga
           ["<leader>Fr"] = { "<cmd>FlutterDebug<cr>", desc = "Run App" },
-          ["<leader>Fh"] = { "<cmd>FlutterHotReload<cr>", desc = "Hot Reload" },
-          ["<leader>FH"] = { "<cmd>FlutterHotRestart<cr>", desc = "Hot Restart" },
+          ["<leader>Fh"] = { "<cmd>FlutterReload<cr>", desc = "Hot Reload" },
+          ["<leader>FH"] = { "<cmd>FlutterRestart<cr>", desc = "Hot Restart" },
           ["<leader>Fq"] = { "<cmd>FlutterQuit<cr>", desc = "Quit App" },
           ["<leader>Fp"] = { "<cmd>FlutterPubGet<cr>", desc = "Get Packages" },
 
