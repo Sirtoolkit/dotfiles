@@ -95,3 +95,4 @@ packages:
     - datagrip
     - google-cloud-sdk
     - android-commandlinetools
+    - amethyst
