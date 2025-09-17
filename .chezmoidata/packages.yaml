@@ -55,8 +55,9 @@ packages:
     - vi-mongo
     - fastlane
     - sops
-    - gemini-cli
     - ripgrep
+    - opencode
+    - bitwarden-cli
   casks:
     # - ledger-live
     # - iina
@@ -73,8 +74,6 @@ packages:
     - google-chrome
     - postman
     - cursor
-    - 1password
-    - 1password-cli
     - ghostty
     - arc
     - imageoptim
@@ -96,3 +95,4 @@ packages:
     - google-cloud-sdk
     - android-commandlinetools
     - amethyst
+    - bitwarden

@@ -1,6 +1,6 @@
 font-family = CaskaydiaCove Nerd Font
 font-size = 16
-theme = GruvboxDarkHard
+theme = Gruvbox Dark Hard
 shell-integration-features = no-cursor,sudo,no-title
 cursor-style = block
 adjust-cell-height = 35%
