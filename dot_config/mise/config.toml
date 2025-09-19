@@ -1,8 +1,6 @@
 [tools]
 node = "lts"
-yarn = "latest"
 ruby = "latest"
-deno = "latest"
 flutter = "latest"
 terraform = "latest"
 rust = "latest"
@@ -11,6 +9,7 @@ dart = "latest"
 python = "latest"
 uv = "latest"
 java = "17"
+pnpm = "latest"
 
 [settings]
 experimental = true
