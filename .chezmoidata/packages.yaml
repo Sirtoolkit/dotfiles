@@ -58,6 +58,7 @@ packages:
     - ripgrep
     - opencode
     - bitwarden-cli
+    - tree-sitter-cli
   casks:
     # - ledger-live
     # - iina
