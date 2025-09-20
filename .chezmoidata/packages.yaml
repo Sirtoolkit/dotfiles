@@ -95,4 +95,3 @@ packages:
     - google-cloud-sdk
     - android-commandlinetools
     - amethyst
-    - bitwarden

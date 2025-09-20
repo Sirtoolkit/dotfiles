@@ -1,5 +1,6 @@
-#!/bin/sh
+#!{{ lookPath "sh" }}
 
+{{ if eq .chezmoi.os "darwin" -}}
 set -e
 
 PLUGINS_DIR="$HOME/.config/tmux/plugins"
@@ -56,3 +57,4 @@ fi
 
 echo "\n🎉 ¡Instalación de todos los repositorios completada!"
 echo "👉 Ahora, añade las líneas de los plugins a tu .tmux.conf y recarga la configuración."
+{{ end -}}

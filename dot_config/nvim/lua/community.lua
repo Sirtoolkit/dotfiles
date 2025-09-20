@@ -21,9 +21,7 @@ return {
   { import = "astrocommunity.pack.swift" },
   { import = "astrocommunity.pack.chezmoi" },
   { import = "astrocommunity.pack.xml" },
-  { import = "astrocommunity.editing-support.multiple-cursors-nvim" },
   { import = "astrocommunity.terminal-integration.toggleterm-manager-nvim" },
   { import = "astrocommunity.docker.lazydocker" },
   { import = "astrocommunity.colorscheme.gruvbox-nvim" },
-  { import = "astrocommunity.search.grug-far-nvim" },
 }

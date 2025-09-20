@@ -1,5 +1,6 @@
-#!/bin/sh
+#!{{ lookPath "sh" }}
 
+{{ if eq .chezmoi.os "darwin" -}}
 set -e
 
 # Colores para output
@@ -112,3 +113,4 @@ main() {
 
 # Ejecutar función principal
 main "$@"
+{{ end -}}

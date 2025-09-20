@@ -1,7 +1,8 @@
-#!/bin/bash
+#!{{ lookPath "bash" }}
 
 # Script para instalar Android Platform Tools solo si no están instalados
 # Se ejecuta una sola vez con chezmoi
+{{ if eq .chezmoi.os "darwin" -}}
 
 set -e  # Salir si hay error
 
@@ -28,3 +29,4 @@ else
     echo "❌ Error: No se pudo instalar Android Platform Tools"
     exit 1
 fi
+{{ end -}}

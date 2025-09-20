@@ -1,6 +1,7 @@
-#!/bin/sh
+#!{{ lookPath "sh" }}
 
 # Removemos set -e para que no falle si alguna herramienta no se instala correctamente
+{{ if eq .chezmoi.os "darwin" -}}
 
 if ! command -v mise >/dev/null 2>&1; then
   echo "✅ 'mise' no está instalado. Saltando la instalación de herramientas."
@@ -26,3 +27,4 @@ if [ -f "$CONFIG_FILE" ]; then
 else
     echo "ℹ️  No se encontró el archivo de configuración global de 'mise'. Saltando instalación."
 fi
+{{ end -}}

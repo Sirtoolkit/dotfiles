@@ -1,5 +1,6 @@
-#!/bin/sh
+#!{{ lookPath "sh" }}
 
+{{ if eq .chezmoi.os "darwin" -}}
 if command -v cursor >/dev/null 2>&1; then
   echo "📦 Verificando e instalando extensiones de Cursor..."
 
@@ -22,3 +23,4 @@ if command -v cursor >/dev/null 2>&1; then
 else
   echo "ℹ️  El comando 'cursor' no fue encontrado. Saltando instalación de extensiones."
 fi
+{{ end -}}

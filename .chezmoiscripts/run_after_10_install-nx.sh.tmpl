@@ -1,0 +1,15 @@
+#!/bin/bash
+# Instala nx globalmente usando npm, solo si no está instalado
+set -e
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "npm no está instalado. Por favor instala Node.js y npm primero."
+  exit 1
+fi
+
+if command -v nx >/dev/null 2>&1; then
+  echo "nx ya está instalado globalmente. Saltando instalación."
+else
+  echo "Instalando nx globalmente con npm..."
+  npm add --global nx
+fi

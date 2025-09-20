@@ -1,3 +1,27 @@
 [user]
 	name = Cesar Leonardo
 	email = cesarleonardo537@gmail.com
+
+[core]
+	editor = vim
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	last = log -1 HEAD
+
+[color]
+	ui = auto
+
+[push]
+	default = simple
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
