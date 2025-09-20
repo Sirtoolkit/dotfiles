@@ -11,7 +11,6 @@ return {
       "ktlint",
       "lua-language-server",
       "js-debug-adapter",
-      "tree-sitter-cli",
       "graphql-language-service-cli",
       "bash-language-server",
       "beautysh",
