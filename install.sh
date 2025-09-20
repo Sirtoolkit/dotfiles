@@ -85,9 +85,9 @@ install_chezmoi() {
     log_success "chezmoi instalado correctamente"
 }
 
-# Función para aplicar configuraciones de chezmoi
+# Función para aplicar configuraciones de chezmoi en dos fases
 apply_chezmoi_config() {
-    log_step "Aplicando configuraciones completas de chezmoi..."
+    log_step "Aplicando configuraciones de chezmoi en dos fases..."
     
     script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
     chezmoi_bin="$HOME/.local/bin/chezmoi"
@@ -96,13 +96,30 @@ apply_chezmoi_config() {
         chezmoi_bin="chezmoi"
     fi
     
-    log_info "Inicializando y aplicando desde: $script_dir"
-    log_info "Chezmoi ejecutará scripts en orden perfecto: 01-Homebrew → 02-Paquetes → 03-1Password → 04-TouchID → 05-mise → 06-Android → 07-tmux → 08-Cursor"
+    log_info "Inicializando chezmoi desde: $script_dir"
+    "$chezmoi_bin" init --source="$script_dir"
     
-    # Dejar que chezmoi haga todo su trabajo en orden
-    "$chezmoi_bin" init --apply --source="$script_dir"
+    # FASE 1: Copiar solo archivos de configuración
+    log_step "📁 FASE 1: Copiando archivos de configuración..."
+    log_info "Aplicando: ~/.config/, ~/.Library/, dotfiles, etc."
     
-    log_success "Chezmoi completado - archivos y scripts aplicados"
+    if "$chezmoi_bin" apply --exclude scripts; then
+        log_success "Archivos de configuración copiados correctamente"
+    else
+        log_warning "Algunos archivos pueden no haberse copiado correctamente, pero continuando..."
+    fi
+    
+    # FASE 2: Ejecutar scripts de instalación
+    log_step "🚀 FASE 2: Ejecutando scripts de instalación..."
+    log_info "Scripts en orden: 01-Homebrew → 02-Paquetes → 03-1Password → 04-TouchID → 05-mise → 06-Android"
+    
+    if "$chezmoi_bin" apply --include scripts; then
+        log_success "Scripts ejecutados correctamente"
+    else
+        log_warning "Algunos scripts fallaron, pero la configuración base está aplicada"
+    fi
+    
+    log_success "Chezmoi completado - archivos copiados primero, luego scripts ejecutados"
 }
 
 # Función principal
@@ -121,10 +138,10 @@ main() {
     # Instalar chezmoi
     install_chezmoi
     
-    # Aplicar todo con chezmoi (archivos + scripts en orden correcto)
+    # Aplicar chezmoi en dos fases: primero archivos, luego scripts
     apply_chezmoi_config
     
-    log_success "Configuración base de chezmoi aplicada. Los pasos finales se ejecutarán dentro de chezmoi."
+    log_success "¡Instalación completa! Archivos copiados primero, scripts ejecutados después."
 }
 
 # Ejecutar función principal
