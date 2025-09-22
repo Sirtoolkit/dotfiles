@@ -41,7 +41,7 @@ packages:
     - eza
     - starship
     - tmux
-    - gdu
+    - yazi
     - ollama
     - sshs
     - lazygit
