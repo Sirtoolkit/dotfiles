@@ -7,8 +7,6 @@ packages:
     - mobile-dev-inc/tap
     - kopecmaciej/vi-mongo
     - FelixKratz/formulae
-    # - osx-cross/arm
-    # - osx-cross/avr
     - qmk/qmk
   brews:
     - bash-completion@2
@@ -58,7 +56,6 @@ packages:
     - sops
     - ripgrep
     - opencode
-    - bitwarden-cli
     - tree-sitter-cli
     - atuin
     - sketchybar
@@ -66,34 +63,18 @@ packages:
     - rbenv
     - ruby-build
   casks:
-    # - ledger-live
-    # - iina
-    # - parallels
-    # - setapp
-    # - sf-symbols
-    # - rectangle
-    # - love
-    # - microsoft-excel
-    # - godot
-    # - arduino-ide
-    # - warp
-    # - visual-studio-code
-    - bitwarden
+    - love
+    - microsoft-excel
+    - godot
+    - visual-studio-code
     - google-chrome
     - postman
-    - cursor
     - ghostty
     - arc
-    - imageoptim
-    - keka
     - obsidian
-    - openmtp
     - orbstack
     - raycast
-    - transmission
-    - xcodes
     - font-caskaydia-cove-nerd-font
-    - minisim
     - slack
     - whatsapp
     - jordanbaird-ice
@@ -105,3 +86,5 @@ packages:
     - nikitabobko/tap/aerospace
     - karabiner-elements
     - hammerspoon
+    - figma
+    - font-hack-nerd-font

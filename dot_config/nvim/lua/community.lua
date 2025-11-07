@@ -6,7 +6,7 @@ return {
   { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.pack.terraform" },
   { import = "astrocommunity.pack.yaml" },
-  { import = "astrocommunity.pack.php" },
+  { import = "astrocommunity.pack.laravel" },
   { import = "astrocommunity.pack.tailwindcss" },
   { import = "astrocommunity.pack.prisma" },
   { import = "astrocommunity.pack.nginx" },
