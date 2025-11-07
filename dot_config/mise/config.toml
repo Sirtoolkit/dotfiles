@@ -1,6 +1,5 @@
 [tools]
 node = "lts"
-ruby = "latest"
 flutter = "latest"
 terraform = "latest"
 rust = "latest"

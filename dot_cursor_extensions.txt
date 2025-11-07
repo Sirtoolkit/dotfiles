@@ -42,4 +42,3 @@ tamasfe.even-better-toml
 vscodevim.vim
 vue.volar
 vue.vscode-typescript-vue-plugin
-wakatime.vscode-wakatime

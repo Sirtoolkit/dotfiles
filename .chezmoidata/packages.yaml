@@ -6,6 +6,7 @@ packages:
     - jorgerojas26/lazysql
     - mobile-dev-inc/tap
     - kopecmaciej/vi-mongo
+    - FelixKratz/formulae
     # - osx-cross/arm
     # - osx-cross/avr
     - qmk/qmk
@@ -59,6 +60,11 @@ packages:
     - opencode
     - bitwarden-cli
     - tree-sitter-cli
+    - atuin
+    - sketchybar
+    - koekeishiya/formulae/skhd
+    - rbenv
+    - ruby-build
   casks:
     # - ledger-live
     # - iina
@@ -72,6 +78,7 @@ packages:
     # - arduino-ide
     # - warp
     # - visual-studio-code
+    - bitwarden
     - google-chrome
     - postman
     - cursor
@@ -95,4 +102,6 @@ packages:
     - datagrip
     - google-cloud-sdk
     - android-commandlinetools
-    - amethyst
+    - nikitabobko/tap/aerospace
+    - karabiner-elements
+    - hammerspoon

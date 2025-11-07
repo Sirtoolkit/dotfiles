@@ -1,0 +1,13 @@
+# APPS #
+#
+# Obsidian
+# alt - o : run-external "open" "-a" "/Applications/Obsidian.app"
+
+# Show date
+alt - d : osascript ~/.config/skhd/applescripts/pop.scpt
+
+# Close notifications
+ralt - n : osascript ~/.config/skhd/applescripts/notifications.scpt
+
+# Ghostty
+# alt - g : run-external "open" "-a" "/Applications/Ghostty.app"
