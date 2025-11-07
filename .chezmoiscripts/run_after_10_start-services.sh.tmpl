@@ -4,15 +4,15 @@ set -e
 
 if command -v skhd >/dev/null 2>&1; then
   echo "Activando skhd..."
-  skhd --start-service
+  skhd --start-service || true
 else
   echo "skhd no encontrado, saltando."
 fi
 
 if command -v sketchybar >/dev/null 2>&1; then
   echo "Activando sketchybar..."
-  sketchybar --config ~/.config/sketchybar/sketchybarrc
-  sketchybar --load-font font-hack-nerd-font
+  sketchybar --config ~/.config/sketchybar/sketchybarrc || true
+  sketchybar --load-font font-hack-nerd-font || true
 else
   echo "sketchybar no encontrado, saltando."
 fi

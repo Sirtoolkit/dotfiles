@@ -62,6 +62,7 @@ packages:
     - koekeishiya/formulae/skhd
     - rbenv
     - ruby-build
+    - gemini-cli
   casks:
     - love
     - microsoft-excel

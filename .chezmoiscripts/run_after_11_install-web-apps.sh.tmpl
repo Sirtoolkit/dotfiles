@@ -1,0 +1,27 @@
+#!{{ lookPath "sh" }}
+
+if ! command -v pake >/dev/null 2>&1; then
+  pnpm install -g pake-cli
+else
+  echo "pake-cli ya está instalado. Saltando instalación."
+fi
+
+pake https://music.youtube.com --name 'Youtube Music'
+pake https://github.com --name 'GitHub'
+pake https://gemini.google.com --name 'Gemini'
+
+# Instalar las apps en /Applications
+if [ -d "Youtube Music.app" ]; then
+  mv "Youtube Music.app" /Applications/
+  echo "Instalada Youtube Music en /Applications"
+fi
+
+if [ -d "GitHub.app" ]; then
+  mv "GitHub.app" /Applications/
+  echo "Instalada GitHub en /Applications"
+fi
+
+if [ -d "Gemini.app" ]; then
+  mv "Gemini.app" /Applications/
+  echo "Instalada Gemini en /Applications"
+fi
