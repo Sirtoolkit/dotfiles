@@ -9,6 +9,14 @@ else
   echo "skhd no encontrado, saltando."
 fi
 
+if command -v aerospace >/dev/null 2>&1; then
+  echo "Starting AeroSpace..."
+  open -a AeroSpace &
+  sleep 2
+else
+  echo "AeroSpace not found, skipping."
+fi
+
 if command -v sketchybar >/dev/null 2>&1; then
   echo "Activando sketchybar..."
   sketchybar --config ~/.config/sketchybar/sketchybarrc || true

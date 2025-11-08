@@ -40,7 +40,7 @@ if [ -d "$WINDOW_NAME_DIR" ]; then
   echo "👍 tmux-window-name ya está instalado. Omitiendo."
 else
   echo "🐍 Instalando libtmux con pip..."
-  python3 -m pip install --user libtmux
+  python3 -m pip install --user --break-system-packages libtmux
   echo "✅ libtmux instalado correctamente."
   echo "🚀 Clonando tmux-window-name en $WINDOW_NAME_DIR..."
   git clone "$WINDOW_NAME_REPO" "$WINDOW_NAME_DIR"

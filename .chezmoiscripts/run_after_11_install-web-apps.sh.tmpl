@@ -1,9 +1,32 @@
 #!{{ lookPath "sh" }}
 
+# Configurar PNPM_HOME si no existe
+if [ -z "$PNPM_HOME" ]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+fi
+
+# Asegurar que PNPM_HOME está en el PATH
+if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
+  export PATH="$PNPM_HOME:$PATH"
+fi
+
+# Crear directorio si no existe
+mkdir -p "$PNPM_HOME"
+
 if ! command -v pake >/dev/null 2>&1; then
+  echo "Instalando pake-cli..."
   pnpm install -g pake-cli
+  # Recargar el PATH después de la instalación
+  export PATH="$PNPM_HOME:$PATH"
 else
   echo "pake-cli ya está instalado. Saltando instalación."
+fi
+
+# Verificar que pake esté disponible
+if ! command -v pake >/dev/null 2>&1; then
+  echo "Error: pake no se encuentra después de la instalación."
+  echo "Por favor, ejecuta 'pnpm setup' manualmente y vuelve a intentar."
+  exit 1
 fi
 
 pake https://music.youtube.com --name 'Youtube Music'

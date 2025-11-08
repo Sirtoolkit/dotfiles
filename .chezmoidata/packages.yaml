@@ -27,6 +27,7 @@ packages:
     - mas
     - mise
     - platformio
+    - pipx
     - swiftformat
     - swiftlint
     - tldr
@@ -82,7 +83,7 @@ packages:
     - discord
     - devpod
     - datagrip
-    - google-cloud-sdk
+    - gcloud-cli
     - android-commandlinetools
     - nikitabobko/tap/aerospace
     - karabiner-elements
