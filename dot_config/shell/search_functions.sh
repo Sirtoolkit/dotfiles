@@ -1,0 +1,3 @@
+dgrep() {
+	als | grep "$@"
+}

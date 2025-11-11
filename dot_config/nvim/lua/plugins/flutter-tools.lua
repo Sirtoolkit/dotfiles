@@ -3,13 +3,20 @@ return {
 		"akinsho/flutter-tools.nvim",
 		lazy = true,
 		opts = {
-			dev_log = { enabled = false },
+			debugger = {
+				enabled = true,
+				exception_breakpoints = {},
+				evaluate_to_string_in_debug_views = true,
+			},
+			dev_log = {
+				enabled = false,
+			},
 		},
 	},
 	{
 		"AstroNvim/astrolsp",
 		---@param opts AstroLSPOpts
-		opts = function(plugin, opts)
+		opts = function(_, opts)
 			opts.servers = opts.servers or {}
 			table.insert(opts.servers, "dartls")
 
@@ -27,6 +34,8 @@ return {
 						settings = {
 							showTodos = true,
 							completeFunctionCalls = true,
+							enableSnippets = true,
+							updateImportsOnRename = true,
 						},
 					},
 				},

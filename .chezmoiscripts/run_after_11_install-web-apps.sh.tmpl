@@ -29,22 +29,35 @@ if ! command -v pake >/dev/null 2>&1; then
   exit 1
 fi
 
-pake https://music.youtube.com --name 'Youtube Music'
-pake https://github.com --name 'GitHub'
-pake https://gemini.google.com --name 'Gemini'
+if [ ! -d "/Applications/Youtube Music.app" ]; then
+  pake https://music.youtube.com --name 'Youtube Music'
+fi
+
+if [ ! -d "/Applications/GitHub.app" ]; then
+  pake https://github.com --name 'GitHub'
+fi
+
+if [ ! -d "/Applications/Gemini.app" ]; then
+  pake https://gemini.google.com --name 'Gemini'
+fi
 
 # Instalar las apps en /Applications
-if [ -d "Youtube Music.app" ]; then
-  mv "Youtube Music.app" /Applications/
+if [ -d "$HOME/Youtube Music.app" ]; then
+  mv "$HOME/Youtube Music.app" /Applications/
   echo "Instalada Youtube Music en /Applications"
 fi
 
-if [ -d "GitHub.app" ]; then
-  mv "GitHub.app" /Applications/
+if [ -d "$HOME/GitHub.app" ]; then
+  mv "$HOME/GitHub.app" /Applications/
   echo "Instalada GitHub en /Applications"
 fi
 
-if [ -d "Gemini.app" ]; then
-  mv "Gemini.app" /Applications/
+if [ -d "$HOME/Gemini.app" ]; then
+  mv "$HOME/Gemini.app" /Applications/
   echo "Instalada Gemini en /Applications"
 fi
+
+# Eliminar archivos .dmg generados
+rm -f "$HOME/Youtube Music.dmg"
+rm -f "$HOME/GitHub.dmg"
+rm -f "$HOME/Gemini.dmg"
