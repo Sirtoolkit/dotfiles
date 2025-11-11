@@ -16,6 +16,7 @@ return {
 					["<leader>FH"] = { "<cmd>FlutterRestart<cr>", desc = "Hot Restart" },
 					["<leader>Fq"] = { "<cmd>FlutterQuit<cr>", desc = "Quit App" },
 					["<leader>Fp"] = { "<cmd>FlutterPubGet<cr>", desc = "Get Packages" },
+					["<leader>Fc"] = { "<cmd>FlutterLogClear<cr>", desc = "Clears the log buffer" },
 
 					-- Depuración (DAP)
 					["<leader>Fd"] = {
@@ -60,15 +61,24 @@ return {
 						end,
 						desc = "DAP: Step Out",
 					},
-					-- ["<leader>Frr"] = { function() require("dapui").toggle() end, desc = "DAP: Toggle UI" },
 
 					-- Utilidades
 					["<leader>Fo"] = { "<cmd>FlutterOpenDevTools<cr>", desc = "Open DevTools" },
 					["<leader>Fl"] = { "<cmd>FlutterDevices<cr>", desc = "Flutter Devices" },
 					["<leader>Fe"] = { "<cmd>FlutterEmulators<cr>", desc = "Flutter Emulators" },
-					["<leader>Fc"] = { "<cmd>FlutterCopyProfilerUrl<cr>", desc = "Copy Profiler URL" },
 
-					--  ["<C-s>"] = { ":w!<cr>", desc = "Save File" },
+					gt = {
+						function()
+							require("astrocore.buffer").nav(vim.v.count1)
+						end,
+						desc = "Next buffer",
+					},
+					gT = {
+						function()
+							require("astrocore.buffer").nav(-vim.v.count1)
+						end,
+						desc = "Previous buffer",
+					},
 				},
 				t = {},
 			},
@@ -86,12 +96,11 @@ return {
 						end,
 						desc = "Hover symbol details",
 					},
-					gD = {
+					gd = {
 						function()
-							vim.lsp.buf.declaration()
+							vim.lsp.buf.definition()
 						end,
-						desc = "Declaration of current symbol",
-						cond = "textDocument/declaration",
+						desc = "Jump to definition",
 					},
 				},
 			},

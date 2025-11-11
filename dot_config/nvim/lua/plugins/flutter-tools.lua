@@ -7,6 +7,29 @@ return {
 				enabled = true,
 				exception_breakpoints = {},
 				evaluate_to_string_in_debug_views = true,
+				register_configurations = function(paths)
+					require("dap").configurations.dart = {
+						{
+							type = "dart",
+							request = "launch",
+							name = "PROD",
+							dartSdkPath = paths.dart_bin,
+							flutterSdkPath = paths.flutter_bin,
+							program = "${workspaceFolder}/lib/main.dart",
+							cwd = "${workspaceFolder}",
+						},
+						{
+							type = "dart",
+							request = "launch",
+							name = "DEV",
+							flutterMode = "profile",
+							dartSdkPath = paths.dart_bin,
+							flutterSdkPath = paths.flutter_bin,
+							program = "${workspaceFolder}/lib/main_dev.dart",
+							cwd = "${workspaceFolder}",
+						},
+					}
+				end,
 			},
 			dev_log = {
 				enabled = false,
