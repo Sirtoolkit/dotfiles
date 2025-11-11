@@ -1,43 +1,23 @@
----@type LazySpec
 return {
-  {
-    "NickvanDyke/opencode.nvim",
-    dependencies = { "folke/snacks.nvim" },
-    opts = {
-      auto_fallback_to_embedded = false,
-    },
-    keys = {
-      {
-        "<leader>Oa",
-        function() require("opencode").ask() end,
-        mode = "n",
-        desc = "Ask opencode",
-      },
-      {
-        "<leader>Oa",
-        function() require("opencode").ask "@selection: " end,
-        mode = "v",
-        desc = "Ask opencode",
-      },
-      {
-        "<leader>Op",
-        function() require("opencode").select_prompt() end,
-        mode = { "n", "v" },
-        desc = "Execute opencode action…",
+  "NickvanDyke/opencode.nvim",
+  dependencies = {
+    ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+    { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+    {
+      "AstroNvim/astrocore",
+      opts = {
+        mappings = {
+          n = {
+            ["<leader>o"] = { name = "󰭹 OpenCode" },
+            ["<leader>og"] = { function() require("opencode").toggle() end, desc = "OpenCode Start" },
+          },
+        },
       },
     },
   },
-  -- {
-  --   "zbirenbaum/copilot.lua",
-  --   cmd = "Copilot",
-  --   event = "InsertEnter",
-  --   opts = {
-  --     suggestion = { enabled = false },
-  --     panel = { enabled = false },
-  --     filetypes = {
-  --       markdown = true,
-  --       help = true,
-  --     },
-  --   },
-  -- },
+  config = function()
+    ---@type opencode.Opts
+    -- Required for `opts.auto_reload`.
+    vim.o.autoread = true
+  end,
 }
