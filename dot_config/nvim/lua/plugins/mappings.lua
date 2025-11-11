@@ -5,7 +5,6 @@ return {
     ---@type AstroCoreOpts
     opts = {
       mappings = {
-        -- first key is the mode
         n = {
           gt = {
             function() require("astrocore.buffer").nav(vim.v.count1) end,
