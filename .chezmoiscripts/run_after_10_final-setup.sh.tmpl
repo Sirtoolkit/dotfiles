@@ -54,11 +54,6 @@ final_setup() {
     else
         log_success "zsh ya es el shell por defecto"
     fi
-    
-    # Información final
-    if [ -f "$HOME/.zshrc" ]; then
-        log_success "Configuración lista - abre una nueva terminal o ejecuta: source ~/.zshrc"
-    fi
 }
 
 # Función para mostrar resumen final
@@ -67,30 +62,20 @@ show_summary() {
     
     echo "\n${GREEN}✅ Instalación exitosa de tu entorno de desarrollo${NC}"
     echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden perfecto):${NC}"
-    echo "  1️⃣ Homebrew installation"
-    echo "  2️⃣ Homebrew packages (mise, tools, etc.)"
-    echo "  3️⃣ 1Password agent setup"
-    echo "  4️⃣ macOS TouchID for sudo"
-    echo "  5️⃣ mise tools (Java, Node, Python, etc.)"
-    echo "  6️⃣ Android Platform Tools (con Java disponible)"
-    echo "  7️⃣ tmux plugins y configuración"
-    echo "  8️⃣ Cursor extensions"
+    echo "  1️⃣ Homebrew installation and packages"
+    echo "  2️⃣ macOS TouchID for sudo"
+    echo "  3️⃣ mise tools (Java, Node, Python, etc.)"
+    echo "  4️⃣ Android Platform Tools (con Java disponible)"
+    echo "  5️⃣ tmux plugins y configuración"
+    echo "  6️⃣ Global npm packages (nx, opencommit)"
+    echo "  7️⃣ Start services (skhd, aerospace, sketchybar)"
+    echo "  8️⃣ Install web apps (Youtube Music, GitHub, Gemini)"
+    echo "  9️⃣ Populate secrets (Dashlane, opencommit config)"
     echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
-    
-    echo "\n${YELLOW}📝 Próximos pasos:${NC}"
-    echo "  1. Abre una nueva terminal o ejecuta: source ~/.zshrc"
-    echo "  2. ¡Todo está listo para usar!"
     
     echo "\n${YELLOW}💡 Si algo falló:${NC}"
     echo "  • Ejecuta: chezmoi apply"
     echo "  • Para herramientas específicas: mise install"
-    
-    echo "\n${BLUE}💡 Comandos útiles:${NC}"
-    echo "  • purge-config          - Limpiar configuraciones"
-    echo "  • purge-all-mobile-dev-cache - Limpiar caché de desarrollo"
-    echo "  • mise-purge-all        - Limpiar herramientas de mise"
-    echo "  • brew-purge-formula    - Limpiar paquetes de Homebrew"
-    echo "  • brew-purge-cask       - Limpiar aplicaciones de Homebrew"
     
     echo "\n${GREEN}🚀 ¡Tu entorno está listo para usar!${NC}\n"
 }
