@@ -21,20 +21,9 @@
       "url": "https://api.githubcopilot.com/mcp/",
       "enabled": true,
     },
-    "flutter-docs": {
+    "dart": {
       "type": "local",
-      "command": ["npx", "-y", "flutter-mcp", "mcp"],
-      "enabled": true,
-    },
-    "Framelink MCP for Figma": {
-      "type": "local",
-      "enabled": true,
-      "command": [
-        "-y",
-        "figma-developer-mcp",
-        "--figma-api-key=YOUR-KEY",
-        "--stdio",
-      ],
+      "command": ["dart", "mcp-server"],
     },
   },
 }
