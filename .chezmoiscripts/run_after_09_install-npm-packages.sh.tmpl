@@ -1,5 +1,4 @@
 #!/bin/bash
-# Instala nx globalmente usando npm, solo si no está instalado
 set -e
 
 if ! command -v npm >/dev/null 2>&1; then
@@ -13,3 +12,11 @@ else
   echo "Instalando nx globalmente con npm..."
   npm add --global nx
 fi
+
+if command -v oco >/dev/null 2>&1; then
+  echo "OpenCommit ya está instalado globalmente. Saltando instalación."
+else
+  echo "Instalando OpenCommit globalmente con npm..."
+  npm install -g opencommit
+fi
+
