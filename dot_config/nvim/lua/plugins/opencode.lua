@@ -13,12 +13,11 @@ return {
     vim.o.autoread = true
 
     vim.keymap.set({ "n", "x" }, "<leader>o", function() require("opencode").toggle() end, { desc = "󰭹 Opencode" })
-
     vim.keymap.set(
       { "n", "x" },
       "<leader>k",
-      function() require("opencode").prompt "@this" end,
-      { desc = "ask opencode" }
+      function() require("opencode").ask("@this: ", { submit = true }) end,
+      { desc = "󰭹 Opencode Select" }
     )
   end,
 }
