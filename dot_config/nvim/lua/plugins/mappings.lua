@@ -33,6 +33,10 @@ return {
             function() vim.lsp.buf.definition() end,
             desc = "Jump to definition",
           },
+          ["<leader>gc"] = {
+            function() require("user.opencommit").run() end,
+            desc = "Generar commit (OpenCommit)",
+          },
         },
       },
     },
