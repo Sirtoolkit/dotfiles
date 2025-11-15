@@ -16,8 +16,8 @@ enable_keyboard() {
     echo "➡️  Looking for available emulators..."
     
     # Get the list of AVDs and store it in an array
-    local -a avds
-    avds=(${(f)"$(emulator -list-avds)"})
+    local avds
+    avds=$(emulator -list-avds)
     
     # Check if any emulators exist
     if [ ${#avds[@]} -eq 0 ]; then
