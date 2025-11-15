@@ -13,3 +13,7 @@ fi
 if [ -f "$HOME/.config/shell/android/android_delete_system_image.sh" ]; then
   source "$HOME/.config/shell/android/android_delete_system_image.sh"
 fi
+
+if [ -f "$HOME/.config/shell/android/android_enable_keyboard.sh" ]; then
+  source "$HOME/.config/shell/android/android_enable_keyboard.sh"
+fi

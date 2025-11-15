@@ -119,7 +119,7 @@ done
     local current_id current_name
 
     while IFS= read -r line; do
-        if [[ "$line" =~ "id: ([0-9]+)' or \"(.*)\"" ]]; then
+        if [[ "$line" =~ "id: ([0-9]+) or \"(.*)\"" ]]; then
             current_id=$match[1]
             current_name=""
         elif [[ "$line" =~ 'Name: '(.*) ]]; then
