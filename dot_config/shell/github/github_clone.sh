@@ -1,4 +1,4 @@
-github-list-repos() {
+ghclone() {
     # Check if 'gh' command exists
     if ! command -v gh &>/dev/null; then
         echo "❌ Error: 'gh' command not found."

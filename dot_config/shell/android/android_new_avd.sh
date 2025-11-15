@@ -1,8 +1,16 @@
-create-emulator() {
+new-avd() {
 	  # Check if SDK tools exist
     if ! command -v sdkmanager &>/dev/null || ! command -v avdmanager &>/dev/null; then
         echo "❌ Error: Android SDK command-line tools not found."
-        echo "    Make sure the tools are in your \$PATH."
+        echo "    Make sure: tools are in your \$PATH."
+        return 1
+    fi
+
+    # Check if fzf command exists
+    if ! command -v fzf &>/dev/null; then
+        echo "❌ Error: 'fzf' command not found."
+        echo "   Make sure fzf is installed and in your \$PATH."
+        echo "   Install with: brew install fzf"
         return 1
     fi
 
@@ -10,28 +18,32 @@ create-emulator() {
     local arch_filter device_type_filter
 
     echo "➡️  Step 0: Let\'s configure your new emulator."
-    PS3="    Please choose the CPU architecture (Intel is faster on most PCs): "
-    select arch_choice in "Intel (x86_64)" "ARM (arm64-v8a)"; do
-        if [[ "$arch_choice" == "Intel (x86_64)" ]]; then
-            arch_filter="x86_64"
-            break
-        elif [[ "$arch_choice" == "ARM (arm64-v8a)" ]]; then
-            arch_filter="arm64-v8a"
-            break
-        else
-            echo "    Invalid option. Try again."
-        fi
-    done
+    
+    # Use fzf to select CPU architecture
+    local arch_choice
+    arch_choice=$(printf "Intel (x86_64)\nARM (arm64-v8a)\n" | fzf --prompt="Select CPU architecture (Intel is faster on most PCs): " --height=8 --border)
+    
+    if [[ -z "$arch_choice" ]]; then
+        echo "❌ No architecture selected."
+        return 1
+    fi
+    
+    if [[ "$arch_choice" == "Intel (x86_64)" ]]; then
+        arch_filter="x86_64"
+    elif [[ "$arch_choice" == "ARM (arm64-v8a)" ]]; then
+        arch_filter="arm64-v8a"
+    fi
 
-    PS3="    What type of device do you want to create? "
-    select device_type_choice in "Phone" "Tablet"; do
-        if [[ -n "$device_type_choice" ]]; then
-            device_type_filter="$device_type_choice"
-            break
-        else
-            echo "    Invalid option. Try again."
-        fi
-done
+    # Use fzf to select device type
+    local device_type_choice
+    device_type_choice=$(printf "Phone\nTablet\n" | fzf --prompt="What type of device do you want to create? " --height=8 --border)
+    
+    if [[ -z "$device_type_choice" ]]; then
+        echo "❌ No device type selected."
+        return 1
+    fi
+    
+    device_type_filter="$device_type_choice"
     echo "---"
 
     # --- STEP 1: SELECT SYSTEM IMAGE (FILTERED & SEPARATED) ---
@@ -80,34 +92,30 @@ done
         return 1
     fi
 
-    local counter=1
+    # Create fzf options with status indicators
+    local -a fzf_options
     if [ ${#installed_images[@]} -gt 0 ]; then
-        echo "--- INSTALLED (Ready to use) ---"
         for img in "${installed_images[@]}"; do
-            echo "  $counter) $(format_image_name_zsh "$img")"
-            ((counter++))
+            fzf_options+=("✅ $(format_image_name_zsh "$img")|$img")
         done
     fi
     if [ ${#available_images[@]} -gt 0 ]; then
-        echo "--- AVAILABLE (Will be downloaded) ---"
         for img in "${available_images[@]}"; do
-            echo "  $counter) $(format_image_name_zsh "$img")"
-            ((counter++))
+            fzf_options+=("⬇️  $(format_image_name_zsh "$img")|$img")
         done
     fi
 
-    local choice
+    local selected_option
+    selected_option=$(printf '%s\n' "${fzf_options[@]}" | fzf --prompt="Select system image: " --height=15 --border --with-nth=1 --delimiter='|')
+    
+    if [[ -z "$selected_option" ]]; then
+        echo "❌ No system image selected."
+        return 1
+    fi
+    
     local selected_image
-    while true; do
-        read "choice?    Please choose a number: "
-        if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#all_images[@]} )); then
-            selected_image=${all_images[$choice]}
-            echo "    You selected: $(format_image_name_zsh "$selected_image") ($selected_image)"
-            break
-        else
-            echo "    Invalid option. Please enter a number between 1 and ${#all_images[@]}. "
-        fi
-    done
+    selected_image=$(echo "$selected_option" | cut -d'|' -f2-)
+    echo "    You selected: $(format_image_name_zsh "$selected_image") ($selected_image)"
 
     echo "    Installing '$selected_image' if necessary..."
     yes | sdkmanager "$selected_image" > /dev/null
@@ -147,15 +155,25 @@ done
     fi
 
     local selected_device_id device_display_name
-    select device_display_name in "${device_names[@]}"; do
-        if [[ -n "$device_display_name" ]]; then
-            selected_device_id=${device_ids[$REPLY]}
-            echo "    You selected: $device_display_name (ID: $selected_device_id)"
-            break
-        else
-            echo "    Invalid option."
-        fi
+    
+    # Create fzf options with device names and IDs
+    local -a fzf_device_options
+    for i in {1..${#device_names[@]}}; do
+        local idx=$((i-1))
+        fzf_device_options+=("${device_names[$idx]}|${device_ids[$idx]}")
     done
+    
+    local selected_device_option
+    selected_device_option=$(printf '%s\n' "${fzf_device_options[@]}" | fzf --prompt="Select device profile: " --height=15 --border --with-nth=1 --delimiter='|')
+    
+    if [[ -z "$selected_device_option" ]]; then
+        echo "❌ No device profile selected."
+        return 1
+    fi
+    
+    device_display_name=$(echo "$selected_device_option" | cut -d'|' -f1)
+    selected_device_id=$(echo "$selected_device_option" | cut -d'|' -f2)
+    echo "    You selected: $device_display_name (ID: $selected_device_id)"
     echo "---"
 
     # --- STEP 3: NAME THE EMULATOR (WITH SUGGESTION) ---

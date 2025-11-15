@@ -1,5 +1,5 @@
-if [ -f "$HOME/.config/shell/android/android_create_emulator.sh" ]; then
-  source "$HOME/.config/shell/android/android_create_emulator.sh"
+if [ -f "$HOME/.config/shell/android/android_new_avd.sh" ]; then
+  source "$HOME/.config/shell/android/android_new_avd.sh"
 fi
 
 if [ -f "$HOME/.config/shell/android/android_launch_emulator.sh" ]; then
