@@ -3,6 +3,13 @@ delete-system-image() {
         echo "❌ Error: 'sdkmanager' command not found."
         return 1
     fi
+
+    # Add fzf existence check
+    if ! command -v fzf &>/dev/null; then
+        echo "❌ Error: 'fzf' command not found."
+        echo "   Please install fzf to use this script (e.g., brew install fzf)."
+        return 1
+    fi
     
     echo "➡️  Looking for installed system-images..."
     local -a installed_images
@@ -15,25 +22,26 @@ delete-system-image() {
     fi
     
     local image_path
-    PS3="   Choose the system-image you want to UNINSTALL: "
-    select image_path in "${installed_images[@]}"; do
-        if [[ -n "$image_path" ]]; then
-            echo "⚠️  Warning! You are about to uninstall the image '$image_path'."
-            local confirm
-            read "confirm?Are you sure? (yes/no): "
+    # Replace select with fzf
+    image_path=$(printf "%s\n" "${installed_images[@]}" | fzf --prompt="   Choose the system-image you want to UNINSTALL: ")
+
+    # Handle fzf cancellation
+    if [[ -z "$image_path" ]]; then
+        echo "   System image selection cancelled."
+        return 0
+    fi
             
-            if [[ "$confirm" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-                echo "🗑️  Uninstalling '$image_path'..."
-                sdkmanager --uninstall "$image_path"
-                echo "✅ Image successfully uninstalled."
-            else
-                echo "👍 Uninstall aborted."
-            fi
-            break
-        else
-            echo "   Invalid option. Please try again."
-        fi
-    done
+    echo "⚠️  Warning! You are about to uninstall the image '$image_path'."
+    local confirm
+    read "confirm?Are you sure? (yes/no): "
+            
+    if [[ "$confirm" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+        echo "🗑️  Uninstalling '$image_path'..."
+        sdkmanager --uninstall "$image_path"
+        echo "✅ Image successfully uninstalled."
+    else
+        echo "👍 Uninstall aborted."
+    fi
 
     return 0
 }

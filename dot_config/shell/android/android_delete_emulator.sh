@@ -4,6 +4,13 @@ delete-emulator() {
         return 1
     fi
 
+    # Add fzf existence check
+    if ! command -v fzf &>/dev/null; then
+        echo "❌ Error: 'fzf' command not found."
+        echo "   Please install fzf to use this script (e.g., brew install fzf)."
+        return 1
+    fi
+
     echo "➡️  Looking for available emulators..."
     local -a avds
     avds=(${(f)"$(emulator -list-avds)"})
@@ -14,25 +21,26 @@ delete-emulator() {
     fi
 
     local avd_name
-    PS3="   Choose the emulator you want to DELETE: "
-    select avd_name in "${avds[@]}"; do
-        if [[ -n "$avd_name" ]]; then
-            echo "⚠️  Warning! You are about to permanently delete the emulator '$avd_name'."
-            local confirm
-            read "confirm?Are you sure? This action cannot be undone. (yes/no): "
+    # Replace select with fzf
+    avd_name=$(printf "%s\n" "${avds[@]}" | fzf --prompt="   Choose the emulator you want to DELETE: ")
 
-            if [[ "$confirm" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-                echo "🗑️  Deleting '$avd_name'..."
-                avdmanager delete avd -n "$avd_name"
-                echo "✅ Emulator '$avd_name' successfully deleted."
-            else
-                echo "👍 Deletion aborted."
-            fi
-            break
-        else
-            echo "   Invalid option. Please try again."
-        fi
-    done
+    # Handle fzf cancellation
+    if [[ -z "$avd_name" ]]; then
+        echo "   Emulator selection cancelled."
+        return 0
+    fi
+
+    echo "⚠️  Warning! You are about to permanently delete the emulator '$avd_name'."
+    local confirm
+    read "confirm?Are you sure? This action cannot be undone. (yes/no): "
+
+    if [[ "$confirm" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+        echo "🗑️  Deleting '$avd_name'..."
+        avdmanager delete avd -n "$avd_name"
+        echo "✅ Emulator '$avd_name' successfully deleted."
+    else
+        echo "👍 Deletion aborted."
+    fi
 
     return 0
 }

@@ -5,33 +5,40 @@ launch-emulator() {
         echo "   Make sure the Android SDK tools are in your \$PATH."
         return 1
     fi
-    
+
+    # Check if 'fzf' command exists
+    if ! command -v fzf &>/dev/null; then
+        echo "❌ Error: 'fzf' command not found."
+        echo "   Please install fzf to use this script (e.g., brew install fzf)."
+        return 1
+    fi
+
     echo "➡️  Looking for available emulators..."
-    
+
     # Get the list of AVDs and store it in an array
     local -a avds
     avds=(${(f)"$(emulator -list-avds)"})
-    
+
     # Check if any emulators exist
     if [ ${#avds[@]} -eq 0 ]; then
         echo "❌ No emulators found."
         echo "   You can create a new one with the 'create-emulator' command."
         return 1
     fi
-    
-    # Create the interactive selection menu
+
+    # Use fzf to select the emulator
     local avd_name
-    PS3="   Choose the emulator you want to launch: "
-    select avd_name in "${avds[@]}"; do
-        if [[ -n "$avd_name" ]]; then
-            echo "🚀 Launching '$avd_name' in the background..."
-            # Execute in the background, detached from the terminal
-            nohup emulator @"$avd_name" > /dev/null 2>&1 &
-            break
-        else
-            echo "   Invalid option. Please try again."
-        fi
-    done
+    avd_name=$(printf "%s\n" "${avds[@]}" | fzf --prompt="   Choose the emulator you want to launch: ")
+
+    # Check if an emulator was selected
+    if [[ -z "$avd_name" ]]; then
+        echo "   Emulator selection cancelled."
+        return 0
+    fi
+
+    echo "🚀 Launching '$avd_name' in the background..."
+    # Execute in the background, detached from the terminal
+    nohup emulator @"$avd_name" > /dev/null 2>&1 &
 
     return 0
 }

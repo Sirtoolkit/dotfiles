@@ -8,22 +8,30 @@
   "mcp": {
     "firebase": {
       "type": "local",
-      "command": ["npx", "-y", "firebase-tools@latest", "mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "firebase-tools@latest",
+        "mcp"
+      ],
       "enabled": true,
     },
     "next-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "next-devtools-mcp@latest", "mcp"],
-      "enabled": true,
-    },
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
+      "command": [
+        "npx",
+        "-y",
+        "next-devtools-mcp@latest",
+        "mcp"
+      ],
       "enabled": true,
     },
     "dart": {
       "type": "local",
-      "command": ["dart", "mcp-server"],
+      "command": [
+        "dart",
+        "mcp-server"
+      ],
     },
   },
 }
