@@ -73,7 +73,7 @@ vim.opt.splitbelow = true -- Splitting a new window below the current one
 vim.opt.splitright = true -- Splitting a new window at the right of the current one
 vim.opt.tabstop = 2 -- Number of space in a tab
 vim.opt.termguicolors = true -- Enable 24-bit RGB color in the TUI
-vim.opt.timeoutlen = 500 -- Shorten key timeout length (bueno para which-key)
+vim.opt.timeoutlen = 1000 -- Tiempo de espera para atajos (1000ms = 1s)
 vim.opt.title = true -- Set terminal title to the filename and path
 vim.opt.undofile = true -- Enable persistent undo (guarda historial al cerrar)
 vim.opt.updatetime = 300 -- Length of time to wait before triggering plugins (git signs, etc)

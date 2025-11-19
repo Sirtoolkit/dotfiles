@@ -110,6 +110,14 @@ vim.keymap.set("n", "<Leader>du", function()
 	require("dapui").toggle()
 end, { desc = "Toggle Debugger UI" })
 
+-- Configurar 'q' para cerrar la ventana flotante de dap (como hover)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "dap-float",
+	callback = function()
+		vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true, silent = true })
+	end,
+})
+
 vim.keymap.set("n", "<Leader>dh", function()
 	require("dap.ui.widgets").hover()
 end, { desc = "Debugger Hover" })
