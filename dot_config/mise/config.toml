@@ -8,6 +8,9 @@ python = "latest"
 uv = "latest"
 java = "17"
 pnpm = "latest"
+dotnet = "latest"
+go = "latest"
+"pipx:psf/black" = "latest"
 
 [settings]
 experimental = true

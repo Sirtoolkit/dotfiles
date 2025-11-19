@@ -5,12 +5,12 @@ packages:
     - gromgit/brewtils
     - jorgerojas26/lazysql
     - mobile-dev-inc/tap
-    - kopecmaciej/vi-mongo
     - FelixKratz/formulae
     - qmk/qmk
   brews:
-    - bash-completion@2
     - bat
+    - php
+    - composer
     - btop
     - carapace
     - cloc
@@ -20,16 +20,10 @@ packages:
     - fzf
     - gh
     - git
-    - grep
     - jq
-    - kdoctor
-    - ktlint
     - mas
     - mise
     - platformio
-    - pipx
-    - swiftformat
-    - swiftlint
     - tldr
     - topgrade
     - trash
@@ -51,11 +45,9 @@ packages:
     - taproom
     - qmk
     - dashlane-cli
-    - vi-mongo
     - fastlane
     - sops
     - ripgrep
-    - opencode
     - tree-sitter-cli
     - atuin
     - sketchybar
@@ -63,6 +55,7 @@ packages:
     - rbenv
     - ruby-build
     - gemini-cli
+    - opencode
   casks:
     - love
     - microsoft-excel
@@ -75,10 +68,8 @@ packages:
     - obsidian
     - orbstack
     - raycast
-    - font-caskaydia-cove-nerd-font
     - slack
     - whatsapp
-    - jordanbaird-ice
     - discord
     - devpod
     - datagrip
@@ -89,3 +80,4 @@ packages:
     - hammerspoon
     - figma
     - font-hack-nerd-font
+    - font-caskaydia-cove-nerd-font

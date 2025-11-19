@@ -3,6 +3,9 @@
 {{ if eq .chezmoi.os "darwin" -}}
 set -e
 
+# Añadir Homebrew al PATH
+export PATH=/opt/homebrew/bin:$PATH
+
 # Colores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'

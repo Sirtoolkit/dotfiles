@@ -20,3 +20,9 @@ else
   npm install -g opencommit
 fi
 
+if command -v expo >/dev/null 2>&1; then
+  echo "Expo ya está instalado globalmente. Saltando instalación."
+else
+  echo "Instalando Expo globalmente con npm..."
+  npm install -g expo 
+fi
