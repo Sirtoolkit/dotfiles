@@ -23,9 +23,7 @@ return {
 
 		-- 2. Configurar None-ls
 		null_ls.setup({
-			-- Aquí puedes añadir fuentes manuales si no usas Mason para todo
 			sources = {},
-			-- Esta función se ejecuta cuando none-ls se conecta al buffer
 			on_attach = function(client, bufnr) end,
 		})
 	end,

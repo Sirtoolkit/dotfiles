@@ -157,5 +157,46 @@ return {
 				})
 			end,
 		})
+
+		require("lspconfig").intelephense.setup({
+			settings = {
+				intelephense = {
+					filetypes = { "php", "blade", "php_only" },
+					files = {
+						maxSize = 5000000, -- Aumentar el tamaño máximo de archivo
+					},
+					environment = {
+						includePaths = {
+							"vendor/laravel/framework/src", -- Solo incluir lo vital del framework
+							-- Agrega aquí otras librerías críticas si no te autocompleta
+						},
+					},
+					-- Excluir carpetas basura que no necesitas para autocompletado
+					exclude = {
+						"**/node_modules/**",
+						"**/vendor/**/Tests/**",
+						"**/vendor/**/tests/**",
+						"**/storage/**",
+						"**/public/**",
+					},
+				},
+			},
+			-- Esto ayuda a que encuentre la raíz del proyecto correctamente
+			root_dir = require("lspconfig").util.root_pattern("composer.json", ".git"),
+		})
+
+		require("conform").setup({
+			formatters_by_ft = {
+				php = { "pint" }, -- Usa Pint para PHP estándar
+				blade = { "blade-formatter" }, -- Usa blade-formatter para .blade.php
+			},
+			-- Formatear al guardar (sin bloquear si tarda mucho)
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_fallback = false, -- NO usar el formateo de Intelephense
+			},
+		})
+
+		vim.opt.wildignore:append({ "*/node_modules/*", "*/vendor/*", "*/storage/*" })
 	end,
 }
