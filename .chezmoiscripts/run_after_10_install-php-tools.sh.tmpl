@@ -1,0 +1,54 @@
+#!{{ lookPath "sh" }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+set -e
+
+# Añadir Homebrew al PATH
+export PATH=/opt/homebrew/bin:$PATH
+
+# Añadir Composer global bin al PATH
+export PATH=$HOME/.config/composer/vendor/bin:$PATH
+
+# Título del script para logs
+echo "🚀 Iniciando instalación de herramientas globales de PHP..."
+
+# 1. Verificar si Composer está instalado
+if ! command -v composer >/dev/null 2>&1; then
+    echo "❌ Error: Composer no se encuentra en el PATH."
+    echo "   Por favor, instala PHP y Composer antes de ejecutar este script."
+    exit 1
+fi
+
+# Lista de paquetes globales a instalar
+PACKAGES=(
+    "laravel/installer"
+    "laravel/valet"
+)
+
+for PACKAGE in "${PACKAGES[@]}"; do
+    if composer global show "$PACKAGE" >/dev/null 2>&1; then
+        echo "✅ $PACKAGE ya está instalado globalmente."
+    else
+        echo "📦 Instalando $PACKAGE globalmente..."
+        composer global require "$PACKAGE"
+        
+        if [ $? -eq 0 ]; then
+            echo "✅ $PACKAGE instalado correctamente."
+        else
+            echo "❌ Hubo un error instalando $PACKAGE."
+            exit 1
+        fi
+    fi
+done
+
+# Configuración específica para Valet
+if command -v valet >/dev/null 2>&1; then
+    echo "🔧 Ejecutando valet install..."
+    valet install
+    echo "✅ Valet configurado."
+else
+    echo "⚠️ Valet no se encontró en el PATH, asegúrate de que ~/.config/composer/vendor/bin esté en tu PATH."
+fi
+
+echo "🎉 Configuración de herramientas PHP completada."
+{{ end }}
