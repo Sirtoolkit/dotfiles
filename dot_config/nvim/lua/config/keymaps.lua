@@ -1,3 +1,75 @@
+-- Navigate vim panes better
+vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
+vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
+vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
+vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
+
+-- Navegación entre ventanas desde el Modo Terminal
+vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
+vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Terminal down window navigation" })
+vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Terminal up window navigation" })
+vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Terminal right window navigation" })
+
+vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
+vim.keymap.set("n", "<leader>w", "<Cmd>w<CR>")
+vim.keymap.set("n", "<leader>q", "<Cmd>confirm q<CR>")
+vim.keymap.set("n", "<leader>Q", "<Cmd>confirm qall<CR>")
+
+vim.keymap.set("n", "<Leader>n", "<cmd>enew<cr>", { desc = "New File" })
+vim.keymap.set({ "n", "i", "x" }, "<C-s>", "<cmd>silent! update! | redraw<cr>", { desc = "Force write" })
+vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>", { desc = "Force quit" })
+vim.keymap.set("n", "|", "<cmd>vsplit<cr>", { desc = "Vertical Split" })
+vim.keymap.set("n", "\\", "<cmd>split<cr>", { desc = "Horizontal Split" })
+vim.keymap.set("n", "<leader>uz", "<Cmd>HighlightColors Toggle<CR>", { desc = "Toggle color highlight" })
+
+vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, {})
+-- vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+
+vim.keymap.set("n", "<leader>gc", function()
+	-- Intenta cargar el módulo y ejecutar la función run()
+	local ok, opencommit = pcall(require, "user.opencommit")
+	if ok then
+		opencommit.run()
+	else
+		vim.notify("No se encontró el módulo lua/user/opencommit.lua", vim.log.levels.ERROR)
+	end
+end, { desc = "Generar commit (OpenCommit)" })
+
+vim.keymap.set("n", "<Leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "ToggleTerm float" })
+vim.keymap.set(
+	"n",
+	"<Leader>th",
+	"<cmd>ToggleTerm size=10 direction=horizontal<cr>",
+	{ desc = "ToggleTerm horizontal split" }
+)
+vim.keymap.set(
+	"n",
+	"<Leader>tv",
+	"<cmd>ToggleTerm size=80 direction=vertical<cr>",
+	{ desc = "ToggleTerm vertical split" }
+)
+vim.keymap.set("n", "<F7>", "<cmd>ToggleTerm<cr>", { desc = "Toogle terminal" })
+vim.keymap.set("n", "<Leader>ts", "<cmd>Telescope toggleterm_manager<cr>", { desc = "Search Toggleterms" })
+vim.keymap.set("n", "<Leader>td", "<cmd>LazyDocker<cr>", { desc = "Toggle LazyDocker" })
+
+vim.keymap.set("n", "<leader>fr", "<cmd>FlutterRun<cr>", { desc = "Run App" })
+vim.keymap.set("n", "<leader>fd", "<cmd>FlutterDebug<cr>", { desc = "Debug App" })
+vim.keymap.set("n", "<leader>fh", "<cmd>FlutterReload<cr>", { desc = "Hot Reload" })
+vim.keymap.set("n", "<leader>fH", "<cmd>FlutterRestart<cr>", { desc = "Hot Restart" })
+vim.keymap.set("n", "<leader>fq", "<cmd>FlutterQuit<cr>", { desc = "Quit App" })
+
+-- Gestión de Paquetes y Logs
+vim.keymap.set("n", "<leader>fp", "<cmd>FlutterPubGet<cr>", { desc = "Get Packages" })
+
+-- Herramientas
+vim.keymap.set("n", "<leader>fo", "<cmd>FlutterOpenDevTools<cr>", { desc = "Open DevTools" })
+vim.keymap.set("n", "<leader>fl", "<cmd>FlutterDevices<cr>", { desc = "Flutter Devices" })
+vim.keymap.set("n", "<leader>fe", "<cmd>FlutterEmulators<cr>", { desc = "Flutter Emulators" })
+
 vim.keymap.set({ "n", "x" }, "<leader>o", function()
 	require("opencode").toggle()
 end, { desc = "󰭹 Opencode" })
