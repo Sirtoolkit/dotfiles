@@ -91,7 +91,7 @@ vim.keymap.set("n", "<Leader>dC", function()
 end, { desc = "Conditional Breakpoint" })
 
 -- Limpiar consola de debug
-vim.keymap.set("n", "<leader>dcl", function()
+vim.keymap.set("n", "<leader>dl", function()
 	-- Iteramos sobre todos los buffers abiertos
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 		-- Buscamos el buffer que sea del tipo 'dap-repl' (REPL estándar)
