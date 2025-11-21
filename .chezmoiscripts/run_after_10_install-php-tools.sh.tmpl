@@ -44,6 +44,7 @@ done
 # Configuración específica para Valet
 if command -v valet >/dev/null 2>&1; then
     echo "🔧 Ejecutando valet install..."
+    brew link nginx
     valet install
     echo "✅ Valet configurado."
 else
