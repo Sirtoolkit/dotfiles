@@ -2,7 +2,6 @@
 
 -- Búsqueda y visualización
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
-vim.keymap.set("n", "<leader>uz", "<Cmd>HighlightColors Toggle<CR>", { desc = "Toggle color highlight" })
 
 -- Operaciones de archivos
 vim.keymap.set("n", "<leader>w", "<Cmd>w<CR>")

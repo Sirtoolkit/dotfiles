@@ -6,4 +6,4 @@ require("config.terminal") -- Terminal y ToggleTerm
 require("config.flutter") -- Flutter keymaps
 require("config.debug") -- DAP debugging
 require("config.comments") -- Comentarios
-require("config.opencode") -- OpenCode keymaps
+require("config.ai") -- AI keymaps
