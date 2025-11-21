@@ -44,3 +44,20 @@ end, { desc = "Sidekick Toggle Opencode" })
 vim.keymap.set("", "<leader>ag", function()
 	require("sidekick.cli").toggle({ name = "gemini", focus = true })
 end, { desc = "Sidekick Toggle Gemini" })
+
+-- Variable para rastrear el estado (asumimos que inicia encendido)
+local copilot_on = true
+
+vim.api.nvim_create_user_command("CopilotToggle", function()
+	if copilot_on then
+		vim.cmd("Copilot disable")
+		print("Copilot Desactivado")
+	else
+		vim.cmd("Copilot enable")
+		print("Copilot Activado")
+	end
+	copilot_on = not copilot_on
+end, { nargs = 0 })
+
+-- Mapeo de tecla: <Leader> + ct (Copilot Toggle)
+vim.keymap.set("n", "<leader>ct", ":CopilotToggle<CR>", { noremap = true, silent = true })
