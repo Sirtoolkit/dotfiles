@@ -17,7 +17,7 @@ vim.keymap.set("n", "<leader>fb", function()
 	else
 		vim.notify("No se encontró el módulo lua/user/dart_build_runner.lua", vim.log.levels.ERROR)
 	end
-end, { desc = "Dart Build Runner Build" })
+end, { desc = "Build Runner" })
 vim.keymap.set("n", "<leader>fP", function()
 	-- Intenta cargar el módulo y ejecutar pod install
 	local ok, pod_install = pcall(require, "user.pod_install")
@@ -26,7 +26,7 @@ vim.keymap.set("n", "<leader>fP", function()
 	else
 		vim.notify("No se encontró el módulo lua/user/pod_install.lua", vim.log.levels.ERROR)
 	end
-end, { desc = "Pod Install (iOS)" })
+end, { desc = "Pod Install" })
 vim.keymap.set("n", "<leader>fU", function()
 	-- Intenta cargar el módulo y ejecutar pod update
 	local ok, pod_install = pcall(require, "user.pod_install")
@@ -35,9 +35,9 @@ vim.keymap.set("n", "<leader>fU", function()
 	else
 		vim.notify("No se encontró el módulo lua/user/pod_install.lua", vim.log.levels.ERROR)
 	end
-end, { desc = "Pod Update (iOS)" })
+end, { desc = "Pod Update" })
 
 -- Herramientas
-vim.keymap.set("n", "<leader>fo", "<cmd>FlutterOpenDevTools<cr>", { desc = "Open DevTools" })
-vim.keymap.set("n", "<leader>fl", "<cmd>FlutterDevices<cr>", { desc = "Flutter Devices" })
-vim.keymap.set("n", "<leader>fe", "<cmd>FlutterEmulators<cr>", { desc = "Flutter Emulators" })
+vim.keymap.set("n", "<leader>fo", "<cmd>FlutterOpenDevTools<cr>", { desc = "DevTools" })
+vim.keymap.set("n", "<leader>fl", "<cmd>FlutterDevices<cr>", { desc = "Devices" })
+vim.keymap.set("n", "<leader>fe", "<cmd>FlutterEmulators<cr>", { desc = "Emulators" })

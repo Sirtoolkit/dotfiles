@@ -38,56 +38,56 @@ return {
 			function()
 				Snacks.lazygit()
 			end,
-			desc = "Lazygit",
+			desc = "󰊢 Lazygit",
 		},
 		{
 			"<leader>go",
 			function()
 				Snacks.gitbrowse()
 			end,
-			desc = "Git browse (open)",
+			desc = "󰊢 Git Browse",
 		},
 		{
 			"<C-p>",
 			function()
 				Snacks.picker.files({})
 			end,
-			desc = "Find Files",
+			desc = "󰈔 Find Files",
 		},
 		{
 			"<leader>sf",
 			function()
 				Snacks.picker.files({ hidden = true, ignored = true })
 			end,
-			desc = "Find Files",
+			desc = "󰈔 Find Files",
 		},
 		{
 			"<leader>sG",
 			function()
 				require("snacks").picker.grep({ hidden = true, ignored = true })
 			end,
-			desc = "Grep Files",
+			desc = "󰍉 Grep Files",
 		},
 		{
 			"<leader>sg",
 			function()
 				require("snacks").picker.grep({})
 			end,
-			desc = "Grep Files",
+			desc = "󰍉 Grep Files",
 		},
 		{
 			"<leader>sp",
 			function()
 				Snacks.picker.projects()
 			end,
-			desc = "Grep Files",
+			desc = "󰉋 Projects",
 		},
 		{
 			"<leader>ld",
 			function()
 				Snacks.picker.diagnostics()
 			end,
-			desc = "Search diagnostics",
+			desc = "󰒡 Diagnostics",
 		},
 	},
 }

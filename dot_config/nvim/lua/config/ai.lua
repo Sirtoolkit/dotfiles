@@ -11,43 +11,43 @@ end, { desc = "Sidekick Toggle" })
 
 vim.keymap.set("", "<leader>aa", function()
 	require("sidekick.cli").toggle()
-end, { desc = "Sidekick Toggle CLI" })
+end, { desc = "󰚩 Toggle CLI" })
 
 vim.keymap.set("", "<leader>as", function()
 	require("sidekick.cli").select()
-end, { desc = "Select CLI" })
+end, { desc = "󰚩 Select CLI" })
 
 vim.keymap.set("", "<leader>ad", function()
 	require("sidekick.cli").close()
-end, { desc = "Detach a CLI Session" })
+end, { desc = "󰚩 Detach CLI" })
 
 vim.keymap.set({ "x", "n" }, "<leader>at", function()
 	require("sidekick.cli").send({ msg = "{this}" })
-end, { desc = "Send This" })
+end, { desc = "󰚩 Send This" })
 
 vim.keymap.set("", "<leader>af", function()
 	require("sidekick.cli").send({ msg = "{file}" })
-end, { desc = "Send File" })
+end, { desc = "󰚩 Send File" })
 
 vim.keymap.set("x", "<leader>av", function()
 	require("sidekick.cli").send({ msg = "{selection}" })
-end, { desc = "Send Visual Selection" })
+end, { desc = "󰚩 Send Selection" })
 
 vim.keymap.set({ "n", "x" }, "<leader>ap", function()
 	require("sidekick.cli").prompt()
-end, { desc = "Sidekick Select Prompt" })
+end, { desc = "󰚩 Prompt" })
 
 vim.keymap.set("", "<leader>ao", function()
 	require("sidekick.cli").toggle({ name = "opencode", focus = true })
-end, { desc = "Sidekick Toggle Opencode" })
+end, { desc = "󰚩 Opencode" })
 
 vim.keymap.set("", "<leader>ag", function()
 	require("sidekick.cli").toggle({ name = "gemini", focus = true })
-end, { desc = "Sidekick Toggle Gemini" })
+end, { desc = "󰚩 Gemini" })
 
 vim.keymap.set("", "<leader>ac", function()
 	require("sidekick.cli").toggle({ name = "cursor", focus = true })
-end, { desc = "Sidekick Toggle Cursor" })
+end, { desc = "󰚩 Cursor" })
 
 -- Variable para rastrear el estado (asumimos que inicia encendido)
 local copilot_on = true
@@ -64,4 +64,4 @@ vim.api.nvim_create_user_command("CopilotToggle", function()
 end, { nargs = 0 })
 
 -- Mapeo de tecla: <Leader> + ct (Copilot Toggle)
-vim.keymap.set("n", "<leader>ct", ":CopilotToggle<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>ct", ":CopilotToggle<CR>", { noremap = true, silent = true, desc = "󰚩 Copilot Toggle" })

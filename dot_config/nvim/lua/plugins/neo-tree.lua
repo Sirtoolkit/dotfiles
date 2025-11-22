@@ -7,7 +7,7 @@ return {
 	},
 	-- Configuración de teclas globales para lanzar Neo-tree
 	keys = {
-		{ "<Leader>e", "<Cmd>Neotree toggle<CR>", desc = "Toggle Explorer" },
+		{ "<Leader>e", "<Cmd>Neotree toggle<CR>", desc = "󰈔 Toggle Explorer" },
 	},
 	opts = function()
 		local git_available = vim.fn.executable("git") == 1
@@ -187,7 +187,7 @@ return {
 			filesystem = {
 				follow_current_file = { enabled = true },
 				filtered_items = { hide_gitignored = git_available },
-				hijack_netrw_behavior = "open_current",
+				hijack_netrw_behavior = "disabled", -- Deshabilitar Netrw completamente
 				use_libuv_file_watcher = vim.fn.has("win32") ~= 1,
 			},
 			event_handlers = {
@@ -202,8 +202,34 @@ return {
 		}
 	end,
 	config = function(_, opts)
+		-- Deshabilitar Netrw completamente
+		vim.g.loaded_netrw = 1
+		vim.g.loaded_netrwPlugin = 1
+
 		-- Cargar configuración principal
 		require("neo-tree").setup(opts)
+
+		-- Abrir Neo-tree automáticamente al iniciar Neovim
+		vim.api.nvim_create_autocmd("VimEnter", {
+			desc = "Open Neo-tree on startup",
+			callback = function()
+				-- Solo abrir si no hay argumentos (archivos pasados por línea de comandos)
+				if vim.fn.argc() == 0 then
+					-- Cerrar cualquier buffer de Netrw que pueda haberse abierto
+					vim.schedule(function()
+						for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+							local buf_name = vim.api.nvim_buf_get_name(buf)
+							local filetype = vim.bo[buf].filetype
+							if filetype == "netrw" or buf_name:match("^netrw://") then
+								vim.api.nvim_buf_delete(buf, { force = true })
+							end
+						end
+						-- Abrir Neo-tree
+						vim.cmd("Neotree show filesystem")
+					end)
+				end
+			end,
+		})
 
 		-- Autocmd: Refrescar Neo-tree al cerrar Lazygit
 		vim.api.nvim_create_autocmd("TermClose", {

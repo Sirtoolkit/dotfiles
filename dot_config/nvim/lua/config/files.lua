@@ -1,25 +1,25 @@
 -- Operaciones de archivos y buffers
 
 -- Búsqueda y visualización
-vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
+vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>", { desc = "󰍉 Clear Search" })
 
 -- Operaciones de archivos
-vim.keymap.set("n", "<leader>w", "<Cmd>w<CR>")
-vim.keymap.set("n", "<leader>q", "<Cmd>confirm q<CR>")
-vim.keymap.set("n", "<leader>Q", "<Cmd>confirm qall<CR>")
-vim.keymap.set("n", "<Leader>n", "<cmd>enew<cr>", { desc = "New File" })
+vim.keymap.set("n", "<leader>w", "<Cmd>w<CR>", { desc = "󰆓 Save" })
+vim.keymap.set("n", "<leader>q", "<Cmd>confirm q<CR>", { desc = "󰅖 Quit" })
+vim.keymap.set("n", "<leader>Q", "<Cmd>confirm qall<CR>", { desc = "󰅖 Quit All" })
+vim.keymap.set("n", "<Leader>n", "<cmd>enew<cr>", { desc = "󰈙 New File" })
 vim.keymap.set({ "n", "i", "x" }, "<C-s>", "<cmd>silent! update! | redraw<cr>", { desc = "Force write" })
 vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>", { desc = "Force quit" })
 
 -- Splits
-vim.keymap.set("n", "|", "<cmd>vsplit<cr>", { desc = "Vertical Split" })
-vim.keymap.set("n", "\\", "<cmd>split<cr>", { desc = "Horizontal Split" })
+vim.keymap.set("n", "|", "<cmd>vsplit<cr>", { desc = "󰖲 Vertical Split" })
+vim.keymap.set("n", "\\", "<cmd>split<cr>", { desc = "󰖲 Horizontal Split" })
 
 -- Gestión de buffers
 -- Cierre "inteligente" (Mantiene el split abierto)
 vim.keymap.set("n", "<Leader>x", function()
 	Snacks.bufdelete()
-end, { desc = "Close buffer" })
+end, { desc = "󰅖 Close buffer" })
 
 -- Cierre forzado (Ignora cambios sin guardar)
 vim.keymap.set("n", "<Leader>X", function()
@@ -31,7 +31,7 @@ vim.keymap.set("n", "<Leader>X", function()
 			Snacks.bufdelete({ buf = buf, force = true })
 		end
 	end
-end, { desc = "Close ALL buffers" })
+end, { desc = "󰅖 Close ALL buffers" })
 
 -- Recarga de configuración
 vim.keymap.set("n", "<Leader>RR", function()
@@ -45,4 +45,4 @@ vim.keymap.set("n", "<Leader>RR", function()
 
 	vim.cmd("source $MYVIMRC")
 	vim.notify("Nvim recargado completamente", vim.log.levels.INFO)
-end, { desc = "Hard Reload Config" })
+end, { desc = "󰒓 Hard Reload Config" })

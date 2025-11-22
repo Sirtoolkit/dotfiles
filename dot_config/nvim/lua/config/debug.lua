@@ -39,47 +39,47 @@ end, { desc = "Debugger: Restart" })
 -- Teclas con Leader (d)
 vim.keymap.set("n", "<Leader>db", function()
 	require("dap").toggle_breakpoint()
-end, { desc = "Toggle Breakpoint" })
+end, { desc = "󰝥 Toggle Breakpoint" })
 
 vim.keymap.set("n", "<Leader>dB", function()
 	require("dap").clear_breakpoints()
-end, { desc = "Clear Breakpoints" })
+end, { desc = "󰝥 Clear Breakpoints" })
 
 vim.keymap.set("n", "<Leader>dc", function()
 	require("dap").continue()
-end, { desc = "Start/Continue" })
+end, { desc = "󰆍 Start/Continue" })
 
 vim.keymap.set("n", "<Leader>di", function()
 	require("dap").step_into()
-end, { desc = "Step Into" })
+end, { desc = "󰆍 Step Into" })
 
 vim.keymap.set("n", "<Leader>do", function()
 	require("dap").step_over()
-end, { desc = "Step Over" })
+end, { desc = "󰆍 Step Over" })
 
 vim.keymap.set("n", "<Leader>dO", function()
 	require("dap").step_out()
-end, { desc = "Step Out" })
+end, { desc = "󰆍 Step Out" })
 
 vim.keymap.set("n", "<Leader>dq", function()
 	require("dap").close()
-end, { desc = "Close Session" })
+end, { desc = "󰆍 Close Session" })
 
 vim.keymap.set("n", "<Leader>dQ", function()
 	require("dap").terminate()
-end, { desc = "Terminate Session" })
+end, { desc = "󰆍 Terminate Session" })
 
 vim.keymap.set("n", "<Leader>dp", function()
 	require("dap").pause()
-end, { desc = "Pause" })
+end, { desc = "󰆍 Pause" })
 
 vim.keymap.set("n", "<Leader>dr", function()
 	require("dap").restart_frame()
-end, { desc = "Restart" })
+end, { desc = "󰆍 Restart" })
 
 vim.keymap.set("n", "<Leader>ds", function()
 	require("dap").run_to_cursor()
-end, { desc = "Run To Cursor" })
+end, { desc = "󰆍 Run To Cursor" })
 
 -- Funciones Avanzadas (Input condicional)
 vim.keymap.set("n", "<Leader>dC", function()
@@ -88,7 +88,7 @@ vim.keymap.set("n", "<Leader>dC", function()
 			require("dap").set_breakpoint(condition)
 		end
 	end)
-end, { desc = "Conditional Breakpoint" })
+end, { desc = "󰝥 Conditional Breakpoint" })
 
 -- Limpiar consola de debug
 vim.keymap.set("n", "<leader>dl", function()
@@ -103,12 +103,12 @@ vim.keymap.set("n", "<leader>dl", function()
 		end
 	end
 	vim.notify("Consola de Debug limpia", vim.log.levels.INFO)
-end, { desc = "Clear Debug Console" })
+end, { desc = "󰆍 Clear Console" })
 
 -- DAP UI
 vim.keymap.set("n", "<Leader>du", function()
 	require("dapui").toggle()
-end, { desc = "Toggle Debugger UI" })
+end, { desc = "󰆍 Toggle UI" })
 
 -- Configurar 'q' para cerrar la ventana flotante de dap (como hover)
 vim.api.nvim_create_autocmd("FileType", {
@@ -120,7 +120,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.keymap.set("n", "<Leader>dh", function()
 	require("dap.ui.widgets").hover()
-end, { desc = "Debugger Hover" })
+end, { desc = "󰆍 Hover" })
 
 vim.keymap.set("n", "<Leader>dE", function()
 	vim.ui.input({ prompt = "Expression: " }, function(expr)
@@ -128,9 +128,9 @@ vim.keymap.set("n", "<Leader>dE", function()
 			require("dapui").eval(expr, { enter = true })
 		end
 	end)
-end, { desc = "Evaluate Input" })
+end, { desc = "󰆍 Evaluate Input" })
 
 -- Evaluar en modo visual
 vim.keymap.set("v", "<Leader>dE", function()
 	require("dapui").eval()
-end, { desc = "Evaluate Selection" })
+end, { desc = "󰆍 Evaluate Selection" })
