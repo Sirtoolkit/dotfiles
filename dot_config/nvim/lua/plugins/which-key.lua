@@ -3,15 +3,19 @@ return {
 	event = "VeryLazy",
 	opts_extend = { "spec", "disable.ft", "disable.bt" },
 	opts = function(_, opts)
-		-- Deshabilitar which-key en modo operator-pending para permitir text objects como ciB, diB, etc.
-		opts.ignore_missing = true
-		opts.operators = false -- Esto desactiva which-key cuando estás en modo operator-pending (c, d, y, etc.)
+		-- Configurar delay (tiempo antes de mostrar el popup)
+		opts.delay = 200 -- milisegundos (ajusta según prefieras)
 
-		-- Asegurar que which-key se active con <leader>
+		-- Configurar triggers (debe ser una tabla, no "auto")
 		-- which-key detecta automáticamente las keymaps con 'desc'
-		-- Configurar triggers para asegurar que which-key se active
-		opts.triggers = opts.triggers or "auto"
-		opts.triggers_blacklist = opts.triggers_blacklist or {}
+		-- Si no hay triggers definidos, usar detección automática
+		if not opts.triggers or opts.triggers == "auto" then
+			opts.triggers = nil -- nil permite detección automática completa
+		end
+
+		-- Nota: Las opciones antiguas (operators, ignore_missing, triggers_blacklist)
+		-- han sido reemplazadas por defer y filter, pero los valores por defecto
+		-- de which-key ya proporcionan el comportamiento deseado
 
 		if not opts.icons then
 			opts.icons = {}
@@ -58,7 +62,6 @@ return {
 	end,
 	config = function(_, opts)
 		local wk = require("which-key")
-		wk.setup(opts)
 
 		-- Configuración de iconos de Nerd Fonts
 		-- Referencia: https://www.nerdfonts.com/cheat-sheet
@@ -100,85 +103,31 @@ return {
 			return icon_char ~= "" and (icon_char .. " ") or ""
 		end
 
-		-- Registrar todos los grupos con iconos usando wk.register
-		-- Esto sobrescribe la detección automática y permite personalizar los nombres
+		-- ============================================
+		-- REGISTROS MANUALES
+		-- Which-key detecta automáticamente todos los keymaps con 'desc'
+		-- Solo registramos manualmente keymaps que NO tienen 'desc'
+		-- Usando el nuevo formato de spec (v3.x)
+		-- ============================================
 
-		-- ============================================
-		-- GRUPOS DE LEADER
-		-- ============================================
-		wk.register({
-			-- Archivos y Buffers
-			w = { name = icon("file") .. "File Operations" },
-			q = { name = icon("close") .. "Quit" },
-			Q = { name = icon("close") .. "Quit All" },
-			n = { name = icon("new_file") .. "New File" },
-			x = { name = icon("close") .. "Close Buffer" },
-			X = { name = icon("close") .. "Close All Buffers" },
-			h = { name = icon("search") .. "Clear Search" },
-			-- Terminal
-			t = { name = icon("terminal") .. "Terminal" },
-			-- LSP y Git
-			g = { name = icon("lsp") .. "LSP" },
-			["gc"] = { name = icon("git") .. "Git Commit" },
-			-- Flutter
-			f = { name = "󰟝 Flutter" },
-			-- Debug
-			d = { name = icon("debug") .. "Debug" },
-			-- Comentarios
-			["/"] = { name = icon("comment") .. "Comment" },
-			-- AI
-			a = { name = icon("ai") .. "AI" },
-			["ct"] = { name = icon("ai") .. "Copilot Toggle" },
-			-- Configuración
-			R = { name = icon("config") .. "Reload" },
-		}, { prefix = "<leader>" })
+		-- Setup con configuración
+		wk.setup(opts)
 
-		-- ============================================
-		-- LSP SIN LEADER (g para go to definition)
-		-- ============================================
-		wk.register({
-			d = { name = icon("lsp") .. "Go to Definition" },
-			t = { name = icon("buffer") .. "Next Buffer" },
-			T = { name = icon("buffer") .. "Previous Buffer" },
-		}, { prefix = "g" })
-
-		-- ============================================
-		-- SPACE PARA RENAME
-		-- ============================================
-		wk.register({
-			["rn"] = { name = icon("lsp") .. "Rename" },
-		}, { prefix = "<space>" })
-
-		-- ============================================
-		-- K PARA HOVER
-		-- ============================================
-		wk.register({
-			K = { name = icon("lsp") .. "Hover" },
+		-- Registrar grupos de leader keys
+		-- Usando el nuevo formato de spec (v3.x)
+		wk.add({
+			{ "<leader>a", group = "AI" },
+			{ "<leader>c", group = "Copilot" },
+			{ "<leader>d", group = "Debug" },
+			{ "<leader>f", group = "Flutter" },
+			{ "<leader>g", group = "Git" },
+			{ "<leader>t", group = "Terminal/Tabs" },
 		})
 
-		-- ============================================
-		-- NAVEGACIÓN DE VENTANAS (Ctrl+)
-		-- ============================================
-		wk.register({
-			["<C-k>"] = { name = icon("window") .. "Window Up" },
-			["<C-j>"] = { name = icon("window") .. "Window Down" },
-			["<C-h>"] = { name = icon("window") .. "Window Left" },
-			["<C-l>"] = { name = icon("window") .. "Window Right" },
-		})
-
-		-- ============================================
-		-- DEBUG CON F-KEYS
-		-- ============================================
-		wk.register({
-			["<F5>"] = { name = icon("debug") .. "Start/Continue" },
-			["<F6>"] = { name = icon("debug") .. "Pause" },
-			["<F7>"] = { name = icon("terminal") .. "Toggle Terminal" },
-			["<F9>"] = { name = icon("breakpoint") .. "Toggle Breakpoint" },
-			["<F10>"] = { name = icon("debug") .. "Step Over" },
-			["<F11>"] = { name = icon("debug") .. "Step Into" },
-			["<S-F11>"] = { name = icon("debug") .. "Step Out" },
-			["<S-F5>"] = { name = icon("debug") .. "Stop" },
-			["<C-F5>"] = { name = icon("debug") .. "Restart" },
-		})
+		-- Nota: Todos los demás keymaps (con 'desc') se detectan automáticamente:
+		-- - Grupos de leader (t, g, f, d, a) y sus keymaps hijos
+		-- - Keymaps directos (w, q, h, n, x, X, Q, /)
+		-- - Keymaps sin leader (gd, gt, gT, K, <space>rn)
+		-- - F-keys de debug
 	end,
 }
