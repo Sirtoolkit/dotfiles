@@ -3,6 +3,10 @@ return {
   event = "VeryLazy",
   opts_extend = { "spec", "disable.ft", "disable.bt" },
   opts = function(_, opts)
+    -- Deshabilitar which-key en modo operator-pending para permitir text objects como ciB, diB, etc.
+    opts.ignore_missing = true
+    opts.operators = false -- Esto desactiva which-key cuando estás en modo operator-pending (c, d, y, etc.)
+    
     if not opts.icons then opts.icons = {} end
     opts.icons.group = ""
     opts.icons.rules = false
