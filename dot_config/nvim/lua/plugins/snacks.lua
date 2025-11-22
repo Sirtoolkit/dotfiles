@@ -50,14 +50,28 @@ return {
 		{
 			"<C-p>",
 			function()
+				Snacks.picker.files({})
+			end,
+			desc = "Find Files",
+		},
+		{
+			"<leader>sf",
+			function()
 				Snacks.picker.files({ hidden = true, ignored = true })
 			end,
 			desc = "Find Files",
 		},
 		{
-			"<leader>sg",
+			"<leader>sG",
 			function()
 				require("snacks").picker.grep({ hidden = true, ignored = true })
+			end,
+			desc = "Grep Files",
+		},
+		{
+			"<leader>sg",
+			function()
+				require("snacks").picker.grep({})
 			end,
 			desc = "Grep Files",
 		},

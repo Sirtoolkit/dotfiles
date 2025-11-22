@@ -63,12 +63,7 @@ return {
 			},
 		}
 
-		-- 1. Configurar UI
-		dapui.setup({
-			floating = { border = "rounded" },
-		})
-
-		-- 2. Configurar Mason-Nvim-DAP
+		-- 1. Configurar Mason-Nvim-DAP
 		require("mason-nvim-dap").setup({
 			automatic_installation = true, -- Intenta instalar adaptadores si faltan
 			handlers = {}, -- Asegura que los adaptadores instalados se configuren automáticamente

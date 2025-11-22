@@ -84,6 +84,30 @@ return {
 					-- Abre el archivo con el programa predeterminado del sistema
 					vim.ui.open(state.tree:get_node():get_id())
 				end,
+				reveal_in_finder = function(state)
+					-- Abre el archivo/carpeta en Finder/Explorer
+					local node = state.tree:get_node()
+					local file_path = node:get_id()
+					if not file_path or file_path == "" then
+						vim.notify("No hay archivo seleccionado", vim.log.levels.WARN)
+						return
+					end
+					-- En macOS: open -R revela el archivo en Finder
+					-- En Linux: xdg-open abre el explorador de archivos
+					-- En Windows: explorer /select, abre el explorador
+					local os = vim.loop.os_uname().sysname
+					if os == "Darwin" then
+						vim.fn.system({ "open", "-R", file_path })
+					elseif os == "Linux" then
+						-- Para Linux, abrimos el directorio padre si es un archivo
+						local dir_path = node.type == "directory" and file_path or vim.fn.fnamemodify(file_path, ":h")
+						vim.fn.system({ "xdg-open", dir_path })
+					elseif os == "Windows" or os == "Windows_NT" then
+						vim.fn.system({ "explorer", "/select,", file_path })
+					else
+						vim.notify("Sistema operativo no soportado", vim.log.levels.ERROR)
+					end
+				end,
 				parent_or_close = function(state)
 					local node = state.tree:get_node()
 					if node:has_children() and node:is_expanded() then
@@ -157,9 +181,7 @@ return {
 					Y = "copy_selector",
 					h = "parent_or_close",
 					l = "child_or_open",
-					-- Mapeos para búsqueda difusa
-					["<C-J>"] = "move_cursor_down",
-					["<C-K>"] = "move_cursor_up",
+					["<leader>of"] = "reveal_in_finder",
 				},
 			},
 			filesystem = {

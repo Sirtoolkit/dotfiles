@@ -45,6 +45,10 @@ vim.keymap.set("", "<leader>ag", function()
 	require("sidekick.cli").toggle({ name = "gemini", focus = true })
 end, { desc = "Sidekick Toggle Gemini" })
 
+vim.keymap.set("", "<leader>ac", function()
+	require("sidekick.cli").toggle({ name = "cursor", focus = true })
+end, { desc = "Sidekick Toggle Cursor" })
+
 -- Variable para rastrear el estado (asumimos que inicia encendido)
 local copilot_on = true
 

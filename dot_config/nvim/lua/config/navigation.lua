@@ -1,9 +1,9 @@
 -- Navegación entre ventanas (panes)
 -- Navigate vim panes better
-vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
-vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
-vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
-vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
+vim.keymap.set("n", "<c-k>", "<cmd>wincmd k<cr>")
+vim.keymap.set("n", "<c-j>", "<cmd>wincmd j<cr>")
+vim.keymap.set("n", "<c-h>", "<cmd>wincmd h<cr>")
+vim.keymap.set("n", "<c-l>", "<cmd>wincmd l<cr>")
 
 -- Navegación entre ventanas desde el Modo Terminal
 vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
