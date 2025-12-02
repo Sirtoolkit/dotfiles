@@ -4,9 +4,6 @@ return {
 	lazy = false, -- <--- ESTO ES CLAVE: Le dice "Cárgate YA, no esperes"
 	opts = {
 		check_ts = true, -- Habilitar integración con Treesitter
-		ts_config = {
-			java = false, -- No usar en Java (a veces falla con genéricos <T>)
-		},
 		-- Configuración de Fast Wrap (Alt+e para envolver código)
 		fast_wrap = {
 			map = "<M-e>",

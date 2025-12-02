@@ -36,6 +36,22 @@ return {
 			end,
 		})
 
+		-- Copilot.vim status
+		table.insert(opts.sections.lualine_x, 2, {
+			function()
+				if vim.fn.exists("*copilot#Status") == 1 then
+					local status = vim.fn["copilot#Status"]()
+					if status and status ~= "" then
+						return " " .. status
+					end
+				end
+				return ""
+			end,
+			cond = function()
+				return vim.fn.exists("*copilot#Status") == 1
+			end,
+		})
+
 		-- CLI session status
 		table.insert(opts.sections.lualine_x, 2, {
 			function()

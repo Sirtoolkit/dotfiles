@@ -48,3 +48,31 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.api.nvim_buf_delete(0, { force = true })
 	end,
 })
+
+-- Notificación de Copilot solo una vez
+vim.api.nvim_create_autocmd("VimEnter", {
+	desc = "Check Copilot status and notify only once",
+	group = vim.api.nvim_create_augroup("copilot-notification", { clear = true }),
+	callback = function()
+		if vim.fn.exists("*copilot#Status") == 1 then
+			local status = vim.fn["copilot#Status"]()
+			if status ~= "Ready" and not vim.g.copilot_notified then
+				vim.notify("Copilot no está configurado. Ejecuta :Copilot auth para autenticarte.", vim.log.levels.WARN)
+				vim.g.copilot_notified = true
+			end
+		end
+	end,
+})
+
+-- Suprimir notificaciones repetidas de Copilot en inserción
+vim.api.nvim_create_autocmd("InsertEnter", {
+	desc = "Suppress repeated Copilot notifications",
+	group = vim.api.nvim_create_augroup("copilot-suppress", { clear = true }),
+	callback = function()
+		if vim.g.copilot_notified then
+			-- Disable further notifications
+			vim.g.copilot_echo_status = 0
+			vim.g.copilot_no_status_messages = 1
+		end
+	end,
+})

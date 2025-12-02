@@ -76,13 +76,10 @@ return {
 				"prettier", -- Formateador universal
 				"prisma-language-server",
 
-				-- == JAVA / KOTLIN ==
-				"jdtls", -- Java LSP (Esencial)
-				"google-java-format", -- Formateador Java
-				"groovy-language-server",
+				-- == ANDROID / KOTLIN ==
 				"kotlin-language-server",
-				"ktfmt",
 				"ktlint",
+				"groovy-language-server",
 
 				-- == INFRAESTRUCTURA ==
 				"terraform-ls",
@@ -128,19 +125,24 @@ return {
 						return
 					end
 
-					-- 2. PROTECCIÓN CONTRA ERRORES (La solución al crash)
-					-- Verificamos si 'lspconfig' realmente conoce este servidor.
-					-- Si es un paquete basura (como "framework"), esto devuelve false y evitamos el error.
-					local valid_server = pcall(function()
-						return lspconfig[server_name]
-					end)
-					if not valid_server or not lspconfig[server_name] then
-						return -- Ignoramos silenciosamente el servidor inválido
+					-- Lista negra de servidores inválidos
+					local invalid_servers = { "framework" }
+					for _, invalid in ipairs(invalid_servers) do
+						if server_name == invalid then
+							return
+						end
 					end
 
-					lspconfig[server_name].setup({
-						capabilities = capabilities,
-					})
+					-- PROTECCIÓN CONTRA ERRORES: Verificar que el servidor existe en lspconfig
+					local ok = pcall(function()
+						lspconfig[server_name].setup({
+							capabilities = capabilities,
+						})
+					end)
+					
+					if not ok then
+						vim.notify("Failed to setup LSP server: " .. server_name, vim.log.levels.WARN)
+					end
 				end,
 			},
 		})
@@ -164,12 +166,6 @@ return {
 					filetypes = { "php", "blade", "php_only" },
 					files = {
 						maxSize = 5000000, -- Aumentar el tamaño máximo de archivo
-					},
-					environment = {
-						includePaths = {
-							"vendor/laravel/framework/src", -- Solo incluir lo vital del framework
-							-- Agrega aquí otras librerías críticas si no te autocompleta
-						},
 					},
 					-- Excluir carpetas basura que no necesitas para autocompletado
 					exclude = {

@@ -80,3 +80,12 @@ vim.opt.updatetime = 300 -- Length of time to wait before triggering plugins (gi
 vim.opt.virtualedit = "block" -- Allow going past end of line in visual block mode
 vim.opt.wrap = false -- Disable wrapping of lines longer than the width of window
 vim.opt.writebackup = false -- Disable making a backup before overwriting a file
+
+-- Suprimir notificaciones repetidas de Copilot
+local original_notify = vim.notify
+vim.notify = function(msg, level, opts)
+  if msg and (msg:match("Copilot") and (msg:match("not signed") or msg:match("not configured"))) and vim.g.copilot_notified then
+    return
+  end
+  original_notify(msg, level, opts)
+end

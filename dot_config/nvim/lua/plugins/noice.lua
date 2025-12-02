@@ -3,6 +3,14 @@ return {
 	event = "VeryLazy",
 	opts = {
 		routes = {
+			-- Ocultar notificaciones de Copilot completamente
+			{
+				filter = {
+					event = "msg_show",
+					find = "Copilot",
+				},
+				opts = { skip = true },
+			},
 			-- Ocultar mensajes que contengan wincmd (por si acaso)
 			{
 				filter = {

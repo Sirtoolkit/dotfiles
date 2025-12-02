@@ -7,7 +7,6 @@ return {
 			separator_style = "thin",
 			always_show_bufferline = true,
 			diagnostics = "nvim_lsp", -- Muestra errores en la pestaña
-
 			-- Mueve la barra si abres Neo-tree
 			offsets = {
 				{

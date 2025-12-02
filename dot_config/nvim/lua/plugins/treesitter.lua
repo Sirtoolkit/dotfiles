@@ -24,7 +24,6 @@ return {
 					"blade",
 					"yaml",
 					"tsx",
-					"java",
 					"kotlin",
 					"dockerfile",
 					"terraform",
