@@ -19,7 +19,10 @@ fi
 
 if command -v sketchybar >/dev/null 2>&1; then
   echo "Activando sketchybar..."
-  sketchybar --config ~/.config/sketchybar/sketchybarrc || true
+  pkill sketchybar || true
+  sleep 1
+  sketchybar --config ~/.config/sketchybar/sketchybarrc &
+  sleep 1
   sketchybar --load-font font-hack-nerd-font || true
 else
   echo "sketchybar no encontrado, saltando."
