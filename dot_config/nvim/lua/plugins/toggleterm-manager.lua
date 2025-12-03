@@ -2,7 +2,6 @@ return {
   "ryanmsnyder/toggleterm-manager.nvim",
   lazy = true,
   dependencies = {
-    "akinsho/toggleterm.nvim",
     "nvim-lua/plenary.nvim",
   },
   opts = function()

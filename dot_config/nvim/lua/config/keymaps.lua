@@ -1,9 +1,7 @@
--- Importar todos los keymaps organizados por categoría
-require("config.navigation") -- Navegación entre ventanas y buffers
-require("config.files") -- Operaciones de archivos y buffers
-require("config.lsp") -- LSP y code actions
-require("config.terminal") -- Terminal y ToggleTerm
-require("config.flutter") -- Flutter keymaps
-require("config.debug") -- DAP debugging
-require("config.comments") -- Comentarios
-require("config.ai") -- AI keymaps
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here
+
+require("config.keymaps.flutter")
+require("config.keymaps.git")
+require("config.keymaps.terminal")

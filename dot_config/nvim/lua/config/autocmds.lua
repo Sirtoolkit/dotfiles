@@ -1,78 +1,8 @@
--- Resaltar texto al copiar (Yank Highlight)
-vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-})
-
--- Cerrar buffer "[No Name]" cuando se abre un archivo desde Neo-tree
--- Solo si el buffer está vacío y sin cambios
-vim.api.nvim_create_autocmd("BufRead", {
-	desc = "Close empty [No Name] buffer when opening file from Neo-tree",
-	group = vim.api.nvim_create_augroup("close-noname-on-open", { clear = true }),
-	callback = function()
-		-- Esperar un momento para que el buffer se cargue completamente
-		vim.schedule(function()
-			-- Buscar el buffer "[No Name]" (buffer sin nombre)
-			for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-				local buf_name = vim.api.nvim_buf_get_name(buf)
-				local buf_option = vim.bo[buf]
-				
-				-- Verificar si es un buffer "[No Name]" (sin nombre y listado)
-				if buf_name == "" and buf_option.buflisted and vim.api.nvim_buf_is_valid(buf) then
-					-- Verificar si está vacío y sin cambios
-					local line_count = vim.api.nvim_buf_line_count(buf)
-					local is_modified = buf_option.modified
-					
-					-- Si está vacío (solo tiene una línea vacía) y sin cambios, cerrarlo
-					if line_count <= 1 and not is_modified then
-						local first_line = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] or ""
-						if first_line == "" then
-							vim.api.nvim_buf_delete(buf, { force = true })
-						end
-					end
-				end
-			end
-		end)
-	end,
-})
-
--- Cerrar cualquier buffer de Netrw que se intente abrir
-vim.api.nvim_create_autocmd("FileType", {
-	desc = "Close Netrw buffers",
-	group = vim.api.nvim_create_augroup("close-netrw", { clear = true }),
-	pattern = "netrw",
-	callback = function()
-		vim.api.nvim_buf_delete(0, { force = true })
-	end,
-})
-
--- Notificación de Copilot solo una vez
-vim.api.nvim_create_autocmd("VimEnter", {
-	desc = "Check Copilot status and notify only once",
-	group = vim.api.nvim_create_augroup("copilot-notification", { clear = true }),
-	callback = function()
-		if vim.fn.exists("*copilot#Status") == 1 then
-			local status = vim.fn["copilot#Status"]()
-			if status ~= "Ready" and not vim.g.copilot_notified then
-				vim.notify("Copilot no está configurado. Ejecuta :Copilot auth para autenticarte.", vim.log.levels.WARN)
-				vim.g.copilot_notified = true
-			end
-		end
-	end,
-})
-
--- Suprimir notificaciones repetidas de Copilot en inserción
-vim.api.nvim_create_autocmd("InsertEnter", {
-	desc = "Suppress repeated Copilot notifications",
-	group = vim.api.nvim_create_augroup("copilot-suppress", { clear = true }),
-	callback = function()
-		if vim.g.copilot_notified then
-			-- Disable further notifications
-			vim.g.copilot_echo_status = 0
-			vim.g.copilot_no_status_messages = 1
-		end
-	end,
-})
+-- Autocmds are automatically loaded on the VeryLazy event
+-- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
+--
+-- Add any additional autocmds here
+-- with `vim.api.nvim_create_autocmd`
+--
+-- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
+-- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
