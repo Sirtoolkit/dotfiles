@@ -50,7 +50,6 @@ packages:
     - ripgrep
     - tree-sitter-cli
     - atuin
-    - sketchybar
     - koekeishiya/formulae/skhd
     - rbenv
     - ruby-build
@@ -80,6 +79,4 @@ packages:
     - karabiner-elements
     - hammerspoon
     - figma
-    - font-hack-nerd-font
     - font-caskaydia-cove-nerd-font
-    - sf-symbols
