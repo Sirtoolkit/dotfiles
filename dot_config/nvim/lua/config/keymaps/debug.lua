@@ -33,18 +33,3 @@ end, { desc = "Debugger: Stop" })
 vim.keymap.set("n", "<C-F5>", function()
   require("dap").restart_frame()
 end, { desc = "Debugger: Restart" })
-
--- Limpiar consola de debug
-vim.keymap.set("n", "<leader>dl", function()
-  -- Iteramos sobre todos los buffers abiertos
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    -- Buscamos el buffer que sea del tipo 'dap-repl' (REPL estándar)
-    -- o 'dapui_console' (Consola específica de nvim-dap-ui)
-    local filetype = vim.bo[buf].filetype
-    if filetype == "dap-repl" or filetype == "dapui_console" then
-      -- Borramos todas las líneas (desde la 0 hasta la última -1)
-      vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
-    end
-  end
-  vim.notify("Consola de Debug limpia", vim.log.levels.INFO)
-end, { desc = "󰆍 Clear Console" })
