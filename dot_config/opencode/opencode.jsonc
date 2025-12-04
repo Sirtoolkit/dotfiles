@@ -6,6 +6,14 @@
   },
   "autoupdate": true,
   "mcp": {
+    "mgrep": {
+      "type": "local",
+      "command": [
+        "mgrep",
+        "mcp"
+      ],
+      "enabled": true
+    },
     "firebase": {
       "type": "local",
       "command": [
