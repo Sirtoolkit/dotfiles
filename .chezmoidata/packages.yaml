@@ -57,10 +57,10 @@ packages:
     - opencode
     - pam-reattach
   casks:
-    - love
+    - gitkraken
     - microsoft-excel
     - godot
-    - visual-studio-code
+    - zed
     - google-chrome
     - postman
     - ghostty
