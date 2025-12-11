@@ -1,0 +1,85 @@
+; vim: set ft=gitconfig
+[user]
+	name = Cesar Posada
+	email = cesarleonardo537@gmail.com
+	signingkey = 7B09867145A39CC3
+[includeIf "gitdir:~/dev/tp"]
+  path = "~/dev/tp/.gitconfig"
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	ui = true
+[github]
+	user = sirtoolkit 
+[alias]
+	br = branch
+	ci = commit
+	co = checkout
+	hammer = commit --allow-empty -m 🔨
+	last = log -1 HEAD
+	qs = "!git add -A && git commit -qm 'quicksave'"
+	rb = rebase
+	st = status
+	sw = switch
+	tree = "log --graph --decorate --abbrev-commit"
+	undo = reset HEAD~1 --mixed
+	up = !git fetch --all --prune && git pull
+	upto = "branch --set-upstream-to"
+	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+  amend = commit --amend --no-edit
+  wt = worktree
+[core]
+	excludesfile = ~/.gitignore
+	editor = nvim
+	pager = diff-so-fancy | less --tabs=4 -RF
+[format]
+	pretty=format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
+[push]
+	default = current
+	autoSetupRemote = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+	process = git-lfs filter-process
+[url "https://github.com"]
+	insteadOf = git://github.com
+[stash]
+	showPatch = true
+[rebase]
+	autostash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+[column]
+	ui = auto
+[log]
+	decorate = full
+[pull]
+	ff = only
+	rebase = true
+[credential]
+	helper = osxkeychain
+[credential "https://github.com"]
+	username = mikker
+[commit]
+	gpgsign = true
+[merge]
+	tool = diffconflicts
+	conflictStyle = zdiff3
+[mergetool]
+	prompt = false
+	keepBackup = false
+[difftool]
+	prompt = false
+[mergetool "diffconflicts"]
+	cmd = nvim -c DiffConflictsWithHistory \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
+[init]
+	defaultBranch = main
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[gpg]
+	program = gpg
+
