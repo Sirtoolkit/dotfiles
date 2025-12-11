@@ -1,0 +1,210 @@
+{
+  "actions": [
+    {
+      "actions": [
+        {
+          "key": "R",
+          "label": "reload-config",
+          "type": "command",
+          "value": "/opt/homebrew/bin/aerospace reload-config"
+        },
+        {
+          "key": "f",
+          "label": "fullscreen",
+          "type": "command",
+          "value": "/opt/homebrew/bin/aerospace fullscreen"
+        },
+        {
+          "key": "c",
+          "type": "url",
+          "value": "raycast://extensions/raycast/window-management/center"
+        },
+        {
+          "key": "r",
+          "type": "url",
+          "value": "raycast://extensions/raycast/window-management/bottom-right-sixth"
+        }
+      ],
+      "iconPath": "rectangle.grid.2x2",
+      "key": "W",
+      "label": "Aerospace",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "a",
+          "type": "application",
+          "value": "/System/Applications/App Store.app"
+        },
+        {
+          "key": "c",
+          "type": "application",
+          "value": "/System/Applications/Calendar.app"
+        },
+        {
+          "key": "i",
+          "type": "application",
+          "value": "/System/Applications/iPhone Mirroring.app"
+        },
+        {
+          "key": "g",
+          "type": "application",
+          "value": "/Applications/Google Chrome.app"
+        }
+      ],
+      "iconPath": "cat",
+      "key": "A",
+      "label": "Apps",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "a",
+          "type": "folder",
+          "value": "/Applications"
+        },
+        {
+          "key": "l",
+          "type": "folder",
+          "value": "/Users/mikker/Downloads"
+        }
+      ],
+      "iconPath": "bookmark",
+      "key": "F",
+      "label": "Folders",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "d",
+          "type": "application",
+          "value": "/Applications/Discord.app"
+        },
+        {
+          "key": "s",
+          "type": "application",
+          "value": "/Applications/Slack.app"
+        }
+      ],
+      "iconPath": "message",
+      "key": "C",
+      "label": "Chat",
+      "type": "group"
+    },
+    {
+      "actions": [
+        {
+          "key": "a",
+          "label": " Music",
+          "type": "application",
+          "value": "/System/Applications/Music.app"
+        },
+        {
+          "key": "t",
+          "label": "TV",
+          "type": "application",
+          "value": "/System/Applications/TV.app"
+        },
+        {
+          "key": "y",
+          "type": "application",
+          "value": "/Applications/Youtube Music.app"
+        }
+      ],
+      "iconPath": "opticaldisc",
+      "key": "m",
+      "label": "Media",
+      "type": "group"
+    },
+    {
+      "key": "a",
+      "type": "application",
+      "value": "/Applications/Arc.app"
+    },
+    {
+      "key": "g",
+      "type": "application",
+      "value": "/Applications/GitKraken.app"
+    },
+    {
+      "key": "G",
+      "type": "application",
+      "value": "/Applications/Gemini.app"
+    },
+    {
+      "key": "i",
+      "type": "application",
+      "value": "/Applications/Simulator.app"
+    },
+    {
+      "key": "e",
+      "type": "command",
+      "label": "Start Android Emulator",
+      "value": "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin && export PATH=$PATH:$ANDROID_HOME/platform-tools && export PATH=$PATH:$ANDROID_HOME/emulator && nohup emulator -avd $(emulator -list-avds | head -n 1) > /dev/null 2>&1 &"
+    },
+    {
+      "key": "s",
+      "type": "application",
+      "value": "/Applications/Shortcat.app"
+    },
+    {
+      "key": "h",
+      "type": "application",
+      "value": "/Applications/Hotspot Shield.app"
+    },
+    {
+      "key": "f",
+      "type": "application",
+      "value": "/Applications/figma.app"
+    },
+    {
+      "key": "p",
+      "type": "application",
+      "value": "/Applications/Postman.app"
+    },
+    {
+      "key": "O",
+      "type": "application",
+      "value": "/Applications/OrbStack.app"
+    },
+    {
+      "key": "o",
+      "type": "application",
+      "value": "/Applications/Obsidian.app"
+    },
+    {
+      "key": "d",
+      "type": "application",
+      "value": "/Applications/DataGrip.app"
+    },
+    {
+      "key": "w",
+      "type": "application",
+      "value": "/Applications/WhatsApp.app"
+    },
+    {
+      "key": "c",
+      "type": "application",
+      "value": "/System/Applications/Calculator.app"
+    },
+    {
+      "key": "t",
+      "type": "application",
+      "value": "/Applications/Transporter.app"
+    },
+    {
+      "key": "x",
+      "type": "application",
+      "value": "/Applications/Xcode.app"
+    },
+    {
+      "key": "space",
+      "type": "application",
+      "value": "/Applications/Ghostty.app"
+    }
+  ],
+  "type": "group"
+}
