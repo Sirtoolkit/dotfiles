@@ -1,13 +1,6 @@
 #!/bin/bash
-# Activa los servicios de skhd y sketchybar si están instalados
+# Activa los servicios necesarios si están instalados
 set -e
-
-if command -v skhd >/dev/null 2>&1; then
-  echo "Activando skhd..."
-  skhd --start-service || true
-else
-  echo "skhd no encontrado, saltando."
-fi
 
 if command -v aerospace >/dev/null 2>&1; then
   echo "Starting AeroSpace..."

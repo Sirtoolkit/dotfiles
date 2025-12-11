@@ -2,11 +2,9 @@ packages:
   taps:
     - dashlane/tap
     - rsteube/homebrew-tap
-    - gromgit/brewtils
     - jorgerojas26/lazysql
-    - mobile-dev-inc/tap
-    - FelixKratz/formulae
     - qmk/qmk
+    - FelixKratz/formulae
   brews:
     - bat
     - php
@@ -23,7 +21,6 @@ packages:
     - jq
     - mas
     - mise
-    - platformio
     - tldr
     - topgrade
     - trash
@@ -50,17 +47,14 @@ packages:
     - ripgrep
     - tree-sitter-cli
     - atuin
-    - koekeishiya/formulae/skhd
-    - rbenv
-    - ruby-build
     - gemini-cli
     - opencode
     - pam-reattach
+    - borders
+    - fd
   casks:
     - gitkraken
     - microsoft-excel
-    - godot
-    - zed
     - google-chrome
     - postman
     - ghostty
@@ -76,7 +70,7 @@ packages:
     - gcloud-cli
     - android-commandlinetools
     - nikitabobko/tap/aerospace
-    - karabiner-elements
-    - hammerspoon
     - figma
     - font-caskaydia-cove-nerd-font
+    - leader-key
+    - shortcat
