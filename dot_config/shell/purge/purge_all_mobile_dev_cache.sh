@@ -1,6 +1,6 @@
 purge-all-mobile-dev-cache() {
 	echo -e "\n\033[1;33mINFO:\033[0m Esta acción eliminará directamente las carpetas de caché de desarrollo nativo y de frameworks."
-	echo "Se limpiarán carpetas de Android (Gradle), iOS (Xcode), Node.js (npm/yarn), React Native, Expo y Flutter."
+	echo "Se limpiarán carpetas de Android (Gradle), iOS (Xcode), Node.js (npm/yarn/pnpm), React Native, Expo y Flutter."
 	echo "Tus proyectos, SDKs y configuraciones principales NO serán eliminados."
 	echo -n "¿Estás seguro de que quieres continuar? (escribe 'si' para confirmar): "
 
@@ -23,18 +23,20 @@ purge-all-mobile-dev-cache() {
 			rm -rf ~/Library/Caches/org.swift.swiftpm/
 		fi
 
-		# --- Limpieza de Carpetas de Caché de Frameworks ---
+	# --- Limpieza de Carpetas de Caché de Frameworks ---
 
-		# Caché de Node.js (npm y Yarn)
-		echo "Eliminando carpetas de caché de npm y Yarn..."
-		rm -rf ~/.npm/_cacache
-		rm -rf ~/.npm/_logs
+	# Caché de Node.js (npm, Yarn y pnpm)
+	echo "Eliminando carpetas de caché de npm, Yarn y pnpm..."
+	rm -rf ~/.npm/_cacache
+	rm -rf ~/.npm/_logs
 
-		if [[ "$(uname)" == "Darwin" ]]; then
-			rm -rf ~/Library/Caches/Yarn
-		else # Asumiendo Linux
-			rm -rf ~/.cache/yarn
-		fi
+	if [[ "$(uname)" == "Darwin" ]]; then
+		rm -rf ~/Library/Caches/Yarn
+		rm -rf ~/Library/Caches/pnpm
+	else # Asumiendo Linux
+		rm -rf ~/.cache/yarn
+		rm -rf ~/.cache/pnpm
+	fi
 
 		# Caché específica de React Native
 		echo "Eliminando carpetas de caché de React Native (Metro)..."

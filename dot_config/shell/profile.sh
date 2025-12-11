@@ -27,6 +27,10 @@ export PATH="$HOME/.pub-cache/bin:$PATH"
 # PHP Composer
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 

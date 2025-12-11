@@ -15,7 +15,6 @@ purge-all() {
         pip-cache-cleanup
         go-cache-cleanup
         docker-prune
-        vscode-cache-cleanup
         system-log-cleanup
         echo -e "\n\033[1;32mAll purge operations completed!\033[0m"
     else
