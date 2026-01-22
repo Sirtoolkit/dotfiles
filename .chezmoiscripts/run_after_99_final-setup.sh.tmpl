@@ -69,6 +69,20 @@ final_setup() {
     else
         log_success "zsh ya es el shell por defecto"
     fi
+
+    # Activar servicio borders si no está ya activado
+    if command -v brew >/dev/null 2>&1; then
+        log_info "Verificando estado del servicio borders..."
+        if brew services list | grep "^borders" | grep -q "started"; then
+            log_info "Servicio borders ya está activado"
+        else
+            log_info "Activando servicio borders..."
+            brew services start borders
+            log_success "Servicio borders activado"
+        fi
+    else
+        log_warning "Homebrew no encontrado, no se puede activar borders"
+    fi
 }
 
 # Función para mostrar resumen final

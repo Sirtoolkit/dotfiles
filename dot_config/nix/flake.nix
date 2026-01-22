@@ -127,7 +127,6 @@ CustomUserPreferences = {
 	   # --- macOS Específico ---
 	   mas           # Mac App Store CLI
 	   pam-reattach  # CRUCIAL: Permite usar TouchID dentro de tmux
-	   jankyborders  # Esto es "borders" (para los bordes de color en ventanas)
 	  
 	   # --- Lenguajes & Frameworks ---
 	   cocoapods     # Gestión de dependencias Swift/Obj-C
@@ -140,9 +139,9 @@ CustomUserPreferences = {
       # security.pam.enableSudoTouchIdAuth = true;
 
       homebrew.enable = true;
-      homebrew.taps = [ { name = "dashlane/tap"; } ];
+      homebrew.taps = [ { name = "dashlane/tap"; } { name = "FelixKratz/formulae"; }];
       homebrew.casks = [ "arc" "ghostty" "figma" "whatsapp" "microsoft-excel" "leader-key" "discord" "android-commandlinetools"];
-      homebrew.brews = [ "dashlane-cli" "mole" "composer" "php"];
+      homebrew.brews = [ "dashlane-cli" "mole" "composer" "php" "borders"];
 
       homebrew.masApps = { 
        Xcode = 497799835;
