@@ -43,7 +43,19 @@ fi
 # Función para configuración final
 final_setup() {
     log_step "Configuración final..."
-    
+
+    # Configurar Git para usar gh como helper de credenciales
+    if command -v gh >/dev/null 2>&1; then
+        log_info "Configurando Git para usar GitHub CLI como helper de credenciales..."
+        git config --global --unset-all credential.https://github.com.helper >/dev/null 2>&1 || true
+        git config --global --unset-all credential.https://gist.github.com.helper >/dev/null 2>&1 || true
+        git config --global credential.https://github.com.helper "!$(which gh) auth git-credential"
+        git config --global credential.https://gist.github.com.helper "!$(which gh) auth git-credential"
+        log_success "Git configurado para usar GitHub CLI"
+    else
+        log_warning "GitHub CLI (gh) no encontrado, saltando configuración de credenciales"
+    fi
+
     # Cambiar shell por defecto a zsh si no lo es ya
     if [ "$SHELL" != "/bin/zsh" ] && [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/opt/homebrew/bin/zsh" ]; then
         if command -v zsh >/dev/null 2>&1;
@@ -72,6 +84,7 @@ show_summary() {
     echo "  5️⃣ Global pnpm packages (nx, opencommit, expo, nest)"
     echo "  6️⃣ Install web apps (YouTube Music, GitHub, Gemini)"
     echo "  7️⃣ Nix y nix-darwin configuration"
+    echo "  8️⃣ Configuración de Git con GitHub CLI"
     echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
     
     echo "\n${YELLOW}💡 Si algo falló:${NC}"
