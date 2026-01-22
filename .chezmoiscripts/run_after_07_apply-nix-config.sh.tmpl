@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+# Get the local hostname
+HOSTNAME=$(scutil --get LocalHostName)
+
+# Check if Nix is already installed
+if ! command -v nix >/dev/null 2>&1; then
+    echo "🛠️  Installing Nix..."
+    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
+    echo "✅ Nix installed successfully"
+else
+    echo "✅ Nix is already installed"
+fi
+
+# Check if nix-darwin is installed
+if ! command -v darwin-rebuild >/dev/null 2>&1; then
+    echo "🛠️  Installing nix-darwin..."
+
+    # Initialize nix-darwin template in ~/.config/nix if flake.nix doesn't exist
+    if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
+        echo "📁 Initializing nix-darwin template in ~/.config/nix..."
+        mkdir -p "$HOME/.config/nix"
+        cd "$HOME/.config/nix"
+        nix flake init -t nix-darwin/master
+        
+        # Update hostname in flake.nix
+        sed -i '' "s/simple/$HOSTNAME/" flake.nix
+    fi
+
+    # Install nix-darwin from your flake in ~/.config/nix
+    nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix#$HOSTNAME
+
+    echo "✅ nix-darwin installed successfully"
+else
+    echo "✅ nix-darwin is already installed"
+    
+    # Apply the Nix Darwin configuration
+    echo "🔄 Applying Nix Darwin configuration..."
+    sudo darwin-rebuild switch --flake ~/.config/nix#$HOSTNAME
+fi
+
+echo "🎉 Nix configuration applied successfully"

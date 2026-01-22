@@ -39,3 +39,10 @@ else
   echo "Instalando Expo globalmente con pnpm..."
   pnpm add -g expo
 fi
+
+if command -v nest >/dev/null 2>&1; then
+  echo "Nest CLI ya está instalado globalmente. Saltando instalación."
+else
+  echo "Instalando Nest CLI globalmente con pnpm..."
+  pnpm add -g @nestjs/cli
+fi
