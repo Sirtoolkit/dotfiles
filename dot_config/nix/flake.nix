@@ -140,7 +140,7 @@ CustomUserPreferences = {
 
       homebrew.enable = true;
       homebrew.taps = [ { name = "dashlane/tap"; } ];
-      homebrew.casks = [ "arc" "ghostty" "figma" "whatsapp" "microsoft-excel" "leader-key" "discord"];
+      homebrew.casks = [ "arc" "ghostty" "figma" "whatsapp" "microsoft-excel" "leader-key" "discord" "android-commandlinetools"];
       homebrew.brews = [ "dashlane-cli" "mole" "composer" "php"];
 
       homebrew.masApps = { 

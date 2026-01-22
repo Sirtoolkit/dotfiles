@@ -6,19 +6,22 @@ if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lscolors.sh" ]; then
 	. "${XDG_CONFIG_HOME:-$HOME/.config}/shell/lscolors.sh"
 fi
 
+# Load mise and get dynamic paths
 eval "$(mise activate zsh)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Added by Toolbox App
-export FLUTTER_ROOT=$(mise where flutter)
+# Flutter from mise
+export FLUTTER_ROOT=$(mise where flutter 2>/dev/null || echo "")
 
-export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
-export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+# Android SDK from Homebrew (installed via Nix)
+if [ -d "/opt/homebrew/share/android-commandlinetools" ]; then
+    export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+    export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+    export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+    export PATH="$ANDROID_HOME/platform-tools:$PATH"
+    export PATH="$ANDROID_HOME/emulator:$PATH"
+fi
 
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-export PATH=$PATH:$ANDROID_HOME/emulator
-
+# OrbStack
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
 # Dart
@@ -31,7 +34,9 @@ export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 export PNPM_HOME="$HOME/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
+# Locale
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+# Local binaries
 export PATH="$HOME/.local/bin:$PATH"

@@ -1,0 +1,69 @@
+#!{{ lookPath "bash" }}
+
+# Script para instalar Android Platform Tools
+# Se ejecuta una sola vez con chezmoi
+{{ if eq .chezmoi.os "darwin" -}}
+
+set -e  # Salir si hay error
+
+echo "🔍 Verificando instalación de Android Platform Tools..."
+
+# Configurar ANDROID_HOME
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+
+echo "📂 Usando ANDROID_HOME: $ANDROID_HOME"
+
+# Verificar que sdkmanager esté disponible
+if ! command -v sdkmanager &> /dev/null; then
+    echo "❌ Error: sdkmanager no está disponible"
+    echo "   Asegúrate de que android-commandlinetools esté instalado con Homebrew/Nix"
+    exit 1
+fi
+
+echo "📍 sdkmanager encontrado en: $(which sdkmanager)"
+
+# Aceptar licencias automáticamente
+echo "📜 Aceptando licencias de Android SDK..."
+yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+# Instalar platform-tools si no existe
+if [ ! -d "$ANDROID_HOME/platform-tools" ] || [ ! -f "$ANDROID_HOME/platform-tools/adb" ]; then
+    echo "⬇️  Instalando Android Platform Tools..."
+    sdkmanager "platform-tools"
+    
+    if [ -f "$ANDROID_HOME/platform-tools/adb" ]; then
+        echo "✅ Android Platform Tools instaladas correctamente"
+    else
+        echo "❌ Error: No se pudo instalar Android Platform Tools"
+        exit 1
+    fi
+else
+    echo "✅ Android Platform Tools ya están instaladas"
+fi
+
+# Obtener la última versión de build-tools disponible
+echo "🔍 Buscando última versión de Android Build Tools..."
+LATEST_BUILD_TOOLS=$(sdkmanager --list 2>/dev/null | grep "build-tools;" | grep -v "rc" | head -1 | awk '{print $1}')
+
+if [ -z "$LATEST_BUILD_TOOLS" ]; then
+    echo "⚠️  No se pudo detectar la última versión de build-tools, usando 35.0.0"
+    LATEST_BUILD_TOOLS="build-tools;35.0.0"
+fi
+
+# Instalar build-tools si no existe
+if [ ! -d "$ANDROID_HOME/build-tools" ]; then
+    echo "⬇️  Instalando Android Build Tools ($LATEST_BUILD_TOOLS)..."
+    sdkmanager "$LATEST_BUILD_TOOLS"
+    echo "✅ Android Build Tools instaladas correctamente"
+else
+    echo "✅ Android Build Tools ya están instaladas"
+fi
+
+echo ""
+echo "📍 Herramientas instaladas en: $ANDROID_HOME"
+echo "   - ADB: $ANDROID_HOME/platform-tools/adb"
+echo "💡 Reinicia tu terminal para que las herramientas estén disponibles en el PATH"
+
+{{ end -}}
