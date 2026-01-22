@@ -111,6 +111,7 @@ CustomUserPreferences = {
 	   coreutils
 	   findutils
 	   wget
+     btop
 	   tree
 	   bat
 	   tldr      # manuales simplificados
