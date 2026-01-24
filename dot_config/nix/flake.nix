@@ -128,21 +128,23 @@
 
         homebrew = {
           enable = true;
-          taps = [ 
-            "dashlane/tap" 
-            "FelixKratz/formulae" 
+          taps = [
+            "dashlane/tap"
+            "FelixKratz/formulae"
+            "yqrashawn/goku"
           ];
-          casks = [ 
-            "arc" 
-            "ghostty" 
-            "figma" 
-            "whatsapp" 
-            "microsoft-excel" 
-            "leader-key" 
-            "discord" 
-            "android-commandlinetools" 
+          casks = [
+            "arc"
+            "ghostty"
+            "figma"
+            "whatsapp"
+            "microsoft-excel"
+            "leader-key"
+            "discord"
+            "android-commandlinetools"
+            "karabiner-elements"
           ];
-          brews = [ "dashlane-cli" "mole" "borders" ];
+          brews = [ "dashlane-cli" "mole" "borders" "goku"];
           masApps = {
             Xcode = 497799835;
             Transporter = 1450874784;
