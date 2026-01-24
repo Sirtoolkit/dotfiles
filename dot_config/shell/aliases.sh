@@ -1,7 +1,3 @@
-source "$HOME/.config/shell/general_aliases.sh"
-source "$HOME/.config/shell/expo_aliases.sh"
-source "$HOME/.config/shell/flutter_aliases.sh"
-source "$HOME/.config/shell/firebase_aliases.sh"
 source "$HOME/.config/shell/search_functions.sh"
 source "$HOME/.config/shell/purge/purge.sh"
 source "$HOME/.config/shell/android/android.sh"

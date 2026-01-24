@@ -49,3 +49,25 @@ experimental = true
 disable_hints = ["false"]
 python.uv_venv_auto = true
 idiomatic_version_file_enable_tools = []
+
+[shell_alias]
+zshconfig = "nvim ~/.zshrc"
+ohmyzsh = "nvim ~/.oh-my-zsh"
+v = "nvim"
+zsource = 'source ~/.zshrc'
+gdu = 'gdu-go'
+
+ls = "eza -l --icons=always -m -n -l"
+l = "eza -l --icons=always -m -n -l -a"
+ll = "eza -l --icons=always -m -n -l"
+
+mkdir = 'mkdir -pv'
+
+firebase = "firebase-tools"
+
+dbb = "flutter clean && dart run build_runner build -d"
+dbw = "flutter clean && dart run build_runner watch -d"
+mbf = "mason make feature_brick --project_name $(cat pubspec.yaml | awk 'NR==1 {print; exit}' | awk '{print $2}') --name"
+
+cea = "npx create-expo-app@latest"
+cea-blank = "npx create-expo-app@latest --template blank-typescript"
