@@ -37,8 +37,6 @@ return {
     vim.cmd([[Neotree close]])
   end,
   init = function()
-    -- FIX: use `autocmd` for lazy-loading neo-tree instead of directly requiring it,
-    -- because `cwd` is not set up properly.
     vim.api.nvim_create_autocmd("BufEnter", {
       group = vim.api.nvim_create_augroup("Neotree_start_directory", { clear = true }),
       desc = "Start Neo-tree with directory",
@@ -58,7 +56,6 @@ return {
   opts = function()
     local git_available = vim.fn.executable("git") == 1
 
-    -- Definición manual de iconos (Reemplaza a astroui)
     local icons = {
       FolderClosed = "",
       FolderOpen = "",
@@ -77,7 +74,6 @@ return {
       GitConflict = "",
     }
 
-    -- Fuentes a mostrar
     local sources = {
       { source = "filesystem", display_name = icons.FolderClosed .. " File" },
       { source = "buffers", display_name = icons.DefaultFile .. " Bufs" },
@@ -127,25 +123,20 @@ return {
       },
       commands = {
         system_open = function(state)
-          -- Abre el archivo con el programa predeterminado del sistema
           vim.ui.open(state.tree:get_node():get_id())
         end,
         reveal_in_finder = function(state)
-          -- Abre el archivo/carpeta en Finder/Explorer
           local node = state.tree:get_node()
           local file_path = node:get_id()
           if not file_path or file_path == "" then
             vim.notify("No hay archivo seleccionado", vim.log.levels.WARN)
             return
           end
-          -- En macOS: open -R revela el archivo en Finder
-          -- En Linux: xdg-open abre el explorador de archivos
-          -- En Windows: explorer /select, abre el explorador
+
           local os = vim.loop.os_uname().sysname
           if os == "Darwin" then
             vim.fn.system({ "open", "-R", file_path })
           elseif os == "Linux" then
-            -- Para Linux, abrimos el directorio padre si es un archivo
             local dir_path = node.type == "directory" and file_path or vim.fn.fnamemodify(file_path, ":h")
             vim.fn.system({ "xdg-open", dir_path })
           elseif os == "Windows" or os == "Windows_NT" then
@@ -165,16 +156,16 @@ return {
         child_or_open = function(state)
           local node = state.tree:get_node()
           if node:has_children() then
-            if not node:is_expanded() then -- si no está expandido, expandir
+            if not node:is_expanded() then
               state.commands.toggle_node(state)
-            else -- si está expandido, ir al primer hijo
+            else
               if node.type == "file" then
                 state.commands.open(state)
               else
                 require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
               end
             end
-          else -- si es archivo, abrir
+          else
             state.commands.open(state)
           end
         end,
@@ -221,8 +212,7 @@ return {
         mappings = {
           ["<S-CR>"] = "system_open",
           ["<Space>"] = false,
-          -- ["[b"] = "prev_source",
-          -- ["]b"] = "next_source",
+
           O = "system_open",
           Y = "copy_selector",
           h = "parent_or_close",
@@ -233,7 +223,7 @@ return {
       filesystem = {
         follow_current_file = { enabled = true },
         filtered_items = { hide_gitignored = git_available },
-        hijack_netrw_behavior = "disabled", -- Deshabilitar Netrw completamente
+        hijack_netrw_behavior = "disabled",
         use_libuv_file_watcher = vim.fn.has("win32") ~= 1,
       },
       event_handlers = {
@@ -248,14 +238,11 @@ return {
     }
   end,
   config = function(_, opts)
-    -- Deshabilitar Netrw completamente
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
-    -- Cargar configuración principal
     require("neo-tree").setup(opts)
 
-    -- Autocmd: Refrescar Neo-tree al cerrar Lazygit
     vim.api.nvim_create_autocmd("TermClose", {
       pattern = "*lazygit*",
       desc = "Refresh Neo-Tree sources when closing lazygit",

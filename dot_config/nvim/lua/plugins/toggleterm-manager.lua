@@ -7,7 +7,7 @@ return {
   opts = function()
     local toggleterm_manager = require("toggleterm-manager")
     local actions = toggleterm_manager.actions
-    local term_icon = "" -- Icono hardcodeado (antes venía de astroui)
+    local term_icon = ""
 
     return {
       titles = {

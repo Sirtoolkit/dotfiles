@@ -1,11 +1,11 @@
 return {
   "akinsho/flutter-tools.nvim",
-  lazy = false, -- Cargar al inicio para que detecte proyectos Flutter rápido
+  lazy = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "stevearc/dressing.nvim", -- Opcional: UI bonita para selectores
+    "stevearc/dressing.nvim",
   },
-  -- 2. Configuración principal
+
   opts = {
     ui = {
       border = "rounded",
@@ -13,7 +13,7 @@ return {
     dev_log = {
       enabled = false,
     },
-    -- 3. Configuración del Debugger (DAP)
+
     debugger = {
       enabled = true,
       exception_breakpoints = {},
@@ -21,7 +21,6 @@ return {
       register_configurations = function(paths)
         local dap = require("dap")
 
-        -- Tus configuraciones personalizadas de PROD y DEV
         dap.configurations.dart = {
           {
             type = "dart",
@@ -36,7 +35,7 @@ return {
             type = "dart",
             request = "launch",
             name = "DEV",
-            flutterMode = "profile", -- Ojo: profile no soporta debug breakpoints, solo ejecución
+            flutterMode = "profile",
             dartSdkPath = paths.dart_bin,
             flutterSdkPath = paths.flutter_bin,
             program = "${workspaceFolder}/lib/main_dev.dart",
@@ -45,17 +44,17 @@ return {
         }
       end,
     },
-    -- 4. Configuración LSP (Reemplaza a astrolsp)
+
     lsp = {
       color = {
         enabled = true,
       },
-      -- Settings que se pasan a dartls
+
       settings = {
         showTodos = true,
         completeFunctionCalls = true,
         enableSnippets = true,
-        updateImportsOnRename = true, -- Muy útil al mover archivos
+        updateImportsOnRename = true,
         dart = {
           analysisExcludedFolders = {
             vim.fn.expand("$HOME/.pub-cache"),
@@ -63,8 +62,6 @@ return {
           },
         },
       },
-      -- Capabilities para autocompletado (nvim-cmp / blink)
-      -- capabilities = require("cmp_nvim_lsp").default_capabilities(),
     },
   },
 }

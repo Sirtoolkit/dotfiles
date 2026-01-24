@@ -1,4 +1,3 @@
--- Desactivar phpcs de none-ls
 return {
   "nvimtools/none-ls.nvim",
   opts = function(_, opts)

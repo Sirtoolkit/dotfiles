@@ -4,7 +4,7 @@ return {
   cmd = { "ToggleTerm", "TermExec" },
   opts = {
     size = 10,
-    open_mapping = [[<F7>]], -- Mapeo por defecto
+    open_mapping = [[<F7>]],
     shading_factor = 2,
     float_opts = {
       border = "rounded",
@@ -15,7 +15,7 @@ return {
       NormalFloat = { link = "NormalFloat" },
       FloatBorder = { link = "FloatBorder" },
     },
-    -- Función al crear la terminal (configuraciones locales de buffer)
+
     on_create = function(_)
       vim.opt_local.foldcolumn = "0"
       vim.opt_local.signcolumn = "no"
