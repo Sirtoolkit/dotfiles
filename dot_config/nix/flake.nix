@@ -114,7 +114,6 @@
 
           # --- macOS Específico ---
           mas
-          pam-reattach
 
           # --- Lenguajes & Frameworks ---
           cocoapods
@@ -122,6 +121,7 @@
 
           # --- Herramientas Específicas ---
           qmk
+          kanata
         ];
 
         # security.pam.enableSudoTouchIdAuth = true;
@@ -131,7 +131,6 @@
           taps = [
             "dashlane/tap"
             "FelixKratz/formulae"
-            "yqrashawn/goku"
           ];
           casks = [
             "arc"
@@ -142,9 +141,8 @@
             "leader-key"
             "discord"
             "android-commandlinetools"
-            "karabiner-elements"
           ];
-          brews = [ "dashlane-cli" "mole" "borders" "goku"];
+          brews = [ "dashlane-cli" "mole" "borders" "pam-reattach" ];
           masApps = {
             Xcode = 497799835;
             Transporter = 1450874784;

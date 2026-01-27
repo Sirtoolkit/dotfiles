@@ -1,11 +1,6 @@
 #!{{ lookPath "sh" }}
 
 {{ if eq .chezmoi.os "darwin" -}}
-# Install pam-reattach if not already installed
-if ! brew list pam-reattach &>/dev/null; then
-  echo "Installing pam-reattach..."
-  brew install pam-reattach
-fi
 
 # Configure TouchID for sudo with pam-reattach
 if ! grep -q "pam_reattach.so" /etc/pam.d/sudo; then
