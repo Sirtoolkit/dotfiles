@@ -73,7 +73,6 @@
             persistent-apps = [
               "/Applications/Arc.app"
               "/Applications/Ghostty.app"
-              "/Applications/Nix Apps/Zed.app"
               "/Applications/Nix Apps/GitKraken.app"
               "/Applications/Nix Apps/Postman.app"
               "/Applications/Nix Apps/Obsidian.app"
