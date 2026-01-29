@@ -3,31 +3,39 @@
 set -e
 
 # Colores para output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
 
 # Función para logging con colores
 log_info() {
-    echo "${BLUE}ℹ️  $1${NC}"
+    printf "%b\n" "${BLUE}ℹ️  $1${NC}"
 }
 
 log_success() {
-    echo "${GREEN}✅ $1${NC}"
+    printf "%b\n" "${GREEN}✅ $1${NC}"
 }
 
 log_warning() {
-    echo "${YELLOW}⚠️  $1${NC}"
+    printf "%b\n" "${YELLOW}⚠️  $1${NC}"
 }
 
 log_error() {
-    echo "${RED}❌ $1${NC}"
+    printf "%b\n" "${RED}❌ $1${NC}"
 }
 
 log_step() {
-    echo "\n${BLUE}🚀 $1${NC}"
+    printf "\n%b\n" "${BLUE}🚀 $1${NC}"
 }
 
 # Verificar que estamos en macOS
@@ -42,7 +50,6 @@ log_info "Detectado sistema operativo: macOS"
 check_basic_tools() {
     log_step "Verificando herramientas básicas..."
     
-    # Solo verificar que tenemos lo mínimo para ejecutar chezmoi
     if ! command -v git >/dev/null 2>&1; then
         log_error "Git no está instalado. Por favor instala Git primero."
         exit 1
@@ -85,46 +92,26 @@ install_chezmoi() {
     log_success "chezmoi instalado correctamente"
 }
 
-# Función para aplicar configuraciones de chezmoi en dos fases
+# Función para aplicar configuraciones de chezmoi
 apply_chezmoi_config() {
-    log_step "Aplicando configuraciones de chezmoi en dos fases..."
+    log_step "Aplicando configuraciones de chezmoi..."
     
-    script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
     chezmoi_bin="$HOME/.local/bin/chezmoi"
     
     if [ ! -x "$chezmoi_bin" ]; then
         chezmoi_bin="chezmoi"
     fi
     
-    log_info "Inicializando chezmoi desde: $script_dir"
-    "$chezmoi_bin" init --source="$script_dir"
-    
-    # FASE 1: Copiar solo archivos de configuración
-    log_step "📁 FASE 1: Copiando archivos de configuración..."
-    log_info "Aplicando: ~/.config/, ~/.Library/, dotfiles, etc."
-    
-    if "$chezmoi_bin" apply --exclude scripts; then
-        log_success "Archivos de configuración copiados correctamente"
+    if "$chezmoi_bin" apply; then
+        log_success "Configuraciones aplicadas correctamente"
     else
-        log_warning "Algunos archivos pueden no haberse copiado correctamente, pero continuando..."
+        log_warning "Algunos archivos pueden no haberse aplicado correctamente"
     fi
-    
-    # FASE 2: Ejecutar scripts de instalación
-    log_step "🚀 FASE 2: Ejecutando scripts de instalación..."
-    log_info "Scripts en orden: 01-Homebrew → 02-Paquetes → 03-1Password → 04-TouchID → 05-mise → 06-Android"
-    
-    if "$chezmoi_bin" apply --include scripts; then
-        log_success "Scripts ejecutados correctamente"
-    else
-        log_warning "Algunos scripts fallaron, pero la configuración base está aplicada"
-    fi
-    
-    log_success "Chezmoi completado - archivos copiados primero, luego scripts ejecutados"
 }
 
 # Función principal
 main() {
-    log_step "🍎 Iniciando instalación completa del entorno de desarrollo para macOS"
+    log_step "🍎 Iniciando instalación de chezmoi y aplicación de configuraciones"
     
     # Verificar que no se ejecute como root
     if [ "$EUID" -eq 0 ]; then
@@ -138,10 +125,10 @@ main() {
     # Instalar chezmoi
     install_chezmoi
     
-    # Aplicar chezmoi en dos fases: primero archivos, luego scripts
+    # Aplicar configuraciones
     apply_chezmoi_config
     
-    log_success "¡Instalación completa! Archivos copiados primero, scripts ejecutados después."
+    log_success "¡Instalación completa!"
 }
 
 # Ejecutar función principal

@@ -13,9 +13,14 @@ OLED_ENABLE = yes           # OLED display
 ENCODER_ENABLE = yes        # Enable encoder support
 ENCODER_MAP_ENABLE = yes    # Enable encoder map
 WPM_ENABLE = yes            # Enable WPM tracking for music bars animation
+COMBO_ENABLE = yes
+CAPS_WORD_ENABLE = yes
+LEADER_ENABLE = yes
+AUTO_SHIFT_ENABLE = yes
 
 # Custom animations and logo
 SRC +=  ./animations/music/music-bars.c \
         ./animations/hornet/hornet.c \
         ./animations/luffy_hat/luffy_hat.c \
+         achordion.c \
         ./animations/hollow_knight/hollow_knight.c

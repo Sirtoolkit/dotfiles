@@ -1,9 +1,8 @@
 [tools]
 node = "lts"
-flutter = "latest"
+flutter = "3.38.0"
 fluttergen = "latest"
 terraform = "latest"
-direnv = "latest"
 rust = "latest"
 usage = "latest"
 python = "latest"
@@ -41,8 +40,9 @@ jq = "latest"
 tree-sitter = "latest"
 ollama = "latest"
 carapace = "latest"
-"pipx:psf/black" = "latest"
-"github:firebase/firebase-tools" = "latest"
+direnv = "latest"
+firebase = "latest"
+pipx = "latest"
 
 [settings]
 experimental = true

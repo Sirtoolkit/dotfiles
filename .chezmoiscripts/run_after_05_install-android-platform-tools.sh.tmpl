@@ -1,0 +1,73 @@
+#!{{ lookPath "bash" }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+
+set -e
+
+# Colores para output
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    RED='\033[0;31m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    YELLOW=''
+    RED=''
+    NC=''
+fi
+
+# Configurar ANDROID_HOME
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+
+# Verificar sdkmanager
+if ! command -v sdkmanager &> /dev/null; then
+    printf "%b\n" "${RED}✗ sdkmanager no disponible${NC}"
+    printf "%b\n" "${YELLOW}  Instala android-commandlinetools con Homebrew/Nix${NC}"
+    exit 1
+fi
+
+printf "%b\n" "${GREEN}✓ sdkmanager encontrado${NC}"
+
+# Aceptar licencias
+printf "%b\n" "${BLUE}Aceptando licencias de Android SDK...${NC}"
+yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+# Instalar platform-tools
+if [ ! -d "$ANDROID_HOME/platform-tools" ] || [ ! -f "$ANDROID_HOME/platform-tools/adb" ]; then
+    printf "%b\n" "${BLUE}Instalando Android Platform Tools...${NC}"
+    sdkmanager "platform-tools"
+    
+    if [ -f "$ANDROID_HOME/platform-tools/adb" ]; then
+        printf "%b\n" "${GREEN}✓ Platform Tools instaladas${NC}"
+    else
+        printf "%b\n" "${RED}✗ Error instalando Platform Tools${NC}"
+        exit 1
+    fi
+else
+    printf "%b\n" "${GREEN}✓ Platform Tools ya están instaladas${NC}"
+fi
+
+# Obtener última versión de build-tools
+LATEST_BUILD_TOOLS=$(sdkmanager --list 2>/dev/null | grep "build-tools;" | grep -v "rc" | head -1 | awk '{print $1}')
+
+if [ -z "$LATEST_BUILD_TOOLS" ]; then
+    LATEST_BUILD_TOOLS="build-tools;35.0.0"
+fi
+
+# Instalar build-tools
+if [ ! -d "$ANDROID_HOME/build-tools" ]; then
+    printf "%b\n" "${BLUE}Instalando Android Build Tools...${NC}"
+    sdkmanager "$LATEST_BUILD_TOOLS"
+    printf "%b\n" "${GREEN}✓ Build Tools instaladas${NC}"
+else
+    printf "%b\n" "${GREEN}✓ Build Tools ya están instaladas${NC}"
+fi
+
+printf "%b\n" "${GREEN}✓ Android SDK configurado${NC}"
+
+{{ end -}}

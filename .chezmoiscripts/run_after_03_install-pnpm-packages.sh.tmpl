@@ -1,0 +1,48 @@
+#!/bin/bash
+set -e
+
+# Colores para output
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    RED='\033[0;31m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    RED=''
+    NC=''
+fi
+
+if ! command -v pnpm >/dev/null 2>&1; then
+  printf "%b\n" "${RED}✗ pnpm no está instalado${NC}"
+  exit 1
+fi
+
+# Configurar PNPM_HOME
+if [ -z "$PNPM_HOME" ]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+fi
+
+# Añadir al PATH
+if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
+  export PATH="$PNPM_HOME:$PATH"
+fi
+
+mkdir -p "$PNPM_HOME"
+
+# Instalar paquetes globales
+packages="nx:nx ocmt:oco expo:expo @nestjs/cli:nest"
+
+for package_info in $packages; do
+  IFS=':' read -r package cmd <<< "$package_info"
+  
+  if command -v "$cmd" >/dev/null 2>&1; then
+    printf "%b\n" "${GREEN}✓ $cmd ya está instalado${NC}"
+  else
+    printf "%b\n" "${BLUE}Instalando $package...${NC}"
+    pnpm add -g "$package"
+  fi
+done
+
+printf "%b\n" "${GREEN}✓ Paquetes de pnpm configurados${NC}"

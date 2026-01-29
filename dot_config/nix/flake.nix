@@ -10,7 +10,7 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
     let
-      configuration = { pkgs, ... }: {
+      configuration = { pkgs, lib, config, ... }: {
         nixpkgs.config.allowUnfree = true;
 
         system.primaryUser = "zizal";
@@ -93,7 +93,6 @@
           google-cloud-sdk
           devpod
           raycast
-          zed-editor
 
           # --- Core & Shell ---
           coreutils
@@ -105,12 +104,12 @@
           tldr
           trash-cli
           topgrade
+          mise
 
           # --- Desarrollo & Git ---
           git
           commitizen
           cloc
-          mise
 
           # --- macOS Específico ---
           mas
@@ -118,20 +117,19 @@
           # --- Lenguajes & Frameworks ---
           cocoapods
           fastlane
-
-          # --- Herramientas Específicas ---
           qmk
-          kanata
         ];
 
         # security.pam.enableSudoTouchIdAuth = true;
 
         homebrew = {
           enable = true;
+
           taps = [
             "dashlane/tap"
             "FelixKratz/formulae"
           ];
+
           casks = [
             "arc"
             "ghostty"
@@ -142,8 +140,14 @@
             "discord"
             "android-commandlinetools"
           ];
-          brews = [ "dashlane-cli" "mole" "borders" "pam-reattach" ];
-          masApps = {
+
+          brews = [ 
+            "dashlane/tap/dashlane-cli"     # Explícito
+            "mole" 
+            "FelixKratz/formulae/borders"   # Explícito para borders
+          ];
+          
+         masApps = {
             Xcode = 497799835;
             Transporter = 1450874784;
             Hotspot-Shield = 771076721;

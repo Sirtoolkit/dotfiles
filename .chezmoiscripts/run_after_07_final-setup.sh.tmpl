@@ -7,31 +7,39 @@ set -e
 export PATH=/opt/homebrew/bin:$PATH
 
 # Colores para output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
 
 # Función para logging con colores
 log_info() {
-    echo "${BLUE}ℹ️  $1${NC}"
+    printf "%b\n" "${BLUE}ℹ️  $1${NC}"
 }
 
 log_success() {
-    echo "${GREEN}✅ $1${NC}"
+    printf "%b\n" "${GREEN}✅ $1${NC}"
 }
 
 log_warning() {
-    echo "${YELLOW}⚠️  $1${NC}"
+    printf "%b\n" "${YELLOW}⚠️  $1${NC}"
 }
 
 log_error() {
-    echo "${RED}❌ $1${NC}"
+    printf "%b\n" "${RED}❌ $1${NC}"
 }
 
 log_step() {
-    echo "\n${BLUE}🚀 $1${NC}"
+    printf "\n%b\n" "${BLUE}🚀 $1${NC}"
 }
 
 # Verificar que estamos en macOS
@@ -87,26 +95,19 @@ final_setup() {
 
 # Función para mostrar resumen final
 show_summary() {
-    log_step "🎉 ¡Instalación completada!"
+    log_step "🎉 ¡Aplicación de dotfiles completada!"
     
-    echo "\n${GREEN}✅ Instalación exitosa de tu entorno de desarrollo${NC}"
-    echo "\n${BLUE}📋 Chezmoi ejecutó automáticamente (en orden):${NC}"
-    echo "  1️⃣ macOS TouchID for sudo"
-    echo "  2️⃣ mise tools (Java, Node, Python, etc.)"
-    echo "  3️⃣ Android Platform Tools"
-    echo "  4️⃣ tmux plugins y configuración"
-    echo "  5️⃣ Global pnpm packages (nx, opencommit, expo, nest)"
-    echo "  6️⃣ Install web apps (YouTube Music, GitHub, Gemini)"
-    echo "  7️⃣ Nix y nix-darwin configuration"
-    echo "  8️⃣ Configuración de Git con GitHub CLI"
-    echo "  ✨ Todos los dotfiles (.zshrc, .config/, etc.)"
+    printf "\n%b\n" "${GREEN}✅ Chezmoi aplicó exitosamente tus dotfiles${NC}"
+    printf "\n%b\n" "${BLUE}📋 Archivos aplicados:${NC}"
+    echo "  • Todos los archivos de configuración en tu directorio home"
+    echo "  • Scripts de instalación ejecutados"
     
-    echo "\n${YELLOW}💡 Si algo falló:${NC}"
-    echo "  • Ejecuta: chezmoi apply"
-    echo "  • Para herramientas específicas: mise install"
-    echo "  • Para actualizar Nix: darwin-rebuild switch --flake ~/.config/nix#\$(scutil --get LocalHostName)"
+    printf "\n%b\n" "${YELLOW}💡 Comandos útiles:${NC}"
+    echo "  • chezmoi apply - Aplicar cambios nuevamente"
+    echo "  • chezmoi status - Ver estado de archivos"
+    echo "  • chezmoi edit ~/.file - Editar archivos gestionados"
     
-    echo "\n${GREEN}🚀 ¡Tu entorno está listo para usar!${NC}\n"
+    printf "\n%b\n\n" "${GREEN}🚀 ¡Tu configuración está lista!${NC}"
 }
 
 # Función principal

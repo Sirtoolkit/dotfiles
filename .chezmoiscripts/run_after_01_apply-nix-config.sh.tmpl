@@ -1,25 +1,36 @@
 #!/bin/bash
 set -e
 
+# Colores para output
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    NC=''
+fi
+
 # Get the local hostname
 HOSTNAME=$(scutil --get LocalHostName)
 
 # Check if Nix is already installed
 if ! command -v nix >/dev/null 2>&1; then
-    echo "🛠️  Installing Nix..."
+    printf "%b\n" "${BLUE}Instalando Nix...${NC}"
     sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
-    echo "✅ Nix installed successfully"
+    printf "%b\n" "${GREEN}✓ Nix instalado${NC}"
 else
-    echo "✅ Nix is already installed"
+    printf "%b\n" "${GREEN}✓ Nix ya está instalado${NC}"
 fi
 
 # Check if nix-darwin is installed
 if ! command -v darwin-rebuild >/dev/null 2>&1; then
-    echo "🛠️  Installing nix-darwin..."
+    printf "%b\n" "${BLUE}Instalando nix-darwin...${NC}"
 
     # Initialize nix-darwin template in ~/.config/nix if flake.nix doesn't exist
     if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
-        echo "📁 Initializing nix-darwin template in ~/.config/nix..."
+        printf "%b\n" "${BLUE}Inicializando template de nix-darwin...${NC}"
         mkdir -p "$HOME/.config/nix"
         cd "$HOME/.config/nix"
         nix flake init -t nix-darwin/master
@@ -31,13 +42,13 @@ if ! command -v darwin-rebuild >/dev/null 2>&1; then
     # Install nix-darwin from your flake in ~/.config/nix
     nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix#$HOSTNAME
 
-    echo "✅ nix-darwin installed successfully"
+    printf "%b\n" "${GREEN}✓ nix-darwin instalado${NC}"
 else
-    echo "✅ nix-darwin is already installed"
+    printf "%b\n" "${GREEN}✓ nix-darwin ya está instalado${NC}"
     
     # Apply the Nix Darwin configuration
-    echo "🔄 Applying Nix Darwin configuration..."
+    printf "%b\n" "${BLUE}Aplicando configuración de Nix Darwin...${NC}"
     sudo darwin-rebuild switch --flake ~/.config/nix#$HOSTNAME
 fi
 
-echo "🎉 Nix configuration applied successfully"
+printf "%b\n" "${GREEN}✓ Configuración de Nix aplicada${NC}"

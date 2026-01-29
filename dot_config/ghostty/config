@@ -1,4 +1,7 @@
 font-family = CaskaydiaCove Nerd Font
+term = xterm-256color
+confirm-close-surface = false
+clipboard-paste-protection = false
 font-size = 16
 theme = Gruvbox Dark Hard
 shell-integration-features = no-cursor,sudo,no-title

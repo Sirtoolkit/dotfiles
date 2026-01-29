@@ -3,6 +3,41 @@
 #include "animations/hornet/hornet.h"
 #include "animations/hollow_knight/hollow_knight.h"
 
+#define HOME_A LGUI_T(KC_A)
+#define HOME_S LALT_T(KC_S)
+#define HOME_D LCTL_T(KC_D)
+#define HOME_F LSFT_T(KC_F)
+
+#define HOME_J RSFT_T(KC_J)
+#define HOME_K RCTL_T(KC_K)
+#define HOME_L RALT_T(KC_L)
+#define HOME_SCLN RGUI_T(KC_SCLN)
+
+enum combos {
+  UI_ESC,
+  WE_TAB,
+  SHFT_CW,
+  JK_LEADER,
+};
+
+const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END};
+const uint16_t PROGMEM we_combo[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM caps_word_combo[] = {HOME_F, HOME_J, COMBO_END};
+const uint16_t PROGMEM leader_combo[] = {HOME_J, HOME_K, COMBO_END};
+
+combo_t key_combos[] = {
+  [UI_ESC] = COMBO(ui_combo, KC_ESC),
+  [WE_TAB] = COMBO(we_combo, KC_TAB),
+  [SHFT_CW] = COMBO(caps_word_combo, CW_TOGG),
+  [JK_LEADER] = COMBO(leader_combo, QK_LEAD),
+};
+
+void leader_end_user(void) {
+    if (leader_sequence_one_key(KC_G))  SEND_STRING("https://google.com\n");
+    if (leader_sequence_two_keys(KC_C, KC_A))  SEND_STRING("const amount = ");
+    if (leader_sequence_one_key(KC_S))  tap_code16(LCTL(KC_S));
+}
+
 enum layer_number {
     _QWERTY = 0,
     _LOWER,
@@ -27,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                   `----------------------------'           '------''--------------------'
      */
 
-    [_QWERTY] = LAYOUT(KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_GRV, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_MINS, KC_LCTL, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_MUTE, KC_MPLY, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_RGUI),
+    [_QWERTY] = LAYOUT(KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_GRV, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_MINS, KC_LCTL, HOME_A,  HOME_S,  HOME_D,  HOME_F, KC_G, KC_H, HOME_J,  HOME_K,  HOME_L,  HOME_SCLN, KC_QUOT, KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_MUTE, KC_MPLY, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_LALT, KC_LGUI, MO(_LOWER), KC_SPC, KC_ENT, MO(_RAISE), KC_BSPC, KC_RGUI),
     /* LOWER
      * ,-----------------------------------------.                    ,-----------------------------------------.
      * |      |      |      |      |      |      |                    |      |      |      |      |      |      |

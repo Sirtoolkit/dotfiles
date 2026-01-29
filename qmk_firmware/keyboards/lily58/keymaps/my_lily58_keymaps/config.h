@@ -1,8 +1,12 @@
 #pragma once
 
-#define QUICK_TAP_TERM 0
-#define TAPPING_TERM 100
-
+#define TAPPING_TERM 250
+#define CHORDAL_HOLD
+#define PERMISSIVE_HOLD
+#define COMBO_ALLOW_ACTION_KEYS
+#define COMBO_TERM 50 // 50ms para presionar ambas teclas
+#define LEADER_TIMEOUT 300 // Tiempo para completar la secuencia después del combo (ms)
+#define AUTO_SHIFT_TIMEOUT 150 // Tiempo en milisegundos para activar el Shift
 // Encoder configuration - both encoders
 #undef ENCODER_A_PINS
 #undef ENCODER_B_PINS
