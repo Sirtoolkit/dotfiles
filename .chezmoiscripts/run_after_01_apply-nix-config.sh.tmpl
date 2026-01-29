@@ -33,14 +33,14 @@ if ! command -v darwin-rebuild >/dev/null 2>&1; then
         printf "%b\n" "${BLUE}Inicializando template de nix-darwin...${NC}"
         mkdir -p "$HOME/.config/nix"
         cd "$HOME/.config/nix"
-        nix flake init -t nix-darwin/master
+        sudo nix flake init -t nix-darwin/master
         
         # Update hostname in flake.nix
         sed -i '' "s/simple/$HOSTNAME/" flake.nix
     fi
 
     # Install nix-darwin from your flake in ~/.config/nix
-    nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix#$HOSTNAME
+    sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix#$HOSTNAME
 
     printf "%b\n" "${GREEN}✓ nix-darwin instalado${NC}"
 else
