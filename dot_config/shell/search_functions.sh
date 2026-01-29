@@ -1,3 +1,0 @@
-dgrep() {
-	als | grep "$@"
-}

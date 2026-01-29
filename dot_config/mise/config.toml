@@ -69,5 +69,8 @@ dbb = "flutter clean && dart run build_runner build -d"
 dbw = "flutter clean && dart run build_runner watch -d"
 mbf = "mason make feature_brick --project_name $(cat pubspec.yaml | awk 'NR==1 {print; exit}' | awk '{print $2}') --name"
 
+dgrep = "als | grep \"$@\""
 cea = "npx create-expo-app@latest"
 cea-blank = "npx create-expo-app@latest --template blank-typescript"
+c = "clear"
+t = "tmux"

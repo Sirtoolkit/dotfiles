@@ -33,9 +33,17 @@ combo_t key_combos[] = {
 };
 
 void leader_end_user(void) {
-    if (leader_sequence_one_key(KC_G))  SEND_STRING("https://google.com\n");
-    if (leader_sequence_two_keys(KC_C, KC_A))  SEND_STRING("const amount = ");
-    if (leader_sequence_one_key(KC_S))  tap_code16(LCTL(KC_S));
+    // --- SECUENCIA: Leader + L (Lock Mac) ---
+    // Envía Control + Command + Q
+    if (leader_sequence_one_key(KC_L)) tap_code16(LCTL(LGUI(KC_Q)));
+    // --- P: Print/Photo (Captura de pantalla de área) ---
+    // Abre el selector de área de macOS (Cmd + Shift + 4)
+    if (leader_sequence_one_key(KC_P)) tap_code16(LGUI(LSFT(KC_4)));
+    // --- M: Mission Control (Ver todas las ventanas) ---
+    if (leader_sequence_one_key(KC_M)) tap_code(KC_MCTL);
+    // --- T: Trash (Vaciar papelera con confirmación) ---
+    // Cmd + Shift + Delete
+    if (leader_sequence_one_key(KC_T)) tap_code16(LGUI(LSFT(KC_BSPC)));
 }
 
 enum layer_number {
@@ -77,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *                   |      |      |      |/       /         \      \ |      |      |      |
      *                   `----------------------------'           '------''--------------------'
      */
-    [_LOWER] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_GRV, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, _______, _______, _______, _______, _______, _______, _______, _______, XXXXXXX, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, _______, _______, _______, _______, _______, _______, _______, _______),
+    [_LOWER] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_F1, KC_F2, KC_F3, KC_BRID, KC_BRIU, KC_VOLD, KC_VOLU, KC_MUTE, KC_MPLY, KC_MPRV, KC_MNXT, KC_F12, KC_GRV, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, _______, _______, _______, _______, _______, _______, _______, _______, XXXXXXX, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, _______, _______, _______, _______, _______, _______, _______, _______),
     /* RAISE
      * ,-----------------------------------------.                    ,-----------------------------------------.
      * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
