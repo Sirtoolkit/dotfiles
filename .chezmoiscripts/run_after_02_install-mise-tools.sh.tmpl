@@ -24,15 +24,21 @@ CONFIG_FILE="${HOME}/.config/mise/config.toml"
 
 if [ -f "$CONFIG_FILE" ]; then
     printf "%b\n" "${BLUE}Instalando herramientas de mise...${NC}"
+    
+    # Verificar que Nix está disponible (dependencia previa)
+    if ! command -v nix >/dev/null 2>&1; then
+        printf "%b\n" "${YELLOW}⚠ Nix no disponible aún. Saltando Mise.${NC}"
+        exit 0
+    fi
 
-    if mise install; then
+    if mise install --all 2>/dev/null; then
         mise reshim
         printf "%b\n" "${GREEN}✓ Herramientas de mise instaladas${NC}"
     else
         printf "%b\n" "${YELLOW}⚠ Algunas herramientas fallaron, continuando...${NC}"
-        mise reshim
+        mise reshim || true
     fi
 else
-    printf "%b\n" "${YELLOW}⚠ No se encontró config de mise${NC}"
+    printf "%b\n" "${YELLOW}⚠ No se encontró config de mise en $CONFIG_FILE${NC}"
 fi
 {{ end -}}

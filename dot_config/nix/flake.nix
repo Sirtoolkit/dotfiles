@@ -117,6 +117,7 @@
           cocoapods
           fastlane
           qmk
+          amp-cli
         ];
 
         # security.pam.enableSudoTouchIdAuth = true;

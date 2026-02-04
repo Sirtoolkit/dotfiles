@@ -1,0 +1,9 @@
+# Configuración de encriptación de chezmoi con Age
+# Age es moderno, rápido y no requiere passphrase repetida
+
+[encryption]
+cipher = "age"
+identity = "~/.config/age/keys.txt"
+
+# Recipient con clave pública Age
+recipient = "age1cx2uwry6nle70zvkfvh5xwyjcu0nglj6x6zvstl5cyau7kyq8p4q23s358"

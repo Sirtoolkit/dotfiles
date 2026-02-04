@@ -5,11 +5,29 @@ set -e
 if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
     BLUE='\033[0;34m'
     GREEN='\033[0;32m'
+    RED='\033[0;31m'
     NC='\033[0m'
 else
     BLUE=''
     GREEN=''
+    RED=''
     NC=''
+fi
+
+# Error handler
+cleanup() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        printf "%b\n" "${RED}✗ Nix setup falló con código $exit_code${NC}"
+    fi
+    return $exit_code
+}
+trap cleanup EXIT
+
+# Verificar permisos sudo antes
+if ! sudo -n true 2>/dev/null; then
+    printf "%b\n" "${BLUE}Se requieren permisos sudo. Por favor, ingresa tu contraseña:${NC}"
+    sudo -v
 fi
 
 # Get the local hostname
