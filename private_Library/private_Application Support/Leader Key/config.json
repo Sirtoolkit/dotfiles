@@ -1,0 +1,145 @@
+{
+  "actions": [
+    {
+      "actions": [
+        {
+          "key": "a",
+          "type": "application",
+          "value": "/System/Applications/App Store.app"
+        },
+        {
+          "key": "c",
+          "type": "application",
+          "value": "/System/Applications/Calendar.app"
+        },
+        {
+          "key": "i",
+          "type": "application",
+          "value": "/System/Applications/iPhone Mirroring.app"
+        },
+        {
+          "key": "l",
+          "type": "folder",
+          "value": "/Users/zizal/Downloads"
+        }
+      ],
+      "iconPath": "cat",
+      "key": "A",
+      "label": "Apps",
+      "type": "group"
+    },
+    {
+      "key": "D",
+      "type": "application",
+      "value": "/Applications/Discord.app"
+    },
+    {
+      "key": "S",
+      "type": "application",
+      "value": "/Applications/Slack.app"
+    },
+    {
+      "key": "F",
+      "type": "application",
+      "value": "/Applications/figma.app"
+    },
+    {
+      "key": "O",
+      "type": "application",
+      "value": "/Applications/OrbStack.app"
+    },
+    {
+      "key": "G",
+      "type": "application",
+      "value": "/Applications/GitKraken.app"
+    },
+    {
+      "key": "f",
+      "type": "folder",
+      "value": "/Applications"
+    },
+    {
+      "key": "m",
+      "label": " Music",
+      "type": "application",
+      "value": "/System/Applications/Music.app"
+    },
+    {
+      "key": "y",
+      "type": "application",
+      "value": "/Applications/Youtube Music.app"
+    },
+    {
+      "key": "a",
+      "type": "application",
+      "value": "/Applications/Arc.app"
+    },
+    {
+      "key": "g",
+      "type": "application",
+      "value": "/Applications/Gemini.app"
+    },
+    {
+      "key": "i",
+      "type": "application",
+      "value": "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+    },
+    {
+      "key": "e",
+      "type": "command",
+      "label": "Start Android Emulator",
+      "value": "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/platform-tools && nohup $ANDROID_HOME/platform-tools/adb devices > /dev/null 2>&1 && osascript -e 'display notification \"Use Android Studio to launch emulator\" with title \"Android Tools\"'"
+    },
+    {
+      "key": "s",
+      "type": "application",
+      "value": "/Applications/Shortcat.app"
+    },
+    {
+      "key": "h",
+      "type": "application",
+      "value": "/Applications/Hotspot Shield.app"
+    },
+    {
+      "key": "b",
+      "type": "application",
+      "value": "/Applications/Bruno.app"
+    },
+    {
+      "key": "o",
+      "type": "application",
+      "value": "/Applications/Obsidian.app"
+    },
+    {
+      "key": "d",
+      "type": "application",
+      "value": "/Applications/DataGrip.app"
+    },
+    {
+      "key": "w",
+      "type": "application",
+      "value": "/Applications/WhatsApp.app"
+    },
+    {
+      "key": "c",
+      "type": "application",
+      "value": "/System/Applications/Calculator.app"
+    },
+    {
+      "key": "t",
+      "type": "application",
+      "value": "/Applications/Transporter.app"
+    },
+    {
+      "key": "x",
+      "type": "application",
+      "value": "/Applications/Xcode.app"
+    },
+    {
+      "key": "space",
+      "type": "application",
+      "value": "/Applications/Ghostty.app"
+    }
+  ],
+  "type": "group"
+}

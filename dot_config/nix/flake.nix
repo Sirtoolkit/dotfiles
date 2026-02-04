@@ -70,64 +70,30 @@
             expose-group-apps = false;
             show-recents = false;
             orientation = "left";
+            tilesize = 48;
             persistent-apps = [
               "/Applications/Arc.app"
+              "/Applications/Gemini.app"
+              "/Applications/Youtube Music.app"
               "/Applications/Ghostty.app"
-              "/Applications/Nix Apps/GitKraken.app"
-              "/Applications/Nix Apps/Postman.app"
-              "/Applications/Nix Apps/Obsidian.app"
+              "/Applications/Bruno.app"
+              "/Applications/Obsidian.app"
+              "/Applications/DataGrip.app"
+              "/Applications/Hotspot Shield.app"
             ];
           };
         };
 
         environment.systemPackages = with pkgs; [
-          aerospace
-          gitkraken
-          postman
-          obsidian
-          orbstack
-          slack
-          shortcat
-          jetbrains.datagrip
-          google-cloud-sdk
-          devpod
-          raycast
-
-          # --- Core & Shell ---
-          coreutils
-          findutils
-          wget
-          btop
-          tree
-          bat
-          tldr
-          trash-cli
-          topgrade
-          mise
-
-          # --- Desarrollo & Git ---
-          git
-          commitizen
-          cloc
-
-          # --- macOS Específico ---
-          mas
-
-          # --- Lenguajes & Frameworks ---
-          cocoapods
-          fastlane
           qmk
-          amp-cli
         ];
-
-        # security.pam.enableSudoTouchIdAuth = true;
 
         homebrew = {
           enable = true;
-
           taps = [
             "dashlane/tap"
             "FelixKratz/formulae"
+            "nikitabobko/tap"
           ];
 
           casks = [
@@ -139,12 +105,59 @@
             "leader-key"
             "discord"
             "android-commandlinetools"
+            "orbstack"
+            "gitkraken"
+            "bruno"
+            "obsidian"
+            "slack"
+            "shortcat"
+            "datagrip"
+            "gcloud-cli"
+            "raycast"
+            "flutter"
+            "nikitabobko/tap/aerospace"
           ];
 
-          brews = [ 
+          brews = [
             "dashlane/tap/dashlane-cli"     # Explícito
-            "mole" 
             "FelixKratz/formulae/borders"   # Explícito para borders
+            "mole"
+            "bat"
+            "btop"
+            "tldr"
+            "mise"
+            "coreutils"
+            "findutils"
+            "wget"
+            "usage"
+            "gh"
+            "infisical"
+            "tmux"
+            "yazi"
+            "lazygit"
+            "lazyssh"
+            "neovim"
+            "starship"
+            "zoxide"
+            "fzf"
+            "eza"
+            "ripgrep"
+            "fd"
+            "jq"
+            "pipx"
+            "trash-cli"
+            "git"
+            "mas"
+            "cocoapods"
+            "opencode"
+            "fastlane"
+            "act"
+            "atuin"
+            "balena-cli"
+            "carapace"
+            "direnv"
+            "chezmoi"
+            "tree-sitter"
           ];
           
          masApps = {

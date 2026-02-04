@@ -232,16 +232,6 @@
       ],
       "enabled": true,
     },
-    "next-devtools": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "next-devtools-mcp@latest",
-        "mcp"
-      ],
-      "enabled": true,
-    },
     "dart": {
       "type": "local",
       "command": [

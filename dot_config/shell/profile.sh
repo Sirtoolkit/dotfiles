@@ -10,6 +10,7 @@ fi
 eval "$(mise activate zsh)"
 
 # Flutter from mise
+# export FLUTTER_ROOT=$(mise where flutter 2>/dev/null || echo "")
 export FLUTTER_ROOT=$(mise where flutter 2>/dev/null || echo "")
 
 # Android SDK from Homebrew (installed via Nix)

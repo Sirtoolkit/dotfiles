@@ -21,7 +21,7 @@ enum combos {
 };
 
 const uint16_t PROGMEM ui_combo[] = {KC_U, KC_I, COMBO_END};
-const uint16_t PROGMEM we_combo[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM we_combo[] = {KC_E, KC_R, COMBO_END};
 const uint16_t PROGMEM caps_word_combo[] = {HOME_F, HOME_J, COMBO_END};
 const uint16_t PROGMEM leader_combo[] = {HOME_J, HOME_K, COMBO_END};
 

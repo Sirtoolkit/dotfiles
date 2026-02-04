@@ -31,13 +31,13 @@ if [ -f "$CONFIG_FILE" ]; then
         exit 0
     fi
 
-    if mise install --all 2>/dev/null; then
-        mise reshim
-        printf "%b\n" "${GREEN}✓ Herramientas de mise instaladas${NC}"
-    else
-        printf "%b\n" "${YELLOW}⚠ Algunas herramientas fallaron, continuando...${NC}"
-        mise reshim || true
-    fi
+    # Instalar herramientas, ignorando errores individuales
+    mise install 2>&1 | grep -v "^WARNING\|^ERROR" | tail -5 || true
+    
+    # Re-generar shims
+    mise reshim 2>/dev/null || true
+    
+    printf "%b\n" "${GREEN}✓ Mise completado (algunas herramientas pueden haberse omitido)${NC}"
 else
     printf "%b\n" "${YELLOW}⚠ No se encontró config de mise en $CONFIG_FILE${NC}"
 fi

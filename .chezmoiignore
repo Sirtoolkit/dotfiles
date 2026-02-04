@@ -1,9 +1,3 @@
 .vscode
-README.md
 install.sh
-validate.sh
-RESOLVED_ISSUES.md
-SECRETS.md
 .oh-my-zsh/cache/
-private_Library/  # Ignorar - manejar manualmente con Age
-Library/Application Support/Leader Key/  # Ignorar - desencriptar manualmente con script

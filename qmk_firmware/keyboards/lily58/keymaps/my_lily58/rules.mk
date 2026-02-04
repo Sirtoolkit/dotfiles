@@ -16,7 +16,7 @@ WPM_ENABLE = yes            # Enable WPM tracking for music bars animation
 COMBO_ENABLE = yes
 CAPS_WORD_ENABLE = yes
 LEADER_ENABLE = yes
-AUTO_SHIFT_ENABLE = yes
+# AUTO_SHIFT_ENABLE = yes
 
 # Custom animations and logo
 SRC +=  ./animations/music/music-bars.c \

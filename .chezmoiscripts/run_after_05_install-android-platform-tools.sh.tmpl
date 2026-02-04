@@ -68,6 +68,13 @@ else
     printf "%b\n" "${GREEN}✓ Build Tools ya están instaladas${NC}"
 fi
 
+# Configurar Flutter con Android SDK
+if command -v flutter &> /dev/null; then
+    printf "%b\n" "${BLUE}Configurando Flutter con Android SDK...${NC}"
+    flutter config --android-sdk "$ANDROID_HOME" > /dev/null 2>&1 || true
+    printf "%b\n" "${GREEN}✓ Flutter configurado con Android SDK${NC}"
+fi
+
 printf "%b\n" "${GREEN}✓ Android SDK configurado${NC}"
 
 {{ end -}}

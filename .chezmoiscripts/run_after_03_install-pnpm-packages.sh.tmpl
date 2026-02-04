@@ -32,7 +32,7 @@ fi
 mkdir -p "$PNPM_HOME"
 
 # Instalar paquetes globales
-packages="nx:nx ocmt:oco expo:expo @nestjs/cli:nest"
+packages="nx:nx ocmt:oco expo:expo @nestjs/cli:nest @mixedbread/mgrep:mgrep"
 
 for package_info in $packages; do
   IFS=':' read -r package cmd <<< "$package_info"

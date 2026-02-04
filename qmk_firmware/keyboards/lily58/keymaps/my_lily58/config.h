@@ -6,7 +6,7 @@
 #define COMBO_ALLOW_ACTION_KEYS
 #define COMBO_TERM 50 // 50ms para presionar ambas teclas
 #define LEADER_TIMEOUT 300 // Tiempo para completar la secuencia después del combo (ms)
-#define AUTO_SHIFT_TIMEOUT 150 // Tiempo en milisegundos para activar el Shift
+// #define AUTO_SHIFT_TIMEOUT 150 // Tiempo en milisegundos para activar el Shift
 // Encoder configuration - both encoders
 #undef ENCODER_A_PINS
 #undef ENCODER_B_PINS
