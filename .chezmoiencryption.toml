@@ -1,5 +1,5 @@
 # Configuración de encriptación de chezmoi con Age
-# Age es moderno, rápido y no requiere passphrase repetida
+# Para desencriptar archivos .age manualmente
 
 [encryption]
 cipher = "age"
