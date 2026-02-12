@@ -4,6 +4,38 @@
   "plugin": [
     "opencode-antigravity-auth@latest"
   ],
+  "agent": {
+    "code-reviewer": {
+      "description": "Reviews code for best practices and potential issues",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    },
+    "commits": {
+      "description": "Creates git commits for configuration changes",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "You are a git commit agent. Analyze changes, create meaningful commits with descriptive messages following conventional commits format. Always verify before committing.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    },
+    "web-search": {
+      "description": "Searches the web for information",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-20250514",
+      "prompt": "You are a web search agent. Use the available search tools to find relevant, up-to-date information. Provide concise answers with sources.",
+      "tools": {
+        "write": false,
+        "edit": false
+      }
+    }
+  },
   "provider": {
     "google": {
       "models": {
@@ -111,6 +143,35 @@
         },
         "antigravity-claude-opus-4-5-thinking": {
           "name": "Claude Opus 4.5 Thinking (Antigravity)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "variants": {
+            "low": {
+              "thinkingConfig": {
+                "thinkingBudget": 8192
+              }
+            },
+            "max": {
+              "thinkingConfig": {
+                "thinkingBudget": 32768
+              }
+            }
+          }
+        },
+        "antigravity-claude-opus-4-6-thinking": {
+          "name": "Claude Opus 4.6 Thinking (Antigravity)",
           "limit": {
             "context": 200000,
             "output": 64000
