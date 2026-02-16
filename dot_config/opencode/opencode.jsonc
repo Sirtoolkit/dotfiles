@@ -4,28 +4,28 @@
   "plugin": [
     "opencode-antigravity-auth@latest"
   ],
-  "agent": {
-    "commits": {
-      "description": "Creates git commits for configuration changes",
-      "mode": "subagent",
-      "model": "anthropic/claude-sonnet-4-20250514",
-      "prompt": "You are a git commit agent. Analyze changes, create meaningful commits with descriptive messages following conventional commits format. Always verify before committing.",
-      "tools": {
-        "write": false,
-        "edit": false
-      }
-    },
-    "web-search": {
-      "description": "Searches the web for information",
-      "mode": "subagent",
-      "model": "anthropic/claude-sonnet-4-20250514",
-      "prompt": "You are a web search agent. Use the available search tools to find relevant, up-to-date information. Provide concise answers with sources.",
-      "tools": {
-        "write": false,
-        "edit": false
-      }
-    }
-  },
+  // "agent": {
+  //   "commits": {
+  //     "description": "Creates git commits for configuration changes",
+  //     "mode": "subagent",
+  //     "model": "anthropic/claude-sonnet-4-20250514",
+  //     "prompt": "You are a git commit agent. Analyze changes, create meaningful commits with descriptive messages following conventional commits format. Always verify before committing.",
+  //     "tools": {
+  //       "write": false,
+  //       "edit": false
+  //     }
+  //   },
+  //   "web-search": {
+  //     "description": "Searches the web for information",
+  //     "mode": "subagent",
+  //     "model": "anthropic/claude-sonnet-4-20250514",
+  //     "prompt": "You are a web search agent. Use the available search tools to find relevant, up-to-date information. Provide concise answers with sources.",
+  //     "tools": {
+  //       "write": false,
+  //       "edit": false
+  //     }
+  //   }
+  // },
   "provider": {
     "google": {
       "models": {
