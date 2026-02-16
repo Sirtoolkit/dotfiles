@@ -11,6 +11,7 @@ go = "latest"
 bun = "latest"
 firebase = "latest"
 amp = "latest"
+opencode = "latest"
 
 [settings]
 experimental = true
@@ -46,3 +47,4 @@ t = "tmux"
 cha = 'chezmoi apply'
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'
 qf-lily = 'qmk flash -kb lily58 -km my_lily58'
+op = "opencode"

@@ -149,7 +149,6 @@
             "git"
             "mas"
             "cocoapods"
-            "opencode"
             "fastlane"
             "act"
             "atuin"
