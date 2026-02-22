@@ -11,7 +11,7 @@ go = "latest"
 bun = "latest"
 firebase = "latest"
 amp = "latest"
-opencode = "latest"
+opencode = "1.0.215"
 
 [settings]
 experimental = true

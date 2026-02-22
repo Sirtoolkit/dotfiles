@@ -13,16 +13,6 @@
       ],
       "enabled": true
     },
-    "firebase": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "firebase-tools@latest",
-        "mcp"
-      ],
-      "enabled": true,
-    },
     "dart": {
       "type": "local",
       "command": [
