@@ -106,7 +106,6 @@
             "discord"
             "android-commandlinetools"
             "orbstack"
-            "gitkraken"
             "windows-app"
             "bruno"
             "obsidian"
