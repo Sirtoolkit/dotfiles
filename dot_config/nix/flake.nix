@@ -106,6 +106,8 @@
             "discord"
             "android-commandlinetools"
             "orbstack"
+            "gitkraken"
+            "windows-app"
             "bruno"
             "obsidian"
             "slack"
@@ -115,6 +117,7 @@
             "raycast"
             "flutter"
             "nikitabobko/tap/aerospace"
+            "crossover"
           ];
 
           brews = [
@@ -156,6 +159,7 @@
             "direnv"
             "chezmoi"
             "tree-sitter"
+            "openvpn"
           ];
           
          masApps = {
