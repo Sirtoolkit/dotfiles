@@ -120,6 +120,7 @@
             "clockify"
             "antigravity"
             "crossover"
+            "brave-browser"
             # TEMP
             "cursor-cli"
           ];
