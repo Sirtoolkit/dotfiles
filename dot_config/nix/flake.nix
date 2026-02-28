@@ -117,6 +117,11 @@
             "flutter"
             "nikitabobko/tap/aerospace"
             "crossover"
+            "clockify"
+            "antigravity"
+            "crossover"
+            # TEMP
+            "cursor-cli"
           ];
 
           brews = [
@@ -159,6 +164,7 @@
             "chezmoi"
             "tree-sitter"
             "openvpn"
+            "gemini-cli"
           ];
           
          masApps = {
