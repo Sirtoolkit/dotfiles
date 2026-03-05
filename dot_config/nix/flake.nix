@@ -22,29 +22,6 @@
             StandardHideDesktopIcons = true;
           };
 
-          CustomUserPreferences = {
-            "com.apple.symbolichotkeys" = {
-              AppleSymbolicHotKeys = {
-                # 64: Spotlight Search (Cmd + Space)
-                "64" = {
-                  enabled = false;
-                  value = {
-                    parameters = [ 32 49 1048576 ];
-                    type = "standard";
-                  };
-                };
-                # 65: Finder Search Window (Option + Cmd + Space)
-                "65" = {
-                  enabled = false;
-                  value = {
-                    parameters = [ 32 49 1572864 ];
-                    type = "standard";
-                  };
-                };
-              };
-            };
-          };
-
           controlcenter = {
             BatteryShowPercentage = true;
             Bluetooth = true;
@@ -74,7 +51,6 @@
             persistent-apps = [
               "/Applications/Arc.app"
               "/Applications/Gemini.app"
-              "/Applications/Youtube Music.app"
               "/Applications/Ghostty.app"
               "/Applications/Bruno.app"
               "/Applications/Antigravity.app"
@@ -120,14 +96,14 @@
             "clockify"
             "antigravity"
             "crossover"
-            "brave-browser"
+            "google-chrome"
             # TEMP
             "cursor-cli"
           ];
 
           brews = [
-            "dashlane/tap/dashlane-cli"     # Explícito
-            "FelixKratz/formulae/borders"   # Explícito para borders
+            "dashlane/tap/dashlane-cli"
+            "FelixKratz/formulae/borders"
             "mole"
             "bat"
             "btop"
@@ -167,16 +143,16 @@
             "openvpn"
             "gemini-cli"
           ];
-          
+
          masApps = {
             Xcode = 497799835;
             Transporter = 1450874784;
             Hotspot-Shield = 771076721;
           };
-          onActivation = { 
-            autoUpdate = true; 
-            upgrade = true; 
-            cleanup = "zap"; 
+          onActivation = {
+            autoUpdate = true;
+            upgrade = true;
+            cleanup = "zap";
           };
         };
 
