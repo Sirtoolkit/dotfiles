@@ -92,7 +92,6 @@
             "raycast"
             "flutter"
             "nikitabobko/tap/aerospace"
-            "crossover"
             "clockify"
             "antigravity"
             "crossover"
