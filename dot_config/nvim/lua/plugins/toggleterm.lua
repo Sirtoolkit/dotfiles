@@ -5,7 +5,7 @@ return {
   opts = {
     size = 10,
     open_mapping = [[<F7>]],
-    shading_factor = 2,
+    shading_factor = 0,
     float_opts = {
       border = "rounded",
     },

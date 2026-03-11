@@ -63,6 +63,18 @@ return {
     config = function(_, opts)
       require("gruvbox").setup(opts)
       vim.cmd("colorscheme gruvbox")
+      -- Configurar fondo de ventanas flotantes y terminal para coincidir con el tema
+      local colors = require("gruvbox").palette
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = colors.dark0 })
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = colors.dark0, fg = colors.gray })
+      vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = colors.dark0 })
+      vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = colors.dark0, fg = colors.gray })
+      vim.api.nvim_set_hl(0, "StatusLine", { bg = colors.dark1, fg = colors.light1 })
+      vim.api.nvim_set_hl(0, "StatusLineNC", { bg = colors.dark0, fg = colors.gray })
+      vim.api.nvim_set_hl(0, "TabLine", { bg = colors.dark0, fg = colors.gray })
+      vim.api.nvim_set_hl(0, "TabLineFill", { bg = colors.dark0 })
+      vim.api.nvim_set_hl(0, "WinBar", { bg = colors.dark0 })
+      vim.api.nvim_set_hl(0, "WinBarNC", { bg = colors.dark0 })
     end,
   },
 }

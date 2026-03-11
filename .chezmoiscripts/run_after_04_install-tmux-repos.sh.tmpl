@@ -19,8 +19,6 @@ fi
 PLUGINS_DIR="$HOME/.config/tmux/plugins"
 TPM_DIR="$PLUGINS_DIR/tpm"
 TPM_REPO="https://github.com/tmux-plugins/tpm.git"
-GRUVBOX_DIR="$PLUGINS_DIR/tmux-gruvbox"
-GRUVBOX_REPO="https://github.com/egel/tmux-gruvbox.git"
 WINDOW_NAME_DIR="$PLUGINS_DIR/tmux-window-name"
 WINDOW_NAME_REPO="https://github.com/ofirgall/tmux-window-name.git"
 PAIN_CONTROL_DIR="$PLUGINS_DIR/tmux-pain-control"
@@ -43,15 +41,6 @@ if "$TPM_DIR/bin/install_plugins"; then
     printf "%b\n" "${GREEN}✓ Plugins instalados${NC}"
 else
     printf "%b\n" "${YELLOW}⚠ Algunos plugins pueden no haberse instalado${NC}"
-fi
-
-# Instalar tema Gruvbox
-if [ -d "$GRUVBOX_DIR" ]; then
-  printf "%b\n" "${GREEN}✓ tmux-gruvbox ya está instalado${NC}"
-else
-  printf "%b\n" "${BLUE}Clonando tmux-gruvbox...${NC}"
-  git clone "$GRUVBOX_REPO" "$GRUVBOX_DIR"
-  printf "%b\n" "${GREEN}✓ Tema instalado${NC}"
 fi
 
 # Instalar tmux-window-name
