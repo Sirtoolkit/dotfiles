@@ -32,6 +32,11 @@ compinit -C
 # Git plugin from oh-my-zsh (direct load, no overhead)
 source ~/.oh-my-zsh/plugins/git/git.plugin.zsh 2>/dev/null || true
 
+# als - list all aliases (from oh-my-zsh lib)
+als() {
+  alias | sed 's/=.*//'
+}
+
 # Git prompt
 GIT_BRANCH=""
 update_git_prompt() {
