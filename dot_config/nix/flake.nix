@@ -141,6 +141,7 @@
             "tree-sitter"
             "openvpn"
             "gemini-cli"
+            "worktrunk"
           ];
 
          masApps = {
