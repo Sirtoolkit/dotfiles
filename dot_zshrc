@@ -29,6 +29,9 @@ fi
 autoload -Uz compinit
 compinit -C
 
+# Git plugin from oh-my-zsh (direct load, no overhead)
+source ~/.oh-my-zsh/plugins/git/git.plugin.zsh 2>/dev/null || true
+
 # Git prompt
 GIT_BRANCH=""
 update_git_prompt() {
