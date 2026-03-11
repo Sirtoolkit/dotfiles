@@ -23,7 +23,6 @@ zshconfig = "nvim ~/.zshrc"
 ohmyzsh = "nvim ~/.oh-my-zsh"
 v = "nvim"
 zsource = 'source ~/.zshrc'
-gdu = 'gdu-go'
 
 ls = "eza -l --icons=always -m -n -l"
 l = "eza -l --icons=always -m -n -l -a"
@@ -40,6 +39,7 @@ mbf = "mason make feature_brick --project_name $(cat pubspec.yaml | awk 'NR==1 {
 dgrep = "als | grep \"$@\""
 cea = "npx create-expo-app@latest"
 cea-blk = "npx create-expo-app@latest --template blank-typescript"
+
 c = "clear"
 t = "tmux"
 ki = "kilo"

@@ -37,8 +37,8 @@ packages="nx:nx opencommit expo:expo @nestjs/cli:nest @mixedbread/mgrep:mgrep @k
 for package_info in $packages; do
   IFS=':' read -r package cmd <<< "$package_info"
   
-  if command -v "$cmd" >/dev/null 2>&1; then
-    printf "%b\n" "${GREEN}✓ $cmd ya está instalado${NC}"
+  if pnpm list -g --json "$package" 2>/dev/null | grep -q "\"$package\""; then
+    printf "%b\n" "${GREEN}✓ $package ya está instalado${NC}"
   else
     printf "%b\n" "${BLUE}Instalando $package...${NC}"
     pnpm add -g "$package"
