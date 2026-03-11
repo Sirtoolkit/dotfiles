@@ -29,7 +29,7 @@ fi
 autoload -Uz compinit
 compinit -C
 
-# Git plugin from oh-my-zsh (direct load, no overhead)
+# Git plugin from oh-my-zsh (direct load - fastest)
 source ~/.oh-my-zsh/plugins/git/git.plugin.zsh 2>/dev/null || true
 
 # als - list all aliases (from oh-my-zsh lib)
