@@ -71,6 +71,7 @@
             "dashlane/tap"
             "FelixKratz/formulae"
             "nikitabobko/tap"
+            "go-task/tap"
           ];
 
           casks = [
@@ -103,6 +104,7 @@
           brews = [
             "dashlane/tap/dashlane-cli"
             "FelixKratz/formulae/borders"
+            "go-task/tap/go-task"
             "mole"
             "bat"
             "btop"
