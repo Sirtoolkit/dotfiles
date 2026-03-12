@@ -24,9 +24,17 @@ ohmyzsh = "nvim ~/.oh-my-zsh"
 v = "nvim"
 zsource = 'source ~/.zshrc'
 
+# Navigation
+".." = "cd .."
+"..." = "cd ../.."
+"...." = "cd ../../.."
+
+# Listing (eza)
 ls = "eza -l --icons=always -m -n -l"
-l = "eza -l --icons=always -m -n -l -a"
+la = "eza -la --icons=always -m -n -l"
+l = "eza -la --icons=always -m -n -l"
 ll = "eza -l --icons=always -m -n -l"
+lt = "eza --tree --icons=always"
 
 mkdir = 'mkdir -pv'
 
@@ -36,9 +44,25 @@ dbb = "flutter clean && dart run build_runner build -d"
 dbw = "flutter clean && dart run build_runner watch -d"
 mbf = "mason make feature_brick --project_name $(cat pubspec.yaml | awk 'NR==1 {print; exit}' | awk '{print $2}') --name"
 
-dgrep = "als | grep \"$@\""
 cea = "npx create-expo-app@latest"
 cea-blk = "npx create-expo-app@latest --template blank-typescript"
+
+# Git shortcuts (shell aliases wrapping git)
+g = "git"
+gst = "git status"
+gp = "git push"
+gpl = "git pull"
+gc = "git commit"
+ga = "git add"
+gco = "git checkout"
+gb = "git branch"
+glog = "git log --oneline --graph -10"
+gs = "git switch"
+gf = "git fetch"
+
+# Search/Find
+alias = "alias | grep"
+grep = "grep --color=auto"
 
 c = "clear"
 t = "tmux"

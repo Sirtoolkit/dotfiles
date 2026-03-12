@@ -29,14 +29,6 @@ fi
 autoload -Uz compinit
 compinit -C
 
-# Git plugin from oh-my-zsh (direct load - fastest)
-source ~/.oh-my-zsh/plugins/git/git.plugin.zsh 2>/dev/null || true
-
-# als - list all aliases (from oh-my-zsh lib)
-als() {
-  alias | sed 's/=.*//'
-}
-
 # Git prompt
 GIT_BRANCH=""
 update_git_prompt() {
@@ -52,46 +44,25 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory sharehistory
 
-# Basic aliases
-alias ls='ls --color=auto'
-alias ll='ls -la'
-alias la='ls -A'
-alias l='ls -CF'
-alias ..='cd ..'
-alias ...='cd ../..'
+# Custom aliases (mise handles most aliases via shell_alias)
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh"
 
 # Key bindings
 bindkey -e
 bindkey '^[[A' history-beginning-search-backward
 bindkey '^[[B' history-beginning-search-forward
 
-# Syntax highlighting
+# Syntax highlighting & autosuggestions
 source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null || true
-
-# Autosuggestions
 source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null || true
 
-# zoxide - lazy load with common aliases
-_load_zoxide() {
-  if command -v zoxide &>/dev/null; then
-    eval "$(zoxide init zsh)"
-  fi
-}
-zoxide() { unfunction zoxide z zi; _load_zoxide; zoxide "$@"; }
-z() { unfunction zoxide z zi; _load_zoxide; z "$@"; }
-zi() { unfunction zoxide z zi; _load_zoxide; zi "$@"; }
+# zoxide - lazy load
+zoxide() { unfunction zoxide z zi; eval "$(zoxide init zsh)"; zoxide "$@"; }
+z() { unfunction zoxide z zi; eval "$(zoxide init zsh)"; z "$@"; }
+zi() { unfunction zoxide z zi; eval "$(zoxide init zsh)"; zi "$@"; }
 
 # direnv - lazy load
-direnv() {
-  if command -v direnv &>/dev/null; then
-    unfunction direnv
-    eval "$(direnv hook zsh)"
-    direnv "$@"
-  else
-    echo "direnv not installed" >&2
-    return 1
-  fi
-}
+direnv() { unfunction direnv; eval "$(direnv hook zsh)"; direnv "$@"; }
 
 # PostgreSQL
 export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
@@ -100,15 +71,8 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 aws() { unfunction aws; eval "$(aws --cli-auto-prompt 2>/dev/null)"; aws "$@"; }
 gcloud() { unfunction gcloud; source "${BREW_PREFIX}/share/google-cloud-sdk/path.zsh.inc" 2>/dev/null; gcloud "$@"; }
 
-# Flutter lazy load with common aliases
-_load_flutter() {
-  export FLUTTER_ROOT="$HOME/.flutter"
-  export PATH="$FLUTTER_ROOT/bin:$PATH"
-}
-flutter() { unfunction flutter fl; _load_flutter; flutter "$@"; }
-fl() { unfunction flutter fl; _load_flutter; flutter "$@"; }
+# Flutter lazy load
+flutter() { unfunction flutter; export FLUTTER_ROOT="$HOME/.flutter"; export PATH="$FLUTTER_ROOT/bin:$PATH"; flutter "$@"; }
 
 # Starship - fast load
-if command -v starship &>/dev/null; then
-  eval "$(starship init zsh)"
-fi
+command -v starship &>/dev/null && eval "$(starship init zsh)"
