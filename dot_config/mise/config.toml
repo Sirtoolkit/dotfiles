@@ -304,8 +304,7 @@ flrp = "flutter run --profile"
 flrr = "flutter run --release"
 flupgrd = "flutter upgrade"
 
-dccmd='docker-compose' || dccmd='docker compose'
-nu = 'nest update'dccmd='docker-compose' || dccmd='docker compose'
+nu = 'nest update'
 nnew = 'nest new'
 nb = 'nest build'
 ns = 'nest start'
