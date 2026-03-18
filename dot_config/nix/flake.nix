@@ -97,6 +97,7 @@
             "antigravity"
             "crossover"
             "google-chrome"
+            "claude-code"
             # TEMP
             "cursor-cli"
           ];
@@ -144,6 +145,7 @@
             "openvpn"
             "gemini-cli"
             "worktrunk"
+            "ollama"
           ];
 
          masApps = {
