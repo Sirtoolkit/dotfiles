@@ -304,6 +304,8 @@ flrp = "flutter run --profile"
 flrr = "flutter run --release"
 flupgrd = "flutter upgrade"
 
+dccmd='docker-compose' || dccmd='docker compose'
+nu = 'nest update'dccmd='docker-compose' || dccmd='docker compose'
 nnew = 'nest new'
 nb = 'nest build'
 ns = 'nest start'
@@ -327,7 +329,27 @@ nglib = 'nest generate library'
 ngsub = 'nest generate sub-app'
 na = 'nest add'
 ni = 'nest info'
-nu = 'nest update'
+
+dccmd = 'docker compose'
+dco = "$dccmd"
+dcb = "$dccmd build"
+dce = "$dccmd exec"
+dcps = "$dccmd ps"
+dcrestart = "$dccmd restart"
+dcrm = "$dccmd rm"
+dcr = "$dccmd run"
+dcstop = "$dccmd stop"
+dcup = "$dccmd up"
+dcupb = "$dccmd up --build"
+dcupd = "$dccmd up -d"
+dcupdb = "$dccmd up -d --build"
+dcdn = "$dccmd down"
+dcl = "$dccmd logs"
+dclf = "$dccmd logs -f"
+dclF = "$dccmd logs -f --tail 0"
+dcpull = "$dccmd pull"
+dcstart = "$dccmd start"
+dck = "$dccmd kill"
 
 alias = "alias | grep"
 grep = "grep --color=auto"
