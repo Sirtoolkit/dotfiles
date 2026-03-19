@@ -22,6 +22,11 @@
             StandardHideDesktopIcons = true;
           };
 
+          screencapture = {
+            target = "clipboard";
+            show-thumbnail = false;
+          };
+
           controlcenter = {
             BatteryShowPercentage = true;
             Bluetooth = true;
