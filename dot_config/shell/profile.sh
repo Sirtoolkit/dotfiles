@@ -8,13 +8,28 @@ fi
 
 # mise - cached activation for fast startup
 MISE_CONFIG="$HOME/.config/mise/config.toml"
+MISE_INSTALLS="$HOME/.local/share/mise/installs"
 MISE_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/shell/mise_activate"
 
-# Regenerate cache if config is newer than cache
-if [[ ! -r "$MISE_CACHE" || "$MISE_CONFIG" -nt "$MISE_CACHE" ]]; then
+# Check if cache needs regeneration:
+# - Cache doesn't exist, or
+# - Config file is newer than cache, or
+# - Any install directory is newer than cache (tools were updated)
+_needs_regen=false
+if [[ ! -r "$MISE_CACHE" ]]; then
+  _needs_regen=true
+elif [[ "$MISE_CONFIG" -nt "$MISE_CACHE" ]]; then
+  _needs_regen=true
+elif [[ -d "$MISE_INSTALLS" ]]; then
+  # Find if any install is newer than cache (check top-level dirs only, with timeout)
+  [[ -n "$(find "$MISE_INSTALLS" -maxdepth 2 -newer "$MISE_CACHE" -print -quit 2>/dev/null)" ]] && _needs_regen=true
+fi
+
+if $_needs_regen; then
   mkdir -p "$(dirname "$MISE_CACHE")"
   mise activate zsh > "$MISE_CACHE" 2>/dev/null || echo "# mise not installed" > "$MISE_CACHE"
 fi
+unset _needs_regen
 
 # Source the cached activation
 [[ -r "$MISE_CACHE" ]] && source "$MISE_CACHE"

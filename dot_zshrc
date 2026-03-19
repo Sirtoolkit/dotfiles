@@ -71,8 +71,5 @@ export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
 aws() { unfunction aws; eval "$(aws --cli-auto-prompt 2>/dev/null)"; aws "$@"; }
 gcloud() { unfunction gcloud; source "${BREW_PREFIX}/share/google-cloud-sdk/path.zsh.inc" 2>/dev/null; gcloud "$@"; }
 
-# Flutter lazy load
-flutter() { unfunction flutter; export FLUTTER_ROOT="$HOME/.flutter"; export PATH="$FLUTTER_ROOT/bin:$PATH"; flutter "$@"; }
-
 # Starship - fast load
 command -v starship &>/dev/null && eval "$(starship init zsh)"
