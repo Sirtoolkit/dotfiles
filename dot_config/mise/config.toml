@@ -172,6 +172,8 @@ gwl = 'wt list'
 gws = 'wt switch'
 gwm = 'wt merge'
 
+glg = "lazygit"
+
 # Git shortcuts (shell aliases wrapping git)
 ba = 'brew autoremove'
 bcfg = 'brew config'
