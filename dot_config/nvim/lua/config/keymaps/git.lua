@@ -9,6 +9,15 @@ vim.keymap.set("n", "<leader>gc", function()
   end
 end, { desc = "󰊢 Git Commit" })
 
+vim.keymap.set("n", "<leader>gw", function()
+  local ok, worktreeSwitch = pcall(require, "user.worktree_switch")
+  if ok then
+    worktreeSwitch.run()
+  else
+    vim.notify("No se encontró el módulo lua/user/worktree_switch.lua", vim.log.levels.ERROR)
+  end
+end, { desc = "󰊢 Git Worktree Switch" })
+
 -- Desactivar atajos de git que no se usan y reemplazarlos con vgit conflict resolution
 -- Se usa defer_fn para asegurar que se ejecute después de que LazyVim cargue sus keymaps
 vim.defer_fn(function()

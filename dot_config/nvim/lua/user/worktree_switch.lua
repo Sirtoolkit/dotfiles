@@ -7,10 +7,8 @@ function M.run()
 
   if not gws_term or not gws_term:is_open() then
     gws_term = Terminal:new({
-      cmd = 'bash -c \'gws || (echo; echo "[Error] oco falló. Asegúrate de tener archivos en stage (git add .)"; echo "Presiona Enter para cerrar."; read)\'',
-
+      cmd = 'bash -c \'wt switch || (echo; echo "[Error] No se pudo cambiar de worktree. Asegúrate de tener archivos en staging (git add .)"; echo "Presiona Enter para cerrar..."; read)\'',
       dir = "git_dir",
-
       direction = "float",
 
       float_opts = {
@@ -20,7 +18,6 @@ function M.run()
       },
 
       close_on_exit = true,
-
       auto_start = true,
     })
   end
