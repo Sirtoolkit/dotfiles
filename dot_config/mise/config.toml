@@ -282,6 +282,8 @@ e = "exit"
 ki = "kilo"
 cl = 'ollama launch claude'
 
-cha = 'chezmoi apply'
+czp = 'chezmoi apply'
+cza = 'chezmoi add'
+
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'
 qf-lily = 'qmk flash -kb lily58 -km my_lily58'
