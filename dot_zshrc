@@ -47,15 +47,8 @@ setopt appendhistory sharehistory
 # Custom aliases (mise handles most aliases via shell_alias)
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh"
 
-# Atuin - local mode (no login required)
-if command -v atuin &>/dev/null; then
-  eval "$(atuin init zsh)"
-fi
-
 # Key bindings
 bindkey -e
-bindkey '^[[A' history-beginning-search-backward
-bindkey '^[[B' history-beginning-search-forward
 
 # Syntax highlighting & autosuggestions
 source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null || true
@@ -78,3 +71,11 @@ gcloud() { unfunction gcloud; source "${BREW_PREFIX}/share/google-cloud-sdk/path
 
 # Starship - fast load
 command -v starship &>/dev/null && eval "$(starship init zsh)"
+
+# ==========================================
+# Atuin - Shell History (DEBE ir al final)
+# ==========================================
+# Configuración estrictamente local (sin login/sincronización)
+if command -v atuin &>/dev/null; then
+    eval "$(atuin init zsh)"
+fi
