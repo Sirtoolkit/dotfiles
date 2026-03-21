@@ -47,6 +47,11 @@ setopt appendhistory sharehistory
 # Custom aliases (mise handles most aliases via shell_alias)
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/custom_aliases.sh"
 
+# Atuin - local mode (no login required)
+if command -v atuin &>/dev/null; then
+  eval "$(atuin init zsh)"
+fi
+
 # Key bindings
 bindkey -e
 bindkey '^[[A' history-beginning-search-backward
