@@ -84,30 +84,6 @@ mbf = "mason make feature_brick --project_name $(cat pubspec.yaml | awk 'NR==1 {
 cea = "npx create-expo-app@latest"
 cea-blk = "npx create-expo-app@latest --template blank-typescript"
 
-gcd = 'git checkout $(git config gitflow.branch.develop)'
-gch = 'git checkout $(git config gitflow.prefix.hotfix)'
-gcr = 'git checkout $(git config gitflow.prefix.release)'
-gfl = 'git flow'
-gflf = 'git flow feature'
-gflff = 'git flow feature finish'
-gflffc = 'git flow feature finish ${$(git_current_branch)#feature/}'
-gflfp = 'git flow feature publish'
-gflfpc = 'git flow feature publish ${$(git_current_branch)#feature/}'
-gflfpll = 'git flow feature pull'
-gflfs = 'git flow feature start'
-gflh = 'git flow hotfix'
-gflhf = 'git flow hotfix finish'
-gflhfc = 'git flow hotfix finish ${$(git_current_branch)#hotfix/}'
-gflhp = 'git flow hotfix publish'
-gflhpc = 'git flow hotfix publish ${$(git_current_branch)#hotfix/}'
-gflhs = 'git flow hotfix start'
-gfli = 'git flow init'
-gflr = 'git flow release'
-gflrf = 'git flow release finish'
-gflrfc = 'git flow release finish ${$(git_current_branch)#release/}'
-gflrp = 'git flow release publish'
-gflrpc = 'git flow release publish ${$(git_current_branch)#release/}'
-gflrs = 'git flow release start'
 g = 'git'
 ga = 'git add'
 gaa = 'git add --all'
@@ -239,24 +215,8 @@ nnew = 'nest new'
 nb = 'nest build'
 ns = 'nest start'
 nsw = 'nest start --watch'
-nsd = 'nest start --dev'           # Alias for start --watchalias nsdbg='nest start --debug --watch'
-ng = 'nest generate'
-ngm = 'nest generate module'
-ngc = 'nest generate controller'
-ngs = 'nest generate service'
-ngg = 'nest generate guard'
-ngp = 'nest generate pipe'
-ngf = 'nest generate filter'
-ngr = 'nest generate resolver'
-ngcl = 'nest generate class'
-ngi = 'nest generate interface'
-ngit = 'nest generate interceptor'
-ngmi = 'nest generate middleware'
-ngd = 'nest generate decorator'
-ngres = 'nest generate resource'
-nglib = 'nest generate library'
-ngsub = 'nest generate sub-app'
-na = 'nest add'
+nsd = 'nest start --dev'
+nsdbg = 'nest start --debug --watch'
 ni = 'nest info'
 
 dccmd = 'docker compose'
@@ -280,7 +240,7 @@ dcpull = "$dccmd pull"
 dcstart = "$dccmd start"
 dck = "$dccmd kill"
 
-alias = "alias | grep"
+als = "alias | grep"
 grep = "grep --color=auto"
 
 c = "clear"
