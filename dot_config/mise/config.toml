@@ -280,6 +280,7 @@ c = "clear"
 t = "tmux"
 e = "exit"
 ki = "kilo"
+olc = "mise run olc"
 cl = 'ollama launch claude'
 
 czp = 'chezmoi apply'
@@ -288,3 +289,24 @@ cza = 'chezmoi add'
 
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'
 qf-lily = 'qmk flash -kb lily58 -km my_lily58'
+
+[tasks.olc]
+description = "Ollama Cloud - Seleccionar y lanzar modelo desde el catálogo"
+run = """
+  cache_file="/tmp/ollama_cloud_list"
+  if [ ! -f "$cache_file" ]; then
+    echo "⏳ Primera vez: Descargando catálogo..."
+    for i in {1..5}; do
+      curl -s -L -H "User-Agent: Mozilla/5.0" "https://ollama.com/search?c=cloud&page=$i"
+    done | grep -oE '/library/[a-z0-9.-]+' | cut -d'/' -f3 | sort -u > "$cache_file"
+  fi
+  selection=$(fzf --height 40% --layout=reverse --border \
+    --header "☁️ Catálogo Cloud (Presiona Ctrl+R para actualizar)" \
+    --bind "ctrl-r:execute(rm $cache_file && echo 'Actualizando...' && for i in {1..5}; do curl -s -L -H 'User-Agent: Mozilla/5.0' 'https://ollama.com/search?c=cloud&page=\\$i'; done | grep -oE '/library/[a-z0-9.-]+' | cut -d'/' -f3 | sort -u > $cache_file)+reload(cat $cache_file)" \
+    < "$cache_file")
+  if [ -n "$selection" ]; then
+    full_model="${selection}:cloud"
+    echo "⚡ Lanzando: ollama launch claude --model $full_model"
+    ollama launch claude --model "$full_model"
+  fi
+"""
