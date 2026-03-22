@@ -94,17 +94,15 @@
             "slack"
             "shortcat"
             "datagrip"
-            "gcloud-cli"
             "raycast"
             "flutter"
             "nikitabobko/tap/aerospace"
             "clockify"
-            "antigravity"
             "crossover"
             "google-chrome"
+            "gcloud-cli"
+            "antigravity"
             "claude-code"
-            # TEMP
-            "cursor-cli"
           ];
 
           brews = [
