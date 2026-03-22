@@ -35,5 +35,10 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
 .claude/**.local.json
+opencode.jsonc
+opencode.json
+.mcp.json
+.agents
+.superset
+AGENTS.md
