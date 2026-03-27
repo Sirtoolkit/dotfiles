@@ -10,10 +10,13 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
     let
+      username = "zizal";
+      hostname = "Cesars-MacBook-Pro";
+
       configuration = { pkgs, lib, config, ... }: {
         nixpkgs.config.allowUnfree = true;
 
-        system.primaryUser = "zizal";
+        system.primaryUser = username;
 
         system.defaults = {
           WindowManager = {
@@ -173,7 +176,7 @@
       };
     in
     {
-      darwinConfigurations."Cesars-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           nix-homebrew.darwinModules.nix-homebrew
@@ -181,7 +184,7 @@
             nix-homebrew = {
               enable = true;
               enableRosetta = true;
-              user = "zizal";
+              user = username;
               autoMigrate = true;
             };
           }
