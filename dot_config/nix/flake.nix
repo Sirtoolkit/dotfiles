@@ -149,10 +149,12 @@
             "gemini-cli"
             "worktrunk"
             "ollama"
+            "opencode"
+            "rtk"
           ];
 
          masApps = {
-            Xcode = 497799835;
+            # Xcode = 497799835;
             Transporter = 1450874784;
             Hotspot-Shield = 771076721;
           };

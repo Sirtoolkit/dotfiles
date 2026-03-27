@@ -7,7 +7,7 @@
 	branch = auto
 	ui = true
 [core]
-	excludesfile = ~/.config/gitignore
+	excludesfile = ~/.config/git/gitignore
 	editor = nvim
 	pager = diff-so-fancy | less --tabs=4 -RF
 [format]
@@ -27,9 +27,11 @@
 [log]
 	decorate = full
 [pull]
-	ff = only
+	ff = true
 	rebase = true
 [init]
 	defaultBranch = main
 [gpg]
 	program = gpg
+[advice]
+	diverging = false
