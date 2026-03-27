@@ -11,12 +11,17 @@ if command -v mise > /dev/null
     set -gx MISE_FISH_AUTO_ACTIVATE 0
     set -gx PATH "$HOME/.local/share/mise/shims" $PATH
 
-    # Lazy load mise on first use
-    function mise --wraps mise
-        functions -e mise
-        # Now do the real activation
-        eval (command mise activate fish)
-        command mise $argv
+    # In interactive shells, activate mise immediately so aliases work
+    # In non-interactive shells, use lazy loading
+    if status is-interactive
+        command mise activate fish | source
+    else
+        # Lazy load mise on first use for non-interactive shells
+        function mise --wraps mise
+            functions -e mise
+            command mise activate fish | source
+            command mise $argv
+        end
     end
 end
 
