@@ -1,4 +1,4 @@
-function purge-all-mobile-dev-cache
+function purge-mobile
 	echo -e "\n\033[1;33mINFO:\033[0m Esta acción eliminará directamente las carpetas de caché de desarrollo nativo y de frameworks."
 	echo "Se limpiarán carpetas de Android (Gradle), iOS (Xcode), Node.js (npm/yarn/pnpm), React Native, Expo y Flutter."
 	echo "Tus proyectos, SDKs y configuraciones principales NO serán eliminados."

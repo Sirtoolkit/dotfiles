@@ -1,4 +1,4 @@
-function mas-purge-all
+function purge-mas
 	if not command -v mas &>/dev/null
 		echo -e "\n\033[1;31mError:\033[0m El comando 'mas' no está instalado."
 		echo "Por favor, instálalo con 'brew install mas' y vuelve a intentarlo."

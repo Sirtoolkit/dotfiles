@@ -1,4 +1,4 @@
-function mise-purge-all
+function purge-mise
 	echo -e "\n\033[1;31mADVERTENCIA:\033[0m Esta acción eliminará todas las herramientas gestionadas por mise y la carpeta ~/.local/share/mise."
 	echo "Esta acción no se puede deshacer."
 	echo -n "¿Estás seguro de que quieres continuar? (escribe 'si' para confirmar): "

@@ -1,4 +1,4 @@
-function new-avd
+function avd-new
     # Check if SDK tools exist
     if not command -v sdkmanager &>/dev/null; or not command -v avdmanager &>/dev/null
         echo "❌ Error: Android SDK command-line tools not found."

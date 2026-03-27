@@ -1,4 +1,4 @@
-function system-log-cleanup
+function purge-logs
 	echo -e "\n\033[1;33mINFO:\033[0m This action will remove system and user log files."
 	echo "This requires sudo privileges."
 	echo -n "Are you sure you want to continue? (type 'yes' to confirm): "

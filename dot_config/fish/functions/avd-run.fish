@@ -1,4 +1,4 @@
-function launch-emulator
+function avd-run
 	# Check if 'emulator' command exists
 	if not command -v emulator &>/dev/null
 		echo "❌ Error: 'emulator' command not found."

@@ -1,4 +1,4 @@
-function delete-emulator
+function avd-del
 	if not command -v emulator &>/dev/null
 		echo "❌ Error: 'emulator' command not found."
 		return 1

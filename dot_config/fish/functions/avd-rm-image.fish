@@ -1,4 +1,4 @@
-function delete-system-image
+function avd-rm-image
 	if not command -v sdkmanager &>/dev/null
 		echo "❌ Error: 'sdkmanager' command not found."
 		return 1

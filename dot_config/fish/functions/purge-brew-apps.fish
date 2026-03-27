@@ -1,4 +1,4 @@
-function brew-purge-cask
+function purge-brew-apps
 	echo -e "\n\033[1;31mADVERTENCIA:\033[0m Estás a punto de eliminar TODOS los casks (aplicaciones) instalados con Homebrew."
 	echo "Esta acción no se puede deshacer."
 	echo -n "¿Estás seguro de que quieres continuar? (escribe 'si' para confirmar): "

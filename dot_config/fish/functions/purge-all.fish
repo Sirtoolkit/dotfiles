@@ -6,14 +6,13 @@ function purge-all
 	read CONFIRM
 	if test "$CONFIRM" = "yes"
 		echo -e "\nProceeding with all purge operations..."
-		purge-all-mobile-dev-cache
+		purge-mobile
 		purge-config
-		mise-purge-all
-		brew-purge-formula
-		brew-purge-cask
-		brew-cleanup
-		docker-prune
-		system-log-cleanup
+		purge-mise
+		purge-brew-pkgs
+		purge-brew-apps
+		purge-mas
+		purge-logs
 		echo -e "\n\033[1;32mAll purge operations completed!\033[0m"
 	else
 		echo -e "\n\033[1;32mOperation cancelled.\033[0m Nothing has been deleted."

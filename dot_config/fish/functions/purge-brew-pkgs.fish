@@ -1,4 +1,4 @@
-function brew-purge-formula
+function purge-brew-pkgs
 	echo -e "\n\033[1;31mADVERTENCIA:\033[0m Estás a punto de eliminar TODAS las fórmulas (paquetes) instaladas con Homebrew."
 	echo "Esta acción no se puede deshacer."
 	echo -n "¿Estás seguro de que quieres continuar? (escribe 'si' para confirmar): "

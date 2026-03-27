@@ -1,4 +1,4 @@
-function ghclone
+function gh-clone
     # Check if 'gh' command exists
     if not command -v gh &>/dev/null
         echo "❌ Error: 'gh' command not found."
