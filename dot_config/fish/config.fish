@@ -1,23 +1,11 @@
 # System essentials
-# Setup brew (cached for speed - 24h)
-set -l cache_dir "$HOME/.cache/fish"
-set -l BREW_PREFIX_CACHE "$cache_dir/brew_prefix"
-
-if test -r "$BREW_PREFIX_CACHE"
-    set -l cache_mtime (stat -f%m "$BREW_PREFIX_CACHE" 2>/dev/null; or echo 0)
-    set -l now (date +%s)
-    set -l cache_age (math $now - $cache_mtime)
-    if test $cache_age -lt 86400
-        set -gx BREW_PREFIX (cat "$BREW_PREFIX_CACHE")
-    else
-        set -gx BREW_PREFIX (brew --prefix 2>/dev/null; or echo "/opt/homebrew")
-        mkdir -p "$cache_dir"
-        echo "$BREW_PREFIX" > "$BREW_PREFIX_CACHE"
-    end
+# Fast Homebrew detection
+if test -d /opt/homebrew
+    set -gx BREW_PREFIX /opt/homebrew
+else if test -d /usr/local/bin/brew
+    set -gx BREW_PREFIX /usr/local
 else
     set -gx BREW_PREFIX (brew --prefix 2>/dev/null; or echo "/opt/homebrew")
-    mkdir -p "$cache_dir"
-    echo "$BREW_PREFIX" > "$BREW_PREFIX_CACHE"
 end
 
 set -gx HOMEBREW_PREFIX "$BREW_PREFIX"
@@ -42,47 +30,24 @@ if test -f "$config_home/shell/profile.fish"
     source "$config_home/shell/profile.fish"
 end
 
-# History
-# fish_history is the session name (default: "fish"), not a path
-# History files are stored in ~/.local/share/fish/fish_history by default
-
-# Custom aliases
-if test -f "$config_home/shell/aliases.fish"
-    source "$config_home/shell/aliases.fish"
-end
-
-# zoxide
-if command -v zoxide >/dev/null
-    zoxide init fish | source
-end
-
-# direnv
-if command -v direnv >/dev/null
-    direnv hook fish | source
-end
-
-# PostgreSQL
-set -gx PATH "/opt/homebrew/opt/postgresql@17/bin" $PATH
-
-# Lazy loading for heavy commands
-function aws --wraps aws
-    functions -e aws
-    eval (aws --cli-auto-prompt 2>/dev/null)
-    aws $argv
+# Tools initialization (optimized loop)
+for tool in zoxide direnv starship atuin
+    if command -v $tool >/dev/null
+        switch $tool
+            case zoxide
+                zoxide init fish | source
+            case direnv
+                direnv hook fish | source
+            case starship
+                starship init fish | source
+            case atuin
+                atuin init fish | source
+        end
+    end
 end
 
 function gcloud --wraps gcloud
     functions -e gcloud
     source "$BREW_PREFIX/share/google-cloud-sdk/path.fish.inc" 2>/dev/null
     gcloud $argv
-end
-
-# Starship
-if command -v starship >/dev/null
-    starship init fish | source
-end
-
-# Atuin - Shell History
-if command -v atuin >/dev/null
-    atuin init fish | source
 end

@@ -39,7 +39,7 @@ function ghclone
             echo "❌ No repositories found."
             return 1
         end
-        clone_selected_repo $repos
+        _clone_selected_repo $repos
         return 0
     end
 
@@ -72,11 +72,11 @@ function ghclone
         return 1
     end
 
-    clone_selected_repo $repos
+    _clone_selected_repo $repos
     return 0
 end
 
-function clone_selected_repo
+function _clone_selected_repo
     set repos $argv
 
     echo ""

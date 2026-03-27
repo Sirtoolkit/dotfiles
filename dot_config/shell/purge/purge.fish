@@ -1,8 +1,0 @@
-source "$HOME/.config/shell/purge/purge_all_mobile_dev_cache.fish"
-source "$HOME/.config/shell/purge/purge_config.fish"
-source "$HOME/.config/shell/purge/mise_purge_all.fish"
-source "$HOME/.config/shell/purge/brew_purge_formula.fish"
-source "$HOME/.config/shell/purge/brew_purge_cask.fish"
-source "$HOME/.config/shell/purge/mas_purge_all.fish"
-source "$HOME/.config/shell/purge/system_log_cleanup.fish"
-source "$HOME/.config/shell/purge/purge_all.fish"

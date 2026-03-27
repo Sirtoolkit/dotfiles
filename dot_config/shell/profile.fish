@@ -5,11 +5,6 @@ if set -q XDG_CONFIG_HOME
 end
 set -gx XDG_CONFIG_HOME "$config_home"
 
-# Source aliases if they exist
-if test -f "$config_home/shell/aliases.fish"
-    source "$config_home/shell/aliases.fish"
-end
-
 # mise activation
 if command -v mise > /dev/null
     mise activate fish | source

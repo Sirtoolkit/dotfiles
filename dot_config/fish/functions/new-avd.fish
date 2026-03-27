@@ -52,11 +52,13 @@ function new-avd
     set -l installed_block (echo "$sdk_list_output" | sed -n '/Installed packages:/,/Available Packages:/p')
     set -l available_block (echo "$sdk_list_output" | sed -n '/Available Packages:/,$p')
 
-    function filter_image_list
+    function _filter_image_list
         set -l input_list $argv[1]
+        set -l arch $argv[2]
+        set -l device_type $argv[3]
         echo "$input_list" | awk '/^[[:space:]]*system-images;/ && /google_apis_playstore/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' \
-            | grep "$arch_filter" \
-            | if test "$device_type_filter" = "Tablet"
+            | grep "$arch" \
+            | if test "$device_type" = "Tablet"
                 grep "tablet"
             else
                 grep -v "tablet"
@@ -64,8 +66,8 @@ function new-avd
             | sort -Vr | uniq
     end
 
-    set -l installed_images (filter_image_list "$installed_block" | string split '\n')
-    set -l available_images (filter_image_list "$available_block" | string split '\n')
+    set -l installed_images (_filter_image_list "$installed_block" "$arch_filter" "$device_type_filter" | string split '\n')
+    set -l available_images (_filter_image_list "$available_block" "$arch_filter" "$device_type_filter" | string split '\n')
 
     # Filter out already installed images from available
     set -l unique_available_images
@@ -76,7 +78,7 @@ function new-avd
     end
     set available_images $unique_available_images
 
-    function format_image_name
+    function _format_image_name
         set -l path $argv[1]
         set -l temp (string replace -r '.*android-' '' "$path")
         set -l api_level (string split ';' "$temp")[1]
@@ -94,10 +96,10 @@ function new-avd
     # Create fzf options with status indicators
     set -l fzf_options
     for img in $installed_images
-        set -a fzf_options "✅ "(format_image_name "$img")"|$img"
+        set -a fzf_options "✅ "(_format_image_name "$img")"|$img"
     end
     for img in $available_images
-        set -a fzf_options "⬇️  "(format_image_name "$img")"|$img"
+        set -a fzf_options "⬇️  "(_format_image_name "$img")"|$img"
     end
 
     set -l selected_option (printf '%s\n' $fzf_options | fzf --prompt="Select system image: " --height=15 --border --with-nth=1 --delimiter='|')
@@ -108,7 +110,7 @@ function new-avd
     end
 
     set -l selected_image (echo "$selected_option" | cut -d'|' -f2-)
-    echo "    You selected: "(format_image_name "$selected_image")" ($selected_image)"
+    echo "    You selected: "(_format_image_name "$selected_image")" ($selected_image)"
 
     echo "    Installing '$selected_image' if necessary..."
     yes | sdkmanager "$selected_image" > /dev/null
