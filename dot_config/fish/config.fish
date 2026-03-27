@@ -30,20 +30,25 @@ if test -f "$config_home/shell/profile.fish"
     source "$config_home/shell/profile.fish"
 end
 
-# Tools initialization (optimized loop)
-for tool in zoxide direnv starship atuin
-    if command -v $tool >/dev/null
-        switch $tool
-            case zoxide
-                zoxide init fish | source
-            case direnv
-                direnv hook fish | source
-            case starship
-                starship init fish | source
-            case atuin
-                atuin init fish | source
-        end
+# Interactive-only tools initialization
+if status is-interactive
+    # zoxide - fast, load immediately
+    command -v zoxide >/dev/null && zoxide init fish | source
+
+    # direnv - needed for interactive shells
+    command -v direnv >/dev/null && direnv hook fish | source
+
+    # starship - prompt (load immediately, only ~3ms)
+    command -v starship >/dev/null && starship init fish | source
+
+    # atuin - lazy load on first up-arrow (avoids 7ms startup cost)
+    function _atuin_lazy_init
+        functions -e _atuin_lazy_init
+        bind --erase \e'['A
+        command -v atuin >/dev/null && atuin init fish | source
+        commandline -f history-search-backward
     end
+    bind \e'['A _atuin_lazy_init
 end
 
 function gcloud --wraps gcloud
