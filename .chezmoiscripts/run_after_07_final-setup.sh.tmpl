@@ -64,18 +64,17 @@ final_setup() {
         log_warning "GitHub CLI (gh) no encontrado, saltando configuración de credenciales"
     fi
 
-    # Cambiar shell por defecto a zsh si no lo es ya
-    if [ "$SHELL" != "/bin/zsh" ] && [ "$SHELL" != "/usr/bin/zsh" ] && [ "$SHELL" != "/opt/homebrew/bin/zsh" ]; then
-        if command -v zsh >/dev/null 2>&1;
-        then
-            log_info "Cambiando shell por defecto a zsh..."
-            chsh -s "$(which zsh)"
-            log_success "Shell cambiado a zsh"
+    # Cambiar shell por defecto a fish si no lo es ya
+    if [ "$SHELL" != "/bin/fish" ] && [ "$SHELL" != "/usr/bin/fish" ] && [ "$SHELL" != "/opt/homebrew/bin/fish" ]; then
+        if command -v fish >/dev/null 2>&1; then
+            log_info "Cambiando shell por defecto a fish..."
+            chsh -s "$(which fish)"
+            log_success "Shell cambiado a fish"
         else
-            log_warning "zsh no está disponible, manteniendo shell actual"
+            log_warning "fish no está disponible, manteniendo shell actual"
         fi
     else
-        log_success "zsh ya es el shell por defecto"
+        log_success "fish ya es el shell por defecto"
     fi
 
     # Activar servicio borders si no está ya activado

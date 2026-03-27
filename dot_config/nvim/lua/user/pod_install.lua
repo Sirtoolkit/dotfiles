@@ -8,7 +8,7 @@ function M.install()
   if not pod_term or not pod_term:is_open() then
     pod_term = Terminal:new({
 
-      cmd = 'zsh -i -c \'cd ios && pod install || (echo; echo "[Error] pod install falló."; echo "Presiona Enter para cerrar."; read)\'',
+      cmd = 'fish -c \'cd ios; and pod install; or begin; echo; echo "[Error] pod install falló."; echo "Presiona Enter para cerrar."; read; end\'',
 
       dir = "git_dir",
 
@@ -26,7 +26,7 @@ function M.install()
     })
   else
     pod_term.cmd =
-      'zsh -i -c \'cd ios && pod install || (echo; echo "[Error] pod install falló."; echo "Presiona Enter para cerrar."; read)\''
+      'fish -c \'cd ios; and pod install; or begin; echo; echo "[Error] pod install falló."; echo "Presiona Enter para cerrar."; read; end\''
   end
 
   pod_term:toggle()
@@ -38,7 +38,7 @@ function M.update()
   if not pod_term or not pod_term:is_open() then
     pod_term = Terminal:new({
 
-      cmd = 'zsh -i -c \'cd ios && pod update || (echo; echo "[Error] pod update falló."; echo "Presiona Enter para cerrar."; read)\'',
+      cmd = 'fish -c \'cd ios; and pod update; or begin; echo; echo "[Error] pod update falló."; echo "Presiona Enter para cerrar."; read; end\'',
 
       dir = "git_dir",
 
@@ -56,7 +56,7 @@ function M.update()
     })
   else
     pod_term.cmd =
-      'zsh -i -c \'cd ios && pod update || (echo; echo "[Error] pod update falló."; echo "Presiona Enter para cerrar."; read)\''
+      'fish -c \'cd ios; and pod update; or begin; echo; echo "[Error] pod update falló."; echo "Presiona Enter para cerrar."; read; end\''
   end
 
   pod_term:toggle()

@@ -56,10 +56,9 @@ python.uv_venv_auto = true
 idiomatic_version_file_enable_tools = []
 
 [shell_alias]
-zshconfig = "nvim ~/.zshrc"
-ohmyzsh = "nvim ~/.oh-my-zsh"
+fishconfig = "nvim ~/.config/fish/config.fish"
 v = "nvim"
-zsource = 'source ~/.zshrc'
+sourcefish = 'source ~/.config/fish/config.fish'
 
 # Navigation
 ".." = "cd .."

@@ -20,6 +20,16 @@ if ! command -v mise >/dev/null 2>&1; then
   exit 0
 fi
 
+# Source Nix environment if installed (needed for non-interactive shells)
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+
+# Ensure Nix is in PATH if installed
+if [ -d "/nix" ] && [ -x "/nix/var/nix/profiles/default/bin/nix" ]; then
+    export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+fi
+
 CONFIG_FILE="${HOME}/.config/mise/config.toml"
 
 if [ -f "$CONFIG_FILE" ]; then

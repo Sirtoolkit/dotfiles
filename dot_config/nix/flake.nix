@@ -151,6 +151,7 @@
             "ollama"
             "opencode"
             "rtk"
+            "fish"
           ];
 
          masApps = {

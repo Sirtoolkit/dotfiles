@@ -8,7 +8,7 @@ function M.run()
   if not dbb_term or not dbb_term:is_open() then
     dbb_term = Terminal:new({
 
-      cmd = 'zsh -i -c \'dbb || (echo; echo "[Error] dart build_runner build falló."; echo "Presiona Enter para cerrar."; read)\'',
+      cmd = 'fish -c \'dbb; or begin; echo; echo "[Error] dart build_runner build falló."; echo "Presiona Enter para cerrar."; read; end\'',
 
       dir = "git_dir",
 

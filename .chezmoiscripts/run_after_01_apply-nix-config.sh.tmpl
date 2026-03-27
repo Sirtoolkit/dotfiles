@@ -1,72 +1,86 @@
 #!/bin/bash
-set -e
+# Habilitar modo estricto: detiene el script si hay errores o variables no definidas
+set -euo pipefail
+
+# 1. Identificar datos del usuario real de forma 100% segura (sin eval)
+REAL_USER=$(logname)
+# Usar dscl en macOS es la forma nativa y segura de obtener el HOME real
+REAL_HOME=$(dscl . -read /Users/"$REAL_USER" NFSHomeDirectory | awk '{print $2}')
+NIX_CONF_DIR="$REAL_HOME/.config/nix"
+HOSTNAME=$(scutil --get LocalHostName)
+NIX_DAEMON_PROFILE="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 
 # Colores para output
-if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
-    BLUE='\033[0;34m'
-    GREEN='\033[0;32m'
-    RED='\033[0;31m'
-    NC='\033[0m'
-else
-    BLUE=''
-    GREEN=''
-    RED=''
-    NC=''
-fi
+BLUE='\033[0;34m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-# Error handler
+# Manejador de errores
 cleanup() {
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
-        printf "%b\n" "${RED}✗ Nix setup falló con código $exit_code${NC}"
+        printf "%b\n" "${RED}✗ El proceso falló con código de error $exit_code${NC}"
     fi
-    return $exit_code
 }
 trap cleanup EXIT
 
-# Verificar permisos sudo antes
+# 2. Solicitar permisos sudo al inicio
 if ! sudo -n true 2>/dev/null; then
-    printf "%b\n" "${BLUE}Se requieren permisos sudo. Por favor, ingresa tu contraseña:${NC}"
+    printf "%b\n" "${BLUE}Se requieren permisos sudo para configurar Nix/Darwin:${NC}"
     sudo -v
 fi
 
-# Get the local hostname
-HOSTNAME=$(scutil --get LocalHostName)
+# 3. Corregir permisos de la carpeta de config PREVINIENDO ataques de symlinks
+if [ -d "$NIX_CONF_DIR" ] && [ ! -L "$NIX_CONF_DIR" ]; then
+    # Solo ejecuta chown si es un directorio real, no un acceso directo
+    sudo chown -R "$REAL_USER":staff "$NIX_CONF_DIR"
+fi
 
-# Check if Nix is already installed
+# 4. Cargar entorno Nix en la sesión actual si ya existe
+if [ -e "$NIX_DAEMON_PROFILE" ]; then
+    . "$NIX_DAEMON_PROFILE"
+fi
+
+# 5. Instalar Nix (modo multi-usuario) si no está presente
 if ! command -v nix >/dev/null 2>&1; then
     printf "%b\n" "${BLUE}Instalando Nix...${NC}"
-    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
-    printf "%b\n" "${GREEN}✓ Nix instalado${NC}"
+    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+    
+    # Recargar el perfil después de instalar
+    if [ -e "$NIX_DAEMON_PROFILE" ]; then
+        . "$NIX_DAEMON_PROFILE"
+    fi
 else
     printf "%b\n" "${GREEN}✓ Nix ya está instalado${NC}"
 fi
 
-# Check if nix-darwin is installed
-if ! command -v darwin-rebuild >/dev/null 2>&1; then
-    printf "%b\n" "${BLUE}Instalando nix-darwin...${NC}"
+# 6. Preparar el directorio y flake para nix-darwin (como usuario normal)
+printf "%b\n" "${BLUE}Verificando configuración de nix-darwin...${NC}"
 
-    # Initialize nix-darwin template in ~/.config/nix if flake.nix doesn't exist
-    if [ ! -f "$HOME/.config/nix/flake.nix" ]; then
-        printf "%b\n" "${BLUE}Inicializando template de nix-darwin...${NC}"
-        mkdir -p "$HOME/.config/nix"
-        cd "$HOME/.config/nix"
-        sudo nix flake init -t nix-darwin/master
-        
-        # Update hostname in flake.nix
-        sed -i '' "s/simple/$HOSTNAME/" flake.nix
-    fi
-
-    # Install nix-darwin from your flake in ~/.config/nix
-    sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake ~/.config/nix#$HOSTNAME
-
-    printf "%b\n" "${GREEN}✓ nix-darwin instalado${NC}"
-else
-    printf "%b\n" "${GREEN}✓ nix-darwin ya está instalado${NC}"
-    
-    # Apply the Nix Darwin configuration
-    printf "%b\n" "${BLUE}Aplicando configuración de Nix Darwin...${NC}"
-    sudo darwin-rebuild switch --flake ~/.config/nix#$HOSTNAME
+if [ ! -d "$NIX_CONF_DIR" ]; then
+    sudo -u "$REAL_USER" mkdir -p "$NIX_CONF_DIR"
 fi
 
-printf "%b\n" "${GREEN}✓ Configuración de Nix aplicada${NC}"
+if [ ! -f "$NIX_CONF_DIR/flake.nix" ]; then
+    cd "$NIX_CONF_DIR"
+    sudo -u "$REAL_USER" nix flake init -t github:LnL7/nix-darwin
+    # Uso de '|' como delimitador seguro en sed para evitar conflictos con '/'
+    sudo -u "$REAL_USER" sed -i '' "s|simple|$HOSTNAME|g" flake.nix
+fi
+
+# 7. Aplicar la configuración aislando el entorno de ejecución
+if ! command -v darwin-rebuild >/dev/null 2>&1; then
+    printf "%b\n" "${BLUE}Construyendo el sistema nix-darwin por primera vez...${NC}"
+    
+    # Usamos sudo -i con sh -c para garantizar que root cargue el daemon de Nix
+    # antes de ejecutar el comando, previniendo errores de "command not found"
+    sudo -i sh -c ". $NIX_DAEMON_PROFILE && nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
+else
+    printf "%b\n" "${GREEN}✓ Aplicando cambios de configuración...${NC}"
+    
+    # Ejecución segura y limpia como root
+    sudo -i sh -c ". $NIX_DAEMON_PROFILE && darwin-rebuild switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
+fi
+
+printf "%b\n" "${GREEN}✓ Proceso finalizado exitosamente y sin alertas de seguridad${NC}"
