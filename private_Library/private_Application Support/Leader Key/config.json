@@ -16,11 +16,6 @@
           "key": "i",
           "type": "application",
           "value": "/System/Applications/iPhone Mirroring.app"
-        },
-        {
-          "key": "l",
-          "type": "folder",
-          "value": "/Users/zizal/Downloads"
         }
       ],
       "iconPath": "cat",
@@ -29,34 +24,44 @@
       "type": "group"
     },
     {
-      "key": "D",
-      "type": "application",
-      "value": "/Applications/Discord.app"
-    },
-    {
-      "key": "S",
-      "type": "application",
-      "value": "/Applications/Slack.app"
-    },
-    {
       "key": "F",
-      "type": "application",
-      "value": "/Applications/figma.app"
+      "type": "folder",
+      "value": "/Users/zizal/Downloads"
     },
     {
       "key": "O",
       "type": "application",
-      "value": "/Applications/OrbStack.app"
+      "value": "/Applications/Obsidian.app"
+    },
+    {
+      "key": "C",
+      "type": "application",
+      "value": "/System/Applications/Calculator.app"
     },
     {
       "key": "G",
       "type": "application",
-      "value": "/Applications/GitKraken.app"
+      "value": "/Applications/Gemini.app"
+    },
+    {
+      "key": "o",
+      "type": "application",
+      "value": "/Applications/OrbStack.app"
     },
     {
       "key": "f",
       "type": "folder",
       "value": "/Applications"
+    },
+    {
+      "key": "c",
+      "type": "application",
+      "value": "/Applications/Discord.app"
+    },
+    {
+      "key": "s",
+      "type": "application",
+      "value": "/Applications/Slack.app"
     },
     {
       "key": "m",
@@ -77,7 +82,7 @@
     {
       "key": "g",
       "type": "application",
-      "value": "/Applications/Gemini.app"
+      "value": "/Applications/Ghostty.app"
     },
     {
       "key": "i",
@@ -87,13 +92,8 @@
     {
       "key": "e",
       "type": "command",
-      "label": "Start Android Emulator",
+      "label": "Android Emulator",
       "value": "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/platform-tools && nohup $ANDROID_HOME/platform-tools/adb devices > /dev/null 2>&1 && osascript -e 'display notification \"Use Android Studio to launch emulator\" with title \"Android Tools\"'"
-    },
-    {
-      "key": "s",
-      "type": "application",
-      "value": "/Applications/Shortcat.app"
     },
     {
       "key": "h",
@@ -106,11 +106,6 @@
       "value": "/Applications/Bruno.app"
     },
     {
-      "key": "o",
-      "type": "application",
-      "value": "/Applications/Obsidian.app"
-    },
-    {
       "key": "d",
       "type": "application",
       "value": "/Applications/DataGrip.app"
@@ -121,11 +116,6 @@
       "value": "/Applications/WhatsApp.app"
     },
     {
-      "key": "c",
-      "type": "application",
-      "value": "/System/Applications/Calculator.app"
-    },
-    {
       "key": "t",
       "type": "application",
       "value": "/Applications/Transporter.app"
@@ -134,11 +124,6 @@
       "key": "x",
       "type": "application",
       "value": "/Applications/Xcode.app"
-    },
-    {
-      "key": "space",
-      "type": "application",
-      "value": "/Applications/Ghostty.app"
     }
   ],
   "type": "group"

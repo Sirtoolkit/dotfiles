@@ -49,6 +49,14 @@ run = """
   fi
 """
 
+[tasks.krun]
+description = "Run kanata keyboard remapper"
+run = "kanata -c ~/.config/kanata/config.kbd > /dev/null &"
+
+[tasks.kkill]
+description = "Kill kanata process"
+run = "pkill kanata"
+
 [settings]
 experimental = true
 disable_hints = ["false"]
@@ -153,10 +161,8 @@ gwri = 'mise run wt:remove_interactive'
 gwl = 'wt list'
 gws = 'wt switch'
 gwm = 'wt merge'
-
 glg = "lazygit"
 
-# Git shortcuts (shell aliases wrapping git)
 ba = 'brew autoremove'
 bcfg = 'brew config'
 bci = 'brew info --cask'
@@ -254,3 +260,5 @@ cza = 'chezmoi add'
 
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'
 qf-lily = 'qmk flash -kb lily58 -km my_lily58'
+krun = "mise run krun"
+kkill = "mise run kkill"

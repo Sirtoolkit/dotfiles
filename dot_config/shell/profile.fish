@@ -5,14 +5,13 @@ if set -q XDG_CONFIG_HOME
 end
 set -gx XDG_CONFIG_HOME "$config_home"
 
-# mise activation (lazy load to avoid 44ms startup cost)
-if command -v mise > /dev/null
-    # Only set PATH and basic env, defer full activation
+# mise activation
+if command -v mise >/dev/null
+    # Always add shims to PATH
     set -gx MISE_FISH_AUTO_ACTIVATE 0
     set -gx PATH "$HOME/.local/share/mise/shims" $PATH
 
-    # In interactive shells, activate mise immediately so aliases work
-    # In non-interactive shells, use lazy loading
+    # In interactive shells, activate mise immediately so shell hooks work
     if status is-interactive
         command mise activate fish | source
     else
@@ -33,8 +32,8 @@ function flutter --wraps flutter
 end
 
 # Android SDK from Homebrew
-if test -d "/opt/homebrew/share/android-commandlinetools"
-    set -gx ANDROID_HOME "/opt/homebrew/share/android-commandlinetools"
+if test -d /opt/homebrew/share/android-commandlinetools
+    set -gx ANDROID_HOME /opt/homebrew/share/android-commandlinetools
     set -gx ANDROID_AVD_HOME "$HOME/.config/.android/avd"
     set -gx PATH "$ANDROID_HOME/cmdline-tools/latest/bin" $PATH
     set -gx PATH "$ANDROID_HOME/platform-tools" $PATH
@@ -64,3 +63,4 @@ set -gx LC_ALL en_US.UTF-8
 
 # Local binaries
 set -gx PATH "$HOME/.local/bin" $PATH
+

@@ -1,0 +1,51 @@
+(defcfg
+  process-unmapped-keys yes
+)
+
+(defsrc
+  caps a s d f j k l ; u i e r lsft rsft
+)
+
+(defalias
+  ;; Home Row Mods (600ms)
+  a_mod (tap-hold-release 200 600 a lmet)
+  s_mod (tap-hold-release 200 600 s lalt)
+  d_mod (tap-hold-release 200 600 d lctl)
+  f_mod (tap-hold-release 200 600 f lsft)
+
+  j_mod (tap-hold-release 200 600 j rsft)
+  k_mod (tap-hold-release 200 600 k rctl)
+  l_mod (tap-hold-release 200 600 l ralt)
+  ;_mod (tap-hold-release 200 600 ; rmet)
+
+  ;; Leader Key
+  ldr (tap-hold 200 600 (multi lmet lctl lalt lsft spc) (multi lmet lctl lalt lsft))
+
+  ;; Caps Word (Se activa y se apaga solo)
+  cw (caps-word 2000) ;; Se apaga tras 2 segundos de inactividad o al pulsar no-letras
+)
+
+(defchords combos 50
+  ;; U + I = ESC
+  (u)   u
+  (i)   i
+  (u i) esc
+
+  ;; E + R = TAB
+  (e)   e
+  (r)   r
+  (e r) tab
+
+  ;; Shift Izquierdo + Shift Derecho = Caps Word (Auto-Shift)
+  (lsft) lsft
+  (rsft) rsft
+  (lsft rsft) @cw
+)
+
+(deflayer default
+  @ldr 
+  @a_mod @s_mod @d_mod @f_mod 
+  @j_mod @k_mod @l_mod @;_mod 
+  (chord combos u) (chord combos i) (chord combos e) (chord combos r)
+  (chord combos lsft) (chord combos rsft)
+)
