@@ -63,4 +63,3 @@ set -gx LC_ALL en_US.UTF-8
 
 # Local binaries
 set -gx PATH "$HOME/.local/bin" $PATH
-

@@ -43,9 +43,9 @@
 )
 
 (deflayer default
-  @ldr 
-  @a_mod @s_mod @d_mod @f_mod 
-  @j_mod @k_mod @l_mod @;_mod 
+  @ldr
+  @a_mod @s_mod @d_mod @f_mod
+  @j_mod @k_mod @l_mod @;_mod
   (chord combos u) (chord combos i) (chord combos e) (chord combos r)
   (chord combos lsft) (chord combos rsft)
 )
