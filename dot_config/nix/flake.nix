@@ -85,7 +85,6 @@
           casks = [
             "arc"
             "ghostty"
-            "figma"
             "whatsapp"
             "leader-key"
             "discord"
@@ -95,7 +94,6 @@
             "bruno"
             "obsidian"
             "slack"
-            "shortcat"
             "datagrip"
             "raycast"
             "flutter"
@@ -153,6 +151,7 @@
             "worktrunk"
             "ollama"
             "opencode"
+            "kanata"
             "rtk"
             "fish"
           ];
