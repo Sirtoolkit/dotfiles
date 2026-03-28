@@ -51,11 +51,11 @@ run = """
 
 [tasks.krun]
 description = "Run kanata keyboard remapper"
-run = "kanata -c ~/.config/kanata/config.kbd > /dev/null &"
+run = "sudo kanata -c ~/.config/kanata/config.kbd > /dev/null &"
 
 [tasks.kkill]
 description = "Kill kanata process"
-run = "pkill kanata"
+run = "sudo pkill kanata"
 
 [settings]
 experimental = true

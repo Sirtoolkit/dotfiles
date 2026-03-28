@@ -110,6 +110,18 @@ EOF
     fi
 fi
 
+# Configurar sudoers para kanata sin password
+CURRENT_USER="$(whoami)"
+SUDOERS_FILE="/etc/sudoers.d/kanata-${CURRENT_USER}"
+
+if [ ! -f "$SUDOERS_FILE" ]; then
+    printf "%b\n" "${BLUE}Configurando sudoers para kanata...${NC}"
+    echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/kanata" | sudo tee "$SUDOERS_FILE" > /dev/null
+    echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /usr/bin/pkill kanata" | sudo tee -a "$SUDOERS_FILE" > /dev/null
+    sudo chmod 440 "$SUDOERS_FILE"
+    printf "%b\n" "${GREEN}✓ Configuración sudoers completada${NC}"
+fi
+
 printf "%b\n" "${GREEN}✓ Karabiner-VirtualHIDDevice listo para usar${NC}"
 
 {{ end -}}
