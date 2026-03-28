@@ -1,4 +1,8 @@
 function purge-karabiner
+    # Primero matar kanata para evitar que el teclado se quede trabado
+    echo "Deteniendo kanata..."
+    sudo pkill kanata 2>/dev/null || echo "  kanata no estaba corriendo"
+
     echo "Desactivando driver de Karabiner-VirtualHIDDevice..."
     bash '/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/scripts/uninstall/deactivate_driver.sh' 2>/dev/null || echo "  Driver no activo o ya desactivado"
 

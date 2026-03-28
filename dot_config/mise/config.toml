@@ -12,13 +12,16 @@ bun = "latest"
 firebase = "latest"
 
 [tasks."wt:new"]
+quiet = true
 run = "wt switch --create feat/{{arg(i=0)}} --base=@"
 
 [tasks."wt:remove"]
+quiet = true
 run = "wt remove -D {{arg(i=0)}}"
 
 [tasks.olc]
 description = "Ollama Cloud - Seleccionar y lanzar modelo desde el catálogo"
+quiet = true
 run = """
   cache_file="/tmp/ollama_cloud_list"
   if [ ! -f "$cache_file" ]; then
@@ -40,6 +43,7 @@ run = """
 
 [tasks."wt:remove_interactive"]
 description = "Borrar worktree seleccionado"
+quiet = true
 run = """
   branch=$(wt list --format=json | jq -r '.[].branch' | fzf)
   if [ -n "$branch" ]; then
@@ -51,11 +55,23 @@ run = """
 
 [tasks.krun]
 description = "Run kanata keyboard remapper"
-run = "sudo kanata -c ~/.config/kanata/config.kbd > /dev/null &"
+quiet = true
+run = """
+  if ! pgrep -x "Karabiner-VirtualHIDDevice-Daemon" > /dev/null 2>&1; then
+    echo "Error: Karabiner-VirtualHIDDevice-Daemon no está corriendo. Ejecuta 'chezmoi apply' primero."
+    exit 1
+  fi
+  sudo kanata -c ~/.config/kanata/config.kbd > /dev/null &
+  echo "✓ Kanata iniciado"
+"""
 
 [tasks.kkill]
 description = "Kill kanata process"
-run = "sudo pkill kanata"
+quiet = true
+run = """
+  sudo pkill kanata
+  echo "✓ Kanata detenido"
+"""
 
 [settings]
 experimental = true
