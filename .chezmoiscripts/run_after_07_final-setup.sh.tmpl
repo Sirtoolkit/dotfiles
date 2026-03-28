@@ -67,8 +67,15 @@ final_setup() {
     # Cambiar shell por defecto a fish si no lo es ya
     if [ "$SHELL" != "/bin/fish" ] && [ "$SHELL" != "/usr/bin/fish" ] && [ "$SHELL" != "/opt/homebrew/bin/fish" ]; then
         if command -v fish >/dev/null 2>&1; then
+            FISH_PATH="$(which fish)"
+            # Añadir fish a /etc/shells si no está presente
+            if ! grep -q "^${FISH_PATH}$" /etc/shells; then
+                log_info "Añadiendo ${FISH_PATH} a /etc/shells..."
+                echo "${FISH_PATH}" | sudo tee -a /etc/shells >/dev/null
+                log_success "${FISH_PATH} añadido a /etc/shells"
+            fi
             log_info "Cambiando shell por defecto a fish..."
-            chsh -s "$(which fish)"
+            chsh -s "${FISH_PATH}"
             log_success "Shell cambiado a fish"
         else
             log_warning "fish no está disponible, manteniendo shell actual"
