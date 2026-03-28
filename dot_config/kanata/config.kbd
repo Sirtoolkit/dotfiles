@@ -2,10 +2,12 @@
   process-unmapped-keys yes
 )
 
+;; 1. MAPA FÍSICO (Agregamos 'o' para el combo de música y 'spc')
 (defsrc
-  caps a s d f j k l ; u i e r lsft rsft
+  caps a s d f j k l ; u i o e r lsft rsft spc
 )
 
+;; 2. ALIAS Y MODIFICADORES
 (defalias
   ;; Home Row Mods (600ms)
   a_mod (tap-hold-release 200 600 a lmet)
@@ -18,34 +20,52 @@
   l_mod (tap-hold-release 200 600 l ralt)
   ;_mod (tap-hold-release 200 600 ; rmet)
 
-  ;; Leader Key
+  ;; Leader Key (Caps Lock)
   ldr (tap-hold 200 600 (multi lmet lctl lalt lsft spc) (multi lmet lctl lalt lsft))
 
-  ;; Caps Word (Se activa y se apaga solo)
-  cw (caps-word 2000) ;; Se apaga tras 2 segundos de inactividad o al pulsar no-letras
+  ;; Auto-Shift
+  cw (caps-word 2000)
+
+  ;; Espacio: Escribe espacio al tocar, activa 'media' al mantener
+  spc_media (tap-hold 200 200 spc (layer-toggle media))
 )
 
+;; 3. COMBOS (Chords)
 (defchords combos 50
-  ;; U + I = ESC
+  ;; Escape
   (u)   u
   (i)   i
   (u i) esc
 
-  ;; E + R = TAB
+  ;; Tabulador
   (e)   e
   (r)   r
   (e r) tab
 
-  ;; Shift Izquierdo + Shift Derecho = Caps Word (Auto-Shift)
+  ;; Auto-Shift
   (lsft) lsft
   (rsft) rsft
   (lsft rsft) @cw
 )
 
+;; 4. CAPA PRINCIPAL
 (deflayer default
   @ldr
   @a_mod @s_mod @d_mod @f_mod
   @j_mod @k_mod @l_mod @;_mod
-  (chord combos u) (chord combos i) (chord combos e) (chord combos r)
+  (chord combos u) (chord combos i) o
+  (chord combos e) (chord combos r)
   (chord combos lsft) (chord combos rsft)
+  @spc_media
+)
+
+;; 5. CAPA DE NAVEGACIÓN Y MULTIMEDIA (Se activa manteniendo el Espacio)
+(deflayer media
+  _                                 ;; caps
+  brdn brup vold volu               ;; a s d f (Mano Izq: Brillo Pantalla y Volumen)
+  left down up   rght               ;; j k l ; (Mano Der: ¡Flechas de navegación!)
+  prev pp   next                    ;; u i o   (Música: Anterior / Play-Pause / Sig)
+  _    mute                         ;; e r     (Puse el Mute en la 'R')
+  _    _                            ;; lsft rsft
+  _                                 ;; spc
 )
