@@ -150,7 +150,6 @@
             "gemini-cli"
             "worktrunk"
             "ollama"
-            "opencode"
             "kanata"
             "rtk"
             "fish"
