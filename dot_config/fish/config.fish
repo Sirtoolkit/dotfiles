@@ -56,3 +56,19 @@ function gcloud --wraps gcloud
     source "$BREW_PREFIX/share/google-cloud-sdk/path.fish.inc" 2>/dev/null
     gcloud $argv
 end
+
+# Anthropic API configuration
+set -gx ANTHROPIC_AUTH_TOKEN ollama
+set -gx ANTHROPIC_BASE_URL http://localhost:11434
+
+# Claude alias con modelo seleccionado
+function claude
+    if test -f ~/.config/ollama/model
+        set -l model (cat ~/.config/ollama/model)
+        if test -n "$model"
+            command claude --model "$model" $argv
+            return
+        end
+    end
+    echo "No hay modelo seleccionado. Usa 'olc' para seleccionar uno."
+end

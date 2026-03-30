@@ -20,7 +20,7 @@ quiet = true
 run = "wt remove -D {{arg(i=0)}}"
 
 [tasks.olc]
-description = "Ollama Cloud - Seleccionar y lanzar modelo desde el catálogo"
+description = "Ollama Cloud - Seleccionar y guardar modelo desde el catálogo"
 quiet = true
 run = """
   cache_file="/tmp/ollama_cloud_list"
@@ -36,7 +36,10 @@ run = """
     < "$cache_file")
   if [ -n "$selection" ]; then
     full_model="${selection}:cloud"
-    echo "⚡ Lanzando: ollama launch claude --model $full_model"
+    mkdir -p ~/.config/ollama
+    echo "$full_model" > ~/.config/ollama/model
+    echo "✓ Modelo guardado: $full_model"
+    echo "🚀 Lanzando claude..."
     ollama launch claude --model "$full_model"
   fi
 """
