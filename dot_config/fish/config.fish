@@ -1,3 +1,8 @@
+# Nix environment (must load early)
+if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+end
+
 # System essentials
 # Fast Homebrew detection
 if test -d /opt/homebrew
