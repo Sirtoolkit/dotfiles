@@ -48,15 +48,18 @@ function avd-new
     # --- STEP 1: SELECT SYSTEM IMAGE (FILTERED & SEPARATED) ---
     echo "➡️  Step 1: Choose a system image (filtered for '$arch_filter' and '$device_type_filter')."
 
-    set -l sdk_list_output (sdkmanager --list --verbose 2>/dev/null)
-    set -l installed_block (echo "$sdk_list_output" | sed -n '/Installed packages:/,/Available Packages:/p')
-    set -l available_block (echo "$sdk_list_output" | sed -n '/Available Packages:/,$p')
+    # Use temp file to avoid fish collapsing multiline variables into one line
+    set -l sdk_tmp (mktemp)
+    sdkmanager --list --verbose 2>/dev/null | grep -vE '^\[=+' > "$sdk_tmp"
+
+    set -l installed_block (sed -n '/Installed packages:/,/Available Packages:/p' "$sdk_tmp")
+    set -l available_block (sed -n '/Available Packages:/,$p' "$sdk_tmp")
+    rm -f "$sdk_tmp"
 
     function _filter_image_list
-        set -l input_list $argv[1]
-        set -l arch $argv[2]
-        set -l device_type $argv[3]
-        echo "$input_list" | awk '/^[[:space:]]*system-images;/ && /google_apis_playstore/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' \
+        set -l arch $argv[1]
+        set -l device_type $argv[2]
+        awk '/^[[:space:]]*system-images;/ && /google_apis/ && !/ext/ && !/Baklava/ && !/ps16k/ {print $1}' \
             | grep "$arch" \
             | if test "$device_type" = "Tablet"
                 grep "tablet"
@@ -66,8 +69,8 @@ function avd-new
             | sort -Vr | uniq
     end
 
-    set -l installed_images (_filter_image_list "$installed_block" "$arch_filter" "$device_type_filter" | string split '\n')
-    set -l available_images (_filter_image_list "$available_block" "$arch_filter" "$device_type_filter" | string split '\n')
+    set -l installed_images (printf '%s\n' $installed_block | _filter_image_list "$arch_filter" "$device_type_filter")
+    set -l available_images (printf '%s\n' $available_block | _filter_image_list "$arch_filter" "$device_type_filter")
 
     # Filter out already installed images from available
     set -l unique_available_images
@@ -80,9 +83,9 @@ function avd-new
 
     function _format_image_name
         set -l path $argv[1]
-        set -l temp (string replace -r '.*android-' '' "$path")
-        set -l api_level (string split ';' "$temp")[1]
-        set -l img_type (string split ';' "$path")[-1]
+        set -l parts (string split ';' "$path")
+        set -l api_level (string replace 'android-' '' "$parts[2]")
+        set -l img_type "$parts[3]"
         echo "Android API $api_level ($img_type)"
     end
 
@@ -124,10 +127,10 @@ function avd-new
     set -l current_name
 
     for line in (avdmanager list device | string split '\n')
-        if string match -r 'id: ([0-9]+) or "(.*)"' "$line" > /dev/null
-            set current_id (string match -r 'id: ([0-9]+) or "(.*)"' "$line")[2]
+        if string match -r -- 'id: ([0-9]+) or "(.*)"' "$line" > /dev/null
+            set current_id (string match -r -- 'id: ([0-9]+) or "(.*)"' "$line")[2]
             set current_name ""
-        else if string match -rq 'Name: (.*)' "$line"
+        else if string match -rq -- 'Name: (.*)' "$line"
             set current_name (string match -r 'Name: (.*)' "$line")[2]
             set -l is_match 0
             if test "$device_type_filter" = "Tablet"
@@ -176,8 +179,8 @@ function avd-new
     set -l temp_api (string replace -r '.*android-' '' "$selected_image")
     set -l api_level (string split ';' "$temp_api")[1]
 
-    set -l device_name_sanitized (echo "$device_display_name" | tr ' ' '_')
-    set -l suggested_name "{$device_name_sanitized}_API{$api_level}_{$arch_filter}"
+    set -l device_name_sanitized (echo "$device_display_name" | tr ' ' '_' | tr -dc 'a-zA-Z0-9._-')
+    set -l suggested_name "$device_name_sanitized"_API_"$api_level"_"$arch_filter"
     echo "    Suggested name: $suggested_name"
 
     echo -n "    Name: "

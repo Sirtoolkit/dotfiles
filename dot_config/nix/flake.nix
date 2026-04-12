@@ -76,13 +76,11 @@
         homebrew = {
           enable = true;
           taps = [
-            "dashlane/tap"
-            "FelixKratz/formulae"
             "nikitabobko/tap"
-            "go-task/tap"
           ];
 
           casks = [
+            "nikitabobko/tap/aerospace"
             "arc"
             "ghostty"
             "whatsapp"
@@ -97,7 +95,6 @@
             "datagrip"
             "raycast"
             "flutter"
-            "nikitabobko/tap/aerospace"
             "clockify"
             "crossover"
             "google-chrome"
@@ -110,6 +107,7 @@
             "dashlane/tap/dashlane-cli"
             "FelixKratz/formulae/borders"
             "go-task/tap/go-task"
+            # "felangel/mason/mason"
             "mole"
             "bat"
             "btop"
