@@ -24,20 +24,28 @@ description = "Ollama Cloud - Seleccionar y guardar modelo desde el catálogo"
 quiet = true
 run = """
   cache_file="/tmp/ollama_cloud_list"
+  usage_file="$HOME/.config/ollama/model_usage"
+  sort_script="$HOME/.config/ollama/olc_sort.sh"
+
   if [ ! -f "$cache_file" ]; then
-    echo "⏳ Primera vez: Descargando catálogo..."
-    for i in {1..5}; do
-      curl -s -L -H "User-Agent: Mozilla/5.0" "https://ollama.com/search?c=cloud&page=$i"
-    done | grep -oE '/library/[a-z0-9.-]+' | cut -d'/' -f3 | sort -u > "$cache_file"
+    echo "⏳ Descargando catálogo..."
+    curl -s "https://ollama.com/api/tags" | jq -r '.models[].name' | sort > "$cache_file"
   fi
-  selection=$(fzf --height 40% --layout=reverse --border \
+
+  selection=$(sh "$sort_script" "$cache_file" "$usage_file" | fzf --height 40% --layout=reverse --border \
     --header "☁️ Catálogo Cloud (Presiona Ctrl+R para actualizar)" \
-    --bind "ctrl-r:execute(rm $cache_file && echo 'Actualizando...' && for i in {1..5}; do curl -s -L -H 'User-Agent: Mozilla/5.0' 'https://ollama.com/search?c=cloud&page=\\$i'; done | grep -oE '/library/[a-z0-9.-]+' | cut -d'/' -f3 | sort -u > $cache_file)+reload(cat $cache_file)" \
-    < "$cache_file")
+    --bind "ctrl-r:reload(curl -s https://ollama.com/api/tags | jq -r '.models[].name' | sort > /tmp/ollama_cloud_list && sh $HOME/.config/ollama/olc_sort.sh /tmp/ollama_cloud_list $usage_file)" \
+    )
+
   if [ -n "$selection" ]; then
+    mkdir -p "$HOME/.config/ollama"
+    if [ -f "$usage_file" ]; then
+      awk -v m="$selection" '$1==m{$2++;found=1}{print}END{if(!found)print m,1}' "$usage_file" > "$usage_file.tmp" && mv "$usage_file.tmp" "$usage_file"
+    else
+      echo "$selection 1" > "$usage_file"
+    fi
     full_model="${selection}:cloud"
-    mkdir -p ~/.config/ollama
-    echo "$full_model" > ~/.config/ollama/model
+    echo "$full_model" > "$HOME/.config/ollama/model"
     echo "✓ Modelo guardado: $full_model"
     echo "🚀 Lanzando claude..."
     ollama launch claude --model "$full_model"

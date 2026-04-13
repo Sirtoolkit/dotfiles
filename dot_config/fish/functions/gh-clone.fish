@@ -97,11 +97,11 @@ function _clone_selected_repo
     set clone_choice (printf "Current directory (%s)\nCustom directory\n" (pwd) | fzf --prompt="Select clone location: " --height=8 --border)
 
     switch "$clone_choice"
-        case "Current directory"*
+        case 'Current directory*'
             echo ""
             echo "🚀 Cloning '$selected_repo' to current directory..."
             gh repo clone "$selected_repo"
-        case "Custom directory"*
+        case 'Custom directory*'
             echo ""
             echo -n "   Enter directory path: "
             read clone_dir
