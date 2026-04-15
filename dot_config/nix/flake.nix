@@ -61,7 +61,6 @@
               "/Applications/Gemini.app"
               "/Applications/Ghostty.app"
               "/Applications/Bruno.app"
-              "/Applications/Antigravity.app"
               "/Applications/Obsidian.app"
               "/Applications/DataGrip.app"
               "/Applications/Hotspot Shield.app"
@@ -99,15 +98,13 @@
             "crossover"
             "google-chrome"
             "gcloud-cli"
-            "antigravity"
-            "claude-code"
+            "claude-code@latest"
           ];
 
           brews = [
             "dashlane/tap/dashlane-cli"
             "FelixKratz/formulae/borders"
             "go-task/tap/go-task"
-            # "felangel/mason/mason"
             "mole"
             "bat"
             "btop"
@@ -145,7 +142,6 @@
             "chezmoi"
             "tree-sitter"
             "openvpn"
-            "gemini-cli"
             "worktrunk"
             "ollama"
             "kanata"

@@ -39,11 +39,6 @@
       "value": "/System/Applications/Calculator.app"
     },
     {
-      "key": "G",
-      "type": "application",
-      "value": "/Applications/Gemini.app"
-    },
-    {
       "key": "o",
       "type": "application",
       "value": "/Applications/OrbStack.app"
@@ -68,11 +63,6 @@
       "label": " Music",
       "type": "application",
       "value": "/System/Applications/Music.app"
-    },
-    {
-      "key": "y",
-      "type": "application",
-      "value": "/Applications/Youtube Music.app"
     },
     {
       "key": "a",
