@@ -98,6 +98,7 @@
             "clockify"
             "crossover"
             "google-chrome"
+            "google-drive"
             "gcloud-cli"
             "claude-code@latest"
           ];
