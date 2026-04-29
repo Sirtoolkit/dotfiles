@@ -88,6 +88,7 @@
             "android-commandlinetools"
             "orbstack"
             "windows-app"
+            "microsoft-teams"
             "bruno"
             "obsidian"
             "slack"
