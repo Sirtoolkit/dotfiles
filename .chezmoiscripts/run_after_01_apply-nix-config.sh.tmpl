@@ -9,6 +9,12 @@ REAL_HOME=$(dscl . -read /Users/"$REAL_USER" NFSHomeDirectory | awk '{print $2}'
 NIX_CONF_DIR="$REAL_HOME/.config/nix"
 HOSTNAME=$(scutil --get LocalHostName)
 NIX_DAEMON_PROFILE="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+NIX_BIN="/nix/var/nix/profiles/default/bin/nix"
+NIX_CA_BUNDLE="/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt"
+NIX_DAEMON_PLIST="/Library/LaunchDaemons/org.nixos.nix-daemon.plist"
+NIX_DAEMON_LABEL="org.nixos.nix-daemon"
+NIX_STORE_PLIST="/Library/LaunchDaemons/org.nixos.darwin-store.plist"
+ACTIVATE_SYSTEM_PLIST="/Library/LaunchDaemons/org.nixos.activate-system.plist"
 
 # Colores para output
 BLUE='\033[0;34m'
@@ -25,6 +31,284 @@ cleanup() {
 }
 trap cleanup EXIT
 
+setup_nix_ssl_cert() {
+    if [ -e "$NIX_CA_BUNDLE" ]; then
+        export NIX_SSL_CERT_FILE="$NIX_CA_BUNDLE"
+        export SSL_CERT_FILE="$NIX_CA_BUNDLE"
+    elif [ -e "/etc/ssl/cert.pem" ]; then
+        export NIX_SSL_CERT_FILE="/etc/ssl/cert.pem"
+        export SSL_CERT_FILE="/etc/ssl/cert.pem"
+    fi
+}
+
+repair_macos_ca_cert_path() {
+    local system_ca_link="/etc/ssl/certs/ca-certificates.crt"
+    local system_ca_fallback="/etc/ssl/cert.pem"
+
+    if [ -e "$system_ca_link" ]; then
+        return 0
+    fi
+
+    if [ -L "$system_ca_link" ] && [ ! -e "$system_ca_link" ] && [ -e "$system_ca_fallback" ]; then
+        printf "%b\n" "${BLUE}Reparando ruta de certificados TLS para Nix en macOS...${NC}"
+        sudo mkdir -p /etc/ssl/certs
+        sudo rm -f "$system_ca_link"
+        sudo ln -s "$system_ca_fallback" "$system_ca_link"
+        printf "%b\n" "${GREEN}✓ Ruta TLS reparada en $system_ca_link${NC}"
+    fi
+}
+
+cleanup_nix_backups() {
+    if [ -f "/etc/bash.bashrc.backup-before-nix" ] || [ -f "/etc/bashrc.backup-before-nix" ] || [ -f "/etc/zshrc.backup-before-nix" ] || [ -f "/etc/zshrc.before-nix-darwin" ]; then
+        printf "%b\n" "${BLUE}Limpiando backups de instalación previa de Nix...${NC}"
+        sudo rm -f /etc/bash.bashrc.backup-before-nix /etc/bashrc.backup-before-nix /etc/zshrc.backup-before-nix /etc/zshrc.before-nix-darwin 2>/dev/null || true
+        printf "%b\n" "${GREEN}✓ Backups limpiados${NC}"
+    fi
+}
+
+strip_nix_block_from_file() {
+    local target_file="$1"
+    local tmp_file=""
+
+    [ -f "$target_file" ] || return 0
+
+    tmp_file=$(mktemp)
+    awk '
+        BEGIN { skip = 0 }
+        /^# Nix$/ { skip = 1; next }
+        /^# End Nix$/ { if (skip) { skip = 0; next } }
+        !skip { print }
+    ' "$target_file" >"$tmp_file"
+
+    if ! cmp -s "$target_file" "$tmp_file"; then
+        printf "%b\n" "${BLUE}Eliminando bloques previos de Nix en $target_file...${NC}"
+        sudo cp "$tmp_file" "$target_file"
+    fi
+
+    rm -f "$tmp_file"
+}
+
+cleanup_nix_shell_rc_files() {
+    strip_nix_block_from_file /etc/bash.bashrc
+    strip_nix_block_from_file /etc/bashrc
+    strip_nix_block_from_file /etc/zshrc
+}
+
+file_contains_only_nix_block() {
+    local target_file="$1"
+    local stripped_file=""
+
+    [ -f "$target_file" ] || return 1
+
+    stripped_file=$(mktemp)
+    awk '
+        BEGIN { skip = 0 }
+        /^# Nix$/ { skip = 1; next }
+        /^# End Nix$/ { if (skip) { skip = 0; next } }
+        !skip { print }
+    ' "$target_file" >"$stripped_file"
+
+    if [ -z "$(tr -d '[:space:]' <"$stripped_file")" ]; then
+        rm -f "$stripped_file"
+        return 0
+    fi
+
+    rm -f "$stripped_file"
+    return 1
+}
+
+rename_for_nix_darwin_activation() {
+    local target_file="$1"
+    local backup_file="${target_file}.before-nix-darwin"
+
+    [ -e "$target_file" ] || return 0
+
+    if [ -e "$backup_file" ]; then
+        backup_file="${backup_file}.$(date +%s)"
+    fi
+
+    printf "%b\n" "${BLUE}Renombrando $target_file para permitir que nix-darwin lo gestione...${NC}"
+    sudo mv "$target_file" "$backup_file"
+}
+
+prepare_nix_darwin_etc_files() {
+    if file_contains_only_nix_block /etc/bashrc; then
+        rename_for_nix_darwin_activation /etc/bashrc
+    fi
+
+    if file_contains_only_nix_block /etc/zshrc; then
+        rename_for_nix_darwin_activation /etc/zshrc
+    fi
+
+    if [ -L /etc/ssl/certs/ca-certificates.crt ] && \
+       [ "$(readlink /etc/ssl/certs/ca-certificates.crt)" = "/etc/ssl/cert.pem" ]; then
+        rename_for_nix_darwin_activation /etc/ssl/certs/ca-certificates.crt
+    fi
+}
+
+cleanup_broken_nix_shell_links() {
+    # En macOS con Nix previo, algunos archivos quedan como symlinks rotos y bloquean el instalador.
+    if [ -L /etc/bashrc ] && [ ! -e /etc/bashrc ]; then
+        printf "%b\n" "${BLUE}Removiendo symlink roto /etc/bashrc...${NC}"
+        sudo rm -f /etc/bashrc
+    fi
+    if [ -L /etc/zshrc ] && [ ! -e /etc/zshrc ]; then
+        printf "%b\n" "${BLUE}Removiendo symlink roto /etc/zshrc...${NC}"
+        sudo rm -f /etc/zshrc
+    fi
+    if [ -L /etc/fish/config.fish ] && [ ! -e /etc/fish/config.fish ]; then
+        printf "%b\n" "${BLUE}Removiendo symlink roto /etc/fish/config.fish...${NC}"
+        sudo rm -f /etc/fish/config.fish
+    fi
+}
+
+repair_nix_launchd_services() {
+    local daemon_status=""
+    local daemon_needs_reload=0
+    local activate_target=""
+
+    if [ -f "$NIX_DAEMON_PLIST" ]; then
+        daemon_status=$(launchctl print "system/$NIX_DAEMON_LABEL" 2>/dev/null || true)
+
+        if printf '%s\n' "$daemon_status" | grep -q "last exit code = 126"; then
+            daemon_needs_reload=1
+        fi
+
+        if printf '%s\n' "$daemon_status" | grep -q "/nix/store/" && \
+           ! printf '%s\n' "$daemon_status" | grep -q "/nix/var/nix/profiles/default/bin/nix-daemon"; then
+            daemon_needs_reload=1
+        fi
+
+        if [ "$daemon_needs_reload" -eq 1 ]; then
+            printf "%b\n" "${BLUE}Recargando servicio nix-daemon con rutas actuales...${NC}"
+            sudo launchctl bootout system "$NIX_DAEMON_PLIST" 2>/dev/null || true
+            sudo launchctl bootstrap system "$NIX_DAEMON_PLIST"
+            sudo launchctl kickstart -k "system/$NIX_DAEMON_LABEL"
+            printf "%b\n" "${GREEN}✓ nix-daemon recargado${NC}"
+        fi
+    fi
+
+    if [ -f "$ACTIVATE_SYSTEM_PLIST" ]; then
+        activate_target=$(plutil -extract ProgramArguments.2 raw -o - "$ACTIVATE_SYSTEM_PLIST" 2>/dev/null | \
+            sed -n 's|.*exec \(/nix/store/[^ ]*\).*|\1|p')
+
+        if [ -n "$activate_target" ] && [ ! -e "$activate_target" ]; then
+            printf "%b\n" "${BLUE}Eliminando activación nix-darwin obsoleta para que se regenere en el primer switch...${NC}"
+            sudo launchctl bootout system "$ACTIVATE_SYSTEM_PLIST" 2>/dev/null || true
+            sudo rm -f "$ACTIVATE_SYSTEM_PLIST"
+            printf "%b\n" "${GREEN}✓ Activación obsoleta eliminada${NC}"
+        fi
+    fi
+}
+
+install_nix() {
+    printf "%b\n" "${BLUE}Instalando Nix...${NC}"
+    cleanup_broken_nix_shell_links
+
+    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+
+    setup_nix_ssl_cert
+    if [ -e "$NIX_DAEMON_PROFILE" ]; then
+        . "$NIX_DAEMON_PROFILE"
+    fi
+}
+
+cleanup_nix_state_files() {
+    sudo rm -rf /etc/nix /var/root/.nix-profile /var/root/.nix-defexpr /var/root/.nix-channels
+    sudo rm -rf "$REAL_HOME/.nix-profile" "$REAL_HOME/.nix-defexpr" "$REAL_HOME/.nix-channels"
+    sudo rm -rf "$REAL_HOME/.local/share/nix" "$REAL_HOME/.local/state/nix" "$REAL_HOME/.cache/nix"
+}
+
+delete_nix_store_volume() {
+    local nix_volume_id=""
+
+    sudo diskutil apfs deleteVolume /nix >/dev/null 2>&1 && return 0
+    sudo diskutil unmount force /nix >/dev/null 2>&1 || true
+    sudo diskutil apfs deleteVolume /nix >/dev/null 2>&1 && return 0
+
+    nix_volume_id=$(diskutil list | awk '/Nix Store/ {print $NF; exit}')
+    if [ -n "$nix_volume_id" ]; then
+        sudo diskutil apfs deleteVolume "$nix_volume_id" >/dev/null 2>&1 && return 0
+    fi
+
+    return 1
+}
+
+reinstall_broken_nix() {
+    printf "%b\n" "${BLUE}La instalación actual de Nix está rota. Reinstalando automáticamente...${NC}"
+
+    sudo launchctl bootout system "$NIX_DAEMON_PLIST" 2>/dev/null || true
+    sudo launchctl bootout system "$NIX_STORE_PLIST" 2>/dev/null || true
+    sudo launchctl bootout system "$ACTIVATE_SYSTEM_PLIST" 2>/dev/null || true
+    sudo rm -f "$NIX_DAEMON_PLIST" "$NIX_STORE_PLIST" "$ACTIVATE_SYSTEM_PLIST"
+
+    if ! delete_nix_store_volume; then
+        printf "%b\n" "${RED}✗ No se pudo eliminar el volumen APFS /nix.${NC}"
+        printf "%b\n" "${RED}  En macOS esto puede pasar si el kernel aún mantiene el volumen en uso.${NC}"
+        printf "%b\n" "${RED}  Reinicia el equipo y vuelve a ejecutar chezmoi para reintentar la reinstalación de Nix.${NC}"
+        exit 1
+    fi
+
+    cleanup_nix_backups
+    cleanup_nix_shell_rc_files
+    cleanup_broken_nix_shell_links
+    cleanup_nix_state_files
+    install_nix
+}
+
+nix_installation_is_healthy() {
+    local healthcheck_log
+    healthcheck_log=$(mktemp)
+
+    if ! sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_FILE="$SSL_CERT_FILE" \
+        "$NIX_BIN" --extra-experimental-features 'nix-command flakes' \
+        derivation show github:NixOS/nixpkgs/nixpkgs-unstable#hello \
+        >"$healthcheck_log" 2>&1; then
+        rm -f "$healthcheck_log"
+        return 1
+    fi
+
+    rm -f "$healthcheck_log"
+    return 0
+}
+
+preflight_nix_installation() {
+    local healthcheck_log
+    local match_line=""
+    healthcheck_log=$(mktemp)
+
+    if nix_installation_is_healthy; then
+        rm -f "$healthcheck_log"
+        return 0
+    fi
+
+    sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_FILE="$SSL_CERT_FILE" \
+        "$NIX_BIN" --extra-experimental-features 'nix-command flakes' \
+        derivation show github:NixOS/nixpkgs/nixpkgs-unstable#hello \
+        >"$healthcheck_log" 2>&1 || true
+
+    if grep -q "bootstrap-stage0-stdenv-darwin.drv' does not exist" "$healthcheck_log"; then
+        match_line=$(grep -m1 "bootstrap-stage0-stdenv-darwin.drv' does not exist" "$healthcheck_log")
+        printf "%b\n" "${BLUE}Detectado Nix roto: $match_line${NC}"
+        rm -f "$healthcheck_log"
+        reinstall_broken_nix
+    else
+        printf "%b\n" "${RED}✗ La instalación base de Nix no pudo evaluar un derivation mínimo.${NC}"
+        cat "$healthcheck_log"
+        rm -f "$healthcheck_log"
+        exit 1
+    fi
+
+    repair_nix_launchd_services
+
+    if ! nix_installation_is_healthy; then
+        printf "%b\n" "${RED}✗ Nix sigue roto incluso después de reinstalarlo.${NC}"
+        exit 1
+    fi
+
+    rm -f "$healthcheck_log"
+}
+
 # 2. Solicitar permisos sudo al inicio
 if ! sudo -n true 2>/dev/null; then
     printf "%b\n" "${BLUE}Se requieren permisos sudo para configurar Nix/Darwin:${NC}"
@@ -39,31 +323,28 @@ fi
 
 # 4. Cargar entorno Nix en la sesión actual si ya existe
 if [ -e "$NIX_DAEMON_PROFILE" ]; then
+    setup_nix_ssl_cert
+    repair_macos_ca_cert_path
     . "$NIX_DAEMON_PROFILE"
 fi
 
 # 5. Limpiar backups de instalaciones previas de Nix si no está instalado
 # Esto evita que el instalador falle al encontrar archivos backup residuales
 if ! command -v nix >/dev/null 2>&1; then
-    if [ -f "/etc/bashrc.backup-before-nix" ] || [ -f "/etc/zshrc.backup-before-nix" ] || [ -f "/etc/zshrc.before-nix-darwin" ]; then
-        printf "%b\n" "${BLUE}Limpiando backups de instalación previa de Nix...${NC}"
-        sudo rm -f /etc/bashrc.backup-before-nix /etc/zshrc.backup-before-nix /etc/zshrc.before-nix-darwin 2>/dev/null || true
-        printf "%b\n" "${GREEN}✓ Backups limpiados${NC}"
-    fi
+    cleanup_nix_backups
 fi
 
 # 6. Instalar Nix (modo multi-usuario) si no está presente
 if ! command -v nix >/dev/null 2>&1; then
-    printf "%b\n" "${BLUE}Instalando Nix...${NC}"
-    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
-
-    # Recargar el perfil después de instalar
-    if [ -e "$NIX_DAEMON_PROFILE" ]; then
-        . "$NIX_DAEMON_PROFILE"
-    fi
+    install_nix
 else
     printf "%b\n" "${GREEN}✓ Nix ya está instalado${NC}"
 fi
+
+repair_nix_launchd_services
+repair_macos_ca_cert_path
+preflight_nix_installation
+prepare_nix_darwin_etc_files
 
 # 7. Preparar el directorio y flake para nix-darwin (como usuario normal)
 printf "%b\n" "${BLUE}Verificando configuración de nix-darwin...${NC}"
@@ -74,7 +355,8 @@ fi
 
 if [ ! -f "$NIX_CONF_DIR/flake.nix" ]; then
     cd "$NIX_CONF_DIR"
-    sudo -u "$REAL_USER" nix flake init -t github:LnL7/nix-darwin
+    sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_FILE="$SSL_CERT_FILE" \
+        "$NIX_BIN" flake init -t github:nix-darwin/nix-darwin
     # Uso de '|' como delimitador seguro en sed para evitar conflictos con '/'
     sudo -u "$REAL_USER" sed -i '' "s|simple|$HOSTNAME|g" flake.nix
 fi
@@ -85,12 +367,12 @@ if ! command -v darwin-rebuild >/dev/null 2>&1; then
     
     # Usamos sudo -i con sh -c para garantizar que root cargue el daemon de Nix
     # antes de ejecutar el comando, previniendo errores de "command not found"
-    sudo -i sh -c ". $NIX_DAEMON_PROFILE && nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
+    sudo -i sh -c "export NIX_SSL_CERT_FILE='$NIX_SSL_CERT_FILE' SSL_CERT_FILE='$SSL_CERT_FILE'; . $NIX_DAEMON_PROFILE && nix run github:nix-darwin/nix-darwin/master#darwin-rebuild --extra-experimental-features 'nix-command flakes' -- switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
 else
     printf "%b\n" "${GREEN}✓ Aplicando cambios de configuración...${NC}"
     
     # Ejecución segura y limpia como root
-    sudo -i sh -c ". $NIX_DAEMON_PROFILE && darwin-rebuild switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
+    sudo -i sh -c "export NIX_SSL_CERT_FILE='$NIX_SSL_CERT_FILE' SSL_CERT_FILE='$SSL_CERT_FILE'; . $NIX_DAEMON_PROFILE && darwin-rebuild switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
 fi
 
 printf "%b\n" "${GREEN}✓ Proceso finalizado exitosamente y sin alertas de seguridad${NC}"

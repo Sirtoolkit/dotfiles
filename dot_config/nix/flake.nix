@@ -58,12 +58,13 @@
             tilesize = 48;
             persistent-apps = [
               "/Applications/Arc.app"
-              "/Applications/Gemini.app"
               "/Applications/Ghostty.app"
               "/Applications/Bruno.app"
               "/Applications/Obsidian.app"
               "/Applications/DataGrip.app"
               "/Applications/Hotspot Shield.app"
+              "/Applications/Microsoft Teams.app"
+              "/Applications/WhatsApp.app"
             ];
           };
         };
@@ -101,6 +102,8 @@
             "google-drive"
             "gcloud-cli"
             "claude-code@latest"
+            "codex"
+            "logseq"
           ];
 
           brews = [

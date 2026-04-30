@@ -278,14 +278,15 @@ grep = "grep --color=auto"
 c = "clear"
 t = "tmux"
 e = "exit"
-ki = "kilo"
 olc = "mise run olc"
 
 czp = 'chezmoi apply'
 czf = 'chezmoi apply --include=files'
 cza = 'chezmoi add'
+co = 'claude'
 
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'
 qf-lily = 'qmk flash -kb lily58 -km my_lily58'
 krun = "mise run krun"
 kkill = "mise run kkill"
+vpn = 'sudo openvpn --config ~/.config/openvpn/sslvpn-cesar@onetouch.hn-client-config.ovpn --auth-user-pass ~/.config/openvpn/pass.txt'
