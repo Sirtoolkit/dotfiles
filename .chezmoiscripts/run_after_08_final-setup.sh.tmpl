@@ -23,23 +23,23 @@ fi
 
 # Función para logging con colores
 log_info() {
-    printf "%b\n" "${BLUE}ℹ️  $1${NC}"
+    printf "%b\n" "${BLUE}→ $1${NC}"
 }
 
 log_success() {
-    printf "%b\n" "${GREEN}✅ $1${NC}"
+    printf "%b\n" "${GREEN}✓ $1${NC}"
 }
 
 log_warning() {
-    printf "%b\n" "${YELLOW}⚠️  $1${NC}"
+    printf "%b\n" "${YELLOW}⚠ $1${NC}"
 }
 
 log_error() {
-    printf "%b\n" "${RED}❌ $1${NC}"
+    printf "%b\n" "${RED}✗ $1${NC}"
 }
 
 log_step() {
-    printf "\n%b\n" "${BLUE}🚀 $1${NC}"
+    printf "\n%b\n" "${BLUE}→ $1${NC}"
 }
 
 # Verificar que estamos en macOS
@@ -50,18 +50,18 @@ fi
 
 # Función para configuración final
 final_setup() {
-    log_step "Configuración final..."
+    log_step "Final"
 
     # Configurar Git para usar gh como helper de credenciales
     if command -v gh >/dev/null 2>&1; then
-        log_info "Configurando Git para usar GitHub CLI como helper de credenciales..."
+        log_info "Configurando credenciales Git con GitHub CLI"
         git config --global --unset-all credential.https://github.com.helper >/dev/null 2>&1 || true
         git config --global --unset-all credential.https://gist.github.com.helper >/dev/null 2>&1 || true
         git config --global credential.https://github.com.helper "!$(which gh) auth git-credential"
         git config --global credential.https://gist.github.com.helper "!$(which gh) auth git-credential"
-        log_success "Git configurado para usar GitHub CLI"
+        log_success "Git usa gh como credential helper"
     else
-        log_warning "GitHub CLI (gh) no encontrado, saltando configuración de credenciales"
+        log_warning "gh no encontrado; se omiten credenciales Git"
     fi
 
     # Cambiar shell por defecto a fish si no lo es ya
@@ -70,13 +70,13 @@ final_setup() {
             FISH_PATH="$(which fish)"
             # Añadir fish a /etc/shells si no está presente
             if ! grep -q "^${FISH_PATH}$" /etc/shells; then
-                log_info "Añadiendo ${FISH_PATH} a /etc/shells..."
+                log_info "Añadiendo ${FISH_PATH} a /etc/shells"
                 echo "${FISH_PATH}" | sudo tee -a /etc/shells >/dev/null
                 log_success "${FISH_PATH} añadido a /etc/shells"
             fi
-            log_info "Cambiando shell por defecto a fish..."
+            log_info "Cambiando shell por defecto a fish"
             chsh -s "${FISH_PATH}"
-            log_success "Shell cambiado a fish"
+            log_success "fish configurado como shell por defecto"
         else
             log_warning "fish no está disponible, manteniendo shell actual"
         fi
@@ -86,39 +86,45 @@ final_setup() {
 
     # Activar servicio borders si no está ya activado
     if command -v brew >/dev/null 2>&1; then
-        log_info "Verificando estado del servicio borders..."
+        log_info "Verificando servicio borders"
         if brew services list | grep "^borders" | grep -q "started"; then
-            log_info "Servicio borders ya está activado"
+            log_success "borders activo"
         else
-            log_info "Activando servicio borders..."
+            log_info "Activando servicio borders"
             brew services start borders
-            log_success "Servicio borders activado"
+            log_success "borders activado"
         fi
     else
-        log_warning "Homebrew no encontrado, no se puede activar borders"
+        log_warning "Homebrew no encontrado; se omite borders"
     fi
 }
 
 # Función para mostrar resumen final
 show_summary() {
-    log_step "🎉 ¡Aplicación de dotfiles completada!"
+    log_step "Resumen"
     
-    printf "\n%b\n" "${GREEN}✅ Chezmoi aplicó exitosamente tus dotfiles${NC}"
-    printf "\n%b\n" "${BLUE}📋 Archivos aplicados:${NC}"
-    echo "  • Todos los archivos de configuración en tu directorio home"
-    echo "  • Scripts de instalación ejecutados"
+    printf "%b\n" "${GREEN}✓ Dotfiles aplicados${NC}"
+    printf "\n%b\n" "${BLUE}Instalaciones gestionadas:${NC}"
+    echo "  - Nix / nix-darwin"
+    echo "  - Mise"
+    echo "  - PNPM global: nx, opencommit, expo, @nestjs/cli, @mixedbread/mgrep"
+    echo "  - tmux y plugins"
+    echo "  - Android SDK + Flutter"
+    echo "  - opencommit"
+    echo "  - Karabiner VirtualHID + kanata"
+    echo "  - Git credentials, fish y borders"
     
-    printf "\n%b\n" "${YELLOW}💡 Comandos útiles:${NC}"
-    echo "  • chezmoi apply - Aplicar cambios nuevamente"
-    echo "  • chezmoi status - Ver estado de archivos"
-    echo "  • chezmoi edit ~/.file - Editar archivos gestionados"
+    printf "\n%b\n" "${YELLOW}Comandos útiles:${NC}"
+    echo "  - chezmoi apply           Reaplicar dotfiles"
+    echo "  - chezmoi status          Ver cambios pendientes"
+    echo "  - chezmoi edit ~/.file    Editar archivo gestionado"
     
-    printf "\n%b\n\n" "${GREEN}🚀 ¡Tu configuración está lista!${NC}"
+    printf "\n%b\n\n" "${GREEN}✓ Configuración lista${NC}"
 }
 
 # Función principal
 main() {
-    log_step "🍎 Iniciando configuración final y resumen"
+    log_step "Setup final"
     
     # Verificar que no se ejecute como root
     if [ "$EUID" -eq 0 ]; then

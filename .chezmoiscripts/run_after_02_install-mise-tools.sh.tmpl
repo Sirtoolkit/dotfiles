@@ -16,7 +16,8 @@ else
 fi
 
 if ! command -v mise >/dev/null 2>&1; then
-  printf "%b\n" "${YELLOW}⚠ mise no está instalado, omitiendo instalación de herramientas${NC}"
+  printf "\n%b\n" "${BLUE}→ Mise${NC}"
+  printf "%b\n" "${YELLOW}⚠ mise no está instalado; se omiten sus herramientas${NC}"
   exit 0
 fi
 
@@ -32,22 +33,30 @@ fi
 
 CONFIG_FILE="${HOME}/.config/mise/config.toml"
 
+printf "\n%b\n" "${BLUE}→ Mise${NC}"
+
 if [ -f "$CONFIG_FILE" ]; then
-    printf "%b\n" "${BLUE}Instalando herramientas de mise...${NC}"
+    printf "%b\n" "${BLUE}→ Sincronizando herramientas de mise${NC}"
     
     # Verificar que Nix está disponible (dependencia previa)
     if ! command -v nix >/dev/null 2>&1; then
-        printf "%b\n" "${YELLOW}⚠ Nix no disponible aún. Saltando Mise.${NC}"
+        printf "%b\n" "${YELLOW}⚠ Nix no disponible todavía; se omite Mise${NC}"
         exit 0
     fi
 
-    # Instalar herramientas, ignorando errores individuales
-    mise install 2>&1 | grep -v "^WARNING\|^ERROR" | tail -5 || true
+    MISE_LOG="$(mktemp)"
+    if mise install >"$MISE_LOG" 2>&1; then
+        printf "%b\n" "${GREEN}✓ Herramientas de mise al día${NC}"
+    else
+        printf "%b\n" "${YELLOW}⚠ mise terminó con advertencias; últimas líneas:${NC}"
+        tail -10 "$MISE_LOG"
+    fi
+    rm -f "$MISE_LOG"
     
     # Re-generar shims
     mise reshim 2>/dev/null || true
     
-    printf "%b\n" "${GREEN}✓ Mise completado (algunas herramientas pueden haberse omitido)${NC}"
+    printf "%b\n" "${GREEN}✓ Mise listo${NC}"
 else
     printf "%b\n" "${YELLOW}⚠ No se encontró config de mise en $CONFIG_FILE${NC}"
 fi

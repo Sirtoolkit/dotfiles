@@ -24,44 +24,49 @@ WINDOW_NAME_REPO="https://github.com/ofirgall/tmux-window-name.git"
 PAIN_CONTROL_DIR="$PLUGINS_DIR/tmux-pain-control"
 PAIN_CONTROL_REPO="https://github.com/tmux-plugins/tmux-pain-control.git"
 
+printf "\n%b\n" "${BLUE}→ tmux${NC}"
+
 mkdir -p "$PLUGINS_DIR"
 
 # Instalar TPM
 if [ -d "$TPM_DIR" ]; then
-  printf "%b\n" "${GREEN}✓ TPM ya está instalado${NC}"
+  printf "%b\n" "${GREEN}✓ TPM${NC}"
 else
-  printf "%b\n" "${BLUE}Clonando TPM...${NC}"
+  printf "%b\n" "${BLUE}→ Clonando TPM${NC}"
   git clone "$TPM_REPO" "$TPM_DIR"
   printf "%b\n" "${GREEN}✓ TPM instalado${NC}"
 fi
 
 # Instalar plugins de tmux
-printf "%b\n" "${BLUE}Instalando plugins de tmux...${NC}"
-if "$TPM_DIR/bin/install_plugins"; then
-    printf "%b\n" "${GREEN}✓ Plugins instalados${NC}"
+printf "%b\n" "${BLUE}→ Sincronizando plugins de tmux${NC}"
+TMUX_PLUGIN_LOG="$(mktemp)"
+if "$TPM_DIR/bin/install_plugins" >"$TMUX_PLUGIN_LOG" 2>&1; then
+    printf "%b\n" "${GREEN}✓ Plugins base sincronizados${NC}"
 else
-    printf "%b\n" "${YELLOW}⚠ Algunos plugins pueden no haberse instalado${NC}"
+    printf "%b\n" "${YELLOW}⚠ Algunos plugins pueden no haberse instalado; últimas líneas:${NC}"
+    tail -10 "$TMUX_PLUGIN_LOG"
 fi
+rm -f "$TMUX_PLUGIN_LOG"
 
 # Instalar tmux-window-name
 if [ -d "$WINDOW_NAME_DIR" ]; then
-  printf "%b\n" "${GREEN}✓ tmux-window-name ya está instalado${NC}"
+  printf "%b\n" "${GREEN}✓ tmux-window-name${NC}"
 else
-  printf "%b\n" "${BLUE}Instalando libtmux...${NC}"
+  printf "%b\n" "${BLUE}→ Instalando libtmux${NC}"
   python3 -m pip install --user libtmux
-  printf "%b\n" "${BLUE}Clonando tmux-window-name...${NC}"
+  printf "%b\n" "${BLUE}→ Clonando tmux-window-name${NC}"
   git clone "$WINDOW_NAME_REPO" "$WINDOW_NAME_DIR"
   printf "%b\n" "${GREEN}✓ tmux-window-name instalado${NC}"
 fi
 
 # Instalar tmux-pain-control
 if [ -d "$PAIN_CONTROL_DIR" ]; then
-  printf "%b\n" "${GREEN}✓ tmux-pain-control ya está instalado${NC}"
+  printf "%b\n" "${GREEN}✓ tmux-pain-control${NC}"
 else
-  printf "%b\n" "${BLUE}Clonando tmux-pain-control...${NC}"
+  printf "%b\n" "${BLUE}→ Clonando tmux-pain-control${NC}"
   git clone "$PAIN_CONTROL_REPO" "$PAIN_CONTROL_DIR"
   printf "%b\n" "${GREEN}✓ tmux-pain-control instalado${NC}"
 fi
 
-printf "%b\n" "${GREEN}✓ Plugins de tmux configurados${NC}"
+printf "%b\n" "${GREEN}✓ tmux listo${NC}"
 {{ end -}}

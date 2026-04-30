@@ -5,18 +5,21 @@ set -e
 if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
     BLUE='\033[0;34m'
     GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
     NC='\033[0m'
 else
     BLUE=''
     GREEN=''
+    YELLOW=''
     NC=''
 fi
 
-printf "%b\n" "${BLUE}Generando configuración de opencommit...${NC}"
+printf "\n%b\n" "${BLUE}→ opencommit${NC}"
+printf "%b\n" "${BLUE}→ Generando ~/.opencommit${NC}"
 
 # Verificar que dcli está disponible
 if ! command -v dcli >/dev/null 2>&1; then
-    printf "dcli no está disponible, omitiendo generación de .opencommit\n"
+    printf "%b\n" "${YELLOW}⚠ dcli no está disponible; se omite ~/.opencommit${NC}"
     exit 0
 fi
 
@@ -49,4 +52,4 @@ else
     echo "OCO_API_KEY=" >> "$HOME/.opencommit"
 fi
 
-printf "%b\n" "${GREEN}✓ Configuración de opencommit generada${NC}"
+printf "%b\n" "${GREEN}✓ opencommit listo${NC}"

@@ -281,6 +281,7 @@ e = "exit"
 olc = "mise run olc"
 
 czp = 'chezmoi apply'
+czpf = 'CHEZMOI_FORCE_NIX=1 chezmoi apply'
 czf = 'chezmoi apply --include=files'
 cza = 'chezmoi add'
 co = 'claude'

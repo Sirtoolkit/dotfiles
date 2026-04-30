@@ -15,9 +15,12 @@ else
 fi
 
 if ! command -v pnpm >/dev/null 2>&1; then
-  printf "%b\n" "${RED}✗ pnpm no está instalado${NC}"
+  printf "\n%b\n" "${BLUE}→ PNPM global${NC}"
+  printf "%b\n" "${RED}✗ pnpm no está instalado; no se pueden instalar paquetes globales${NC}"
   exit 1
 fi
+
+printf "\n%b\n" "${BLUE}→ PNPM global${NC}"
 
 # Configurar PNPM_HOME
 if [ -z "$PNPM_HOME" ]; then
@@ -38,11 +41,11 @@ for package_info in $packages; do
   IFS=':' read -r package cmd <<< "$package_info"
   
   if pnpm list -g --json "$package" 2>/dev/null | grep -q "\"$package\""; then
-    printf "%b\n" "${GREEN}✓ $package ya está instalado${NC}"
+    printf "%b\n" "${GREEN}✓ $package${NC}"
   else
-    printf "%b\n" "${BLUE}Instalando $package...${NC}"
+    printf "%b\n" "${BLUE}→ Instalando $package${NC}"
     pnpm add -g "$package"
   fi
 done
 
-printf "%b\n" "${GREEN}✓ Paquetes de pnpm configurados${NC}"
+printf "%b\n" "${GREEN}✓ PNPM global listo${NC}"

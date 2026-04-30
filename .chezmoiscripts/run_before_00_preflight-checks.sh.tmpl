@@ -17,7 +17,7 @@ else
     NC=''
 fi
 
-log_check() {
+log_section() {
     printf "%b\n" "${BLUE}→ $1${NC}"
 }
 
@@ -35,33 +35,29 @@ log_error() {
 
 FAILED=0
 
+log_section "Preflight"
+
 # 1. Verificar SO
-log_check "Verificando sistema operativo..."
 if [ "$(uname -s)" != "Darwin" ]; then
     log_error "Se requiere macOS"
     exit 1
 fi
-log_ok "macOS detectado"
 
 # 2. Verificar versión macOS
-log_check "Verificando versión de macOS..."
 MACOS_VERSION=$(sw_vers -productVersion | awk -F. '{print $1}')
 if [ "$MACOS_VERSION" -lt 12 ]; then
     log_error "Se requiere macOS 12 o superior (actualmente: $MACOS_VERSION)"
     exit 1
 fi
-log_ok "macOS version $MACOS_VERSION OK"
 
 # 3. Verificar arquitectura
-log_check "Verificando arquitectura..."
 ARCH=$(uname -m)
 if [ "$ARCH" != "arm64" ] && [ "$ARCH" != "x86_64" ]; then
     log_warn "Arquitectura no estándar detectada: $ARCH"
 fi
-log_ok "Arquitectura: $ARCH"
+log_ok "macOS $MACOS_VERSION ($ARCH)"
 
 # 4. Verificar herramientas básicas
-log_check "Verificando herramientas básicas..."
 for cmd in git curl sudo; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         log_error "Falta herramienta requerida: $cmd"
@@ -69,24 +65,22 @@ for cmd in git curl sudo; do
     fi
 done
 if [ $FAILED -eq 0 ]; then
-    log_ok "Herramientas básicas disponibles"
+    log_ok "Herramientas básicas: git, curl, sudo"
 fi
 
 # 5. Verificar espacio disco (requiere ~10GB)
-log_check "Verificando espacio en disco..."
 DISK_AVAILABLE=$(df / | tail -1 | awk '{print $4}')
 DISK_NEEDED=$((10 * 1024 * 1024))  # 10GB en KB
 if [ "$DISK_AVAILABLE" -lt "$DISK_NEEDED" ]; then
     log_warn "Espacio limitado en disco (disponible: $(($DISK_AVAILABLE / 1024 / 1024))GB, recomendado: 10GB)"
 fi
-log_ok "Espacio en disco: $(($DISK_AVAILABLE / 1024 / 1024))GB"
+log_ok "Disco disponible: $(($DISK_AVAILABLE / 1024 / 1024))GB"
 
 # 6. Verificar conectividad internet
-log_check "Verificando conectividad internet..."
 if ! ping -c 1 -W 2 github.com >/dev/null 2>&1; then
     log_warn "No hay conexión a github.com - algunas descargas pueden fallar"
 else
-    log_ok "Conectividad internet OK"
+    log_ok "Internet OK"
 fi
 
 # Resumen
@@ -94,5 +88,5 @@ if [ $FAILED -gt 0 ]; then
     log_error "$FAILED errores encontrados. Corrige antes de continuar."
     exit 1
 else
-    printf "\n%b\n\n" "${GREEN}✓ Todos los checks pasaron. Listo para instalar.${NC}"
+    printf "%b\n\n" "${GREEN}✓ Preflight listo${NC}"
 fi

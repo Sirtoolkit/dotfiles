@@ -24,6 +24,8 @@ export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
 export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
+printf "\n%b\n" "${BLUE}→ Android SDK${NC}"
+
 # Verificar sdkmanager
 if ! command -v sdkmanager &> /dev/null; then
     printf "%b\n" "${RED}✗ sdkmanager no disponible${NC}"
@@ -31,15 +33,16 @@ if ! command -v sdkmanager &> /dev/null; then
     exit 1
 fi
 
-printf "%b\n" "${GREEN}✓ sdkmanager encontrado${NC}"
+printf "%b\n" "${GREEN}✓ sdkmanager disponible${NC}"
 
 # Aceptar licencias
-printf "%b\n" "${BLUE}Aceptando licencias de Android SDK...${NC}"
+printf "%b\n" "${BLUE}→ Aceptando licencias de Android SDK${NC}"
 yes | sdkmanager --licenses > /dev/null 2>&1 || true
+printf "%b\n" "${GREEN}✓ Licencias de Android SDK listas${NC}"
 
 # Instalar platform-tools
 if [ ! -d "$ANDROID_HOME/platform-tools" ] || [ ! -f "$ANDROID_HOME/platform-tools/adb" ]; then
-    printf "%b\n" "${BLUE}Instalando Android Platform Tools...${NC}"
+    printf "%b\n" "${BLUE}→ Instalando Android Platform Tools${NC}"
     sdkmanager "platform-tools"
     
     if [ -f "$ANDROID_HOME/platform-tools/adb" ]; then
@@ -49,7 +52,7 @@ if [ ! -d "$ANDROID_HOME/platform-tools" ] || [ ! -f "$ANDROID_HOME/platform-too
         exit 1
     fi
 else
-    printf "%b\n" "${GREEN}✓ Platform Tools ya están instaladas${NC}"
+    printf "%b\n" "${GREEN}✓ Platform Tools${NC}"
 fi
 
 # Obtener última versión de build-tools
@@ -61,20 +64,20 @@ fi
 
 # Instalar build-tools
 if [ ! -d "$ANDROID_HOME/build-tools" ]; then
-    printf "%b\n" "${BLUE}Instalando Android Build Tools...${NC}"
+    printf "%b\n" "${BLUE}→ Instalando Android Build Tools${NC}"
     sdkmanager "$LATEST_BUILD_TOOLS"
     printf "%b\n" "${GREEN}✓ Build Tools instaladas${NC}"
 else
-    printf "%b\n" "${GREEN}✓ Build Tools ya están instaladas${NC}"
+    printf "%b\n" "${GREEN}✓ Build Tools${NC}"
 fi
 
 # Configurar Flutter con Android SDK
 if command -v flutter &> /dev/null; then
-    printf "%b\n" "${BLUE}Configurando Flutter con Android SDK...${NC}"
+    printf "%b\n" "${BLUE}→ Configurando Flutter con Android SDK${NC}"
     flutter config --android-sdk "$ANDROID_HOME" > /dev/null 2>&1 || true
-    printf "%b\n" "${GREEN}✓ Flutter configurado con Android SDK${NC}"
+    printf "%b\n" "${GREEN}✓ Flutter usa Android SDK${NC}"
 fi
 
-printf "%b\n" "${GREEN}✓ Android SDK configurado${NC}"
+printf "%b\n" "${GREEN}✓ Android SDK listo${NC}"
 
 {{ end -}}

@@ -25,25 +25,43 @@ DOWNLOAD_DIR="$HOME/Downloads"
 PKG_PATH="$DOWNLOAD_DIR/$PKG_NAME"
 MANAGER_APP="/Applications/.Karabiner-VirtualHIDDevice-Manager.app"
 DAEMON_PATH="/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app"
+DAEMON_BIN="/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon"
+LAUNCHD_PLIST="/Library/LaunchDaemons/org.pqrs.karabiner.virtualhiddevice-daemon.plist"
+CURRENT_USER="$(whoami)"
+SUDOERS_FILE="/etc/sudoers.d/kanata-${CURRENT_USER}"
+
+printf "\n%b\n" "${BLUE}→ Karabiner${NC}"
+
+karabiner_setup_complete() {
+    [ -d "$MANAGER_APP" ] || return 1
+    [ -f "$LAUNCHD_PLIST" ] || return 1
+    [ -f "$SUDOERS_FILE" ] || return 1
+    return 0
+}
+
+if karabiner_setup_complete; then
+    printf "%b\n" "${GREEN}✓ VirtualHID listo${NC}"
+    exit 0
+fi
 
 # Verificar si ya está instalado
 if [ -d "$MANAGER_APP" ]; then
-    printf "%b\n" "${GREEN}✓ Karabiner-VirtualHIDDevice ya está instalado${NC}"
+    printf "%b\n" "${GREEN}✓ VirtualHID instalado${NC}"
 else
     # Descargar el paquete si no existe
     if [ ! -f "$PKG_PATH" ]; then
-        printf "%b\n" "${BLUE}Descargando Karabiner-VirtualHIDDevice ${VERSION}...${NC}"
+        printf "%b\n" "${BLUE}→ Descargando VirtualHID ${VERSION}${NC}"
         curl -fsSL "$DOWNLOAD_URL" -o "$PKG_PATH" || {
             printf "%b\n" "${RED}✗ Error descargando el paquete${NC}"
         }
         [ -f "$PKG_PATH" ] && printf "%b\n" "${GREEN}✓ Descarga completada${NC}"
     else
-        printf "%b\n" "${YELLOW}⚑ Usando paquete existente: ${PKG_PATH}${NC}"
+        printf "%b\n" "${YELLOW}⚠ Usando paquete existente: ${PKG_PATH}${NC}"
     fi
 
     # Instalar el paquete si existe (requiere sudo)
     if [ -f "$PKG_PATH" ]; then
-        printf "%b\n" "${BLUE}Instalando Karabiner-VirtualHIDDevice...${NC}"
+        printf "%b\n" "${BLUE}→ Instalando VirtualHID${NC}"
         printf "%b\n" "${YELLOW}  Se requiere contraseña de administrador${NC}"
         if sudo installer -pkg "$PKG_PATH" -target / 2>/dev/null; then
             printf "%b\n" "${GREEN}✓ Instalación completada${NC}"
@@ -54,7 +72,7 @@ else
 
     # Activar el driver
     if [ -d "$MANAGER_APP" ]; then
-        printf "%b\n" "${BLUE}Activando driver...${NC}"
+        printf "%b\n" "${BLUE}→ Activando driver VirtualHID${NC}"
         "$MANAGER_APP/Contents/MacOS/Karabiner-VirtualHIDDevice-Manager" activate 2>/dev/null || true
         printf "%b\n" "${GREEN}✓ Driver activado${NC}"
     fi
@@ -65,13 +83,9 @@ else
     printf "%b\n" "${GREEN}✓ Karabiner-VirtualHIDDevice instalado${NC}"
 fi
 
-# Configurar el daemon como servicio de sistema (siempre, no solo en instalación)
-DAEMON_BIN="/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHIDDevice/Applications/Karabiner-VirtualHIDDevice-Daemon.app/Contents/MacOS/Karabiner-VirtualHIDDevice-Daemon"
-LAUNCHD_PLIST="/Library/LaunchDaemons/org.pqrs.karabiner.virtualhiddevice-daemon.plist"
-
 if [ -f "$DAEMON_BIN" ]; then
     if [ ! -f "$LAUNCHD_PLIST" ]; then
-        printf "%b\n" "${BLUE}Configurando daemon como servicio de sistema...${NC}"
+        printf "%b\n" "${BLUE}→ Configurando LaunchDaemon de VirtualHID${NC}"
 
         sudo tee "$LAUNCHD_PLIST" > /dev/null << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -98,30 +112,27 @@ EOF
 
         sudo launchctl load "$LAUNCHD_PLIST"
         sleep 1
-        printf "%b\n" "${GREEN}✓ Daemon configurado y corriendo como servicio${NC}"
+        printf "%b\n" "${GREEN}✓ LaunchDaemon activo${NC}"
     else
         # Verificar si está corriendo
         if ! sudo launchctl list org.pqrs.karabiner.virtualhiddevice-daemon 2>/dev/null | grep -q "PID"; then
-            printf "%b\n" "${BLUE}Reiniciando daemon...${NC}"
+            printf "%b\n" "${BLUE}→ Reiniciando LaunchDaemon de VirtualHID${NC}"
             sudo launchctl unload "$LAUNCHD_PLIST" 2>/dev/null || true
             sudo launchctl load "$LAUNCHD_PLIST"
-            printf "%b\n" "${GREEN}✓ Daemon reiniciado${NC}"
+            printf "%b\n" "${GREEN}✓ LaunchDaemon reiniciado${NC}"
         fi
     fi
 fi
 
 # Configurar sudoers para kanata sin password
-CURRENT_USER="$(whoami)"
-SUDOERS_FILE="/etc/sudoers.d/kanata-${CURRENT_USER}"
-
 if [ ! -f "$SUDOERS_FILE" ]; then
-    printf "%b\n" "${BLUE}Configurando sudoers para kanata...${NC}"
+    printf "%b\n" "${BLUE}→ Configurando sudoers de kanata${NC}"
     echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/kanata" | sudo tee "$SUDOERS_FILE" > /dev/null
     echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /usr/bin/pkill kanata" | sudo tee -a "$SUDOERS_FILE" > /dev/null
     sudo chmod 440 "$SUDOERS_FILE"
-    printf "%b\n" "${GREEN}✓ Configuración sudoers completada${NC}"
+    printf "%b\n" "${GREEN}✓ sudoers de kanata listo${NC}"
 fi
 
-printf "%b\n" "${GREEN}✓ Karabiner-VirtualHIDDevice listo para usar${NC}"
+printf "%b\n" "${GREEN}✓ Karabiner listo${NC}"
 
 {{ end -}}
