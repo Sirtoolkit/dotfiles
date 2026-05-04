@@ -57,14 +57,14 @@
             orientation = "left";
             tilesize = 48;
             persistent-apps = [
-              "/Applications/Arc.app"
-              "/Applications/Ghostty.app"
               "/Applications/Bruno.app"
               "/Applications/Obsidian.app"
-              "/Applications/DataGrip.app"
               "/Applications/Hotspot Shield.app"
-              "/Applications/Microsoft Teams.app"
               "/Applications/WhatsApp.app"
+              "/Applications/Arc.app"
+              "/Applications/DataGrip.app"
+              "/Applications/Ghostty.app"
+              "/Applications/Microsoft Teams.app"
             ];
           };
         };
