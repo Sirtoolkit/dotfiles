@@ -104,6 +104,7 @@
             "claude-code@latest"
             "codex"
             "logseq"
+            "lens"
           ];
 
           brews = [
@@ -152,6 +153,7 @@
             "kanata"
             "rtk"
             "fish"
+            "kubectl"
           ];
 
          masApps = {
