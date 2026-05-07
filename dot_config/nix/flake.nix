@@ -77,6 +77,7 @@
           enable = true;
           taps = [
             "nikitabobko/tap"
+            "azure/kubelogin"
           ];
 
           casks = [
@@ -111,6 +112,7 @@
             "dashlane/tap/dashlane-cli"
             "FelixKratz/formulae/borders"
             "go-task/tap/go-task"
+            "Azure/kubelogin/kubelogin"
             "mole"
             "bat"
             "btop"
@@ -153,6 +155,7 @@
             "kanata"
             "rtk"
             "fish"
+            "azure-cli"
             "kubectl"
           ];
 

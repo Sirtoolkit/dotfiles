@@ -1,0 +1,86 @@
+#!/usr/bin/env sh
+
+find_mise() {
+  if command -v mise >/dev/null 2>&1; then
+    command -v mise
+    return 0
+  fi
+
+  for candidate in /opt/homebrew/bin/mise /usr/local/bin/mise "$HOME/.local/bin/mise"; do
+    if [ -x "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+config_declares_flutter() {
+  awk '
+    /^\[tools\][[:space:]]*$/ { in_tools = 1; next }
+    /^\[/ { in_tools = 0 }
+    in_tools && /^[[:space:]]*flutter[[:space:]]*=/ { found = 1 }
+    END { exit !found }
+  ' "$1"
+}
+
+project_has_mise_flutter() {
+  dir=${PWD:-.}
+
+  while [ "$dir" != "/" ]; do
+    for config in "$dir/mise.toml" "$dir/.mise.toml" "$dir/mise.local.toml"; do
+      if [ -f "$config" ] && config_declares_flutter "$config"; then
+        return 0
+      fi
+    done
+
+    dir=$(dirname "$dir")
+  done
+
+  return 1
+}
+
+resolve_path() (
+  cd -P "$(dirname "$1")" >/dev/null 2>&1 || exit 1
+  file=$(basename "$1")
+
+  while [ -L "$file" ]; do
+    file=$(readlink "$file")
+    cd -P "$(dirname "$file")" >/dev/null 2>&1 || exit 1
+    file=$(basename "$file")
+  done
+
+  printf '%s/%s\n' "$PWD" "$file"
+)
+
+sdk_from_flutter_bin() {
+  flutter_bin=$(resolve_path "$1") || return 1
+  cd "$(dirname "$flutter_bin")/.." >/dev/null 2>&1 || return 1
+  pwd -P
+}
+
+if project_has_mise_flutter; then
+  if mise_bin=$(find_mise); then
+    if sdk_path=$("$mise_bin" where flutter 2>/dev/null); then
+      if [ -n "$sdk_path" ] && [ -x "$sdk_path/bin/flutter" ]; then
+        printf '%s\n' "$sdk_path"
+        exit 0
+      fi
+    fi
+  fi
+fi
+
+for flutter_bin in /opt/homebrew/bin/flutter /usr/local/bin/flutter; do
+  if [ -x "$flutter_bin" ]; then
+    sdk_from_flutter_bin "$flutter_bin"
+    exit $?
+  fi
+done
+
+if flutter_bin=$(command -v flutter 2>/dev/null); then
+  sdk_from_flutter_bin "$flutter_bin"
+  exit $?
+fi
+
+exit 1

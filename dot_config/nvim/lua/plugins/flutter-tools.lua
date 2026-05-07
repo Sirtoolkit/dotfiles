@@ -7,6 +7,8 @@ return {
   },
 
   opts = {
+    flutter_lookup_cmd = vim.fn.expand("~/.config/nvim/bin/flutter-sdk-path"),
+
     ui = {
       border = "rounded",
     },
@@ -19,29 +21,7 @@ return {
       exception_breakpoints = {},
       evaluate_to_string_in_debug_views = true,
       register_configurations = function(paths)
-        local dap = require("dap")
-
-        dap.configurations.dart = {
-          {
-            type = "dart",
-            request = "launch",
-            name = "PROD",
-            dartSdkPath = paths.dart_bin,
-            flutterSdkPath = paths.flutter_bin,
-            program = "${workspaceFolder}/lib/main.dart",
-            cwd = "${workspaceFolder}",
-          },
-          {
-            type = "dart",
-            request = "launch",
-            name = "DEV",
-            flutterMode = "profile",
-            dartSdkPath = paths.dart_bin,
-            flutterSdkPath = paths.flutter_bin,
-            program = "${workspaceFolder}/lib/main_dev.dart",
-            cwd = "${workspaceFolder}",
-          },
-        }
+        require("user.flutter_launch_configs").register(paths)
       end,
     },
 

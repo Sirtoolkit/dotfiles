@@ -1,120 +1,97 @@
 {
-  "actions": [
+  "actions" : [
     {
-      "actions": [
-        {
-          "key": "a",
-          "type": "application",
-          "value": "/System/Applications/App Store.app"
-        },
-        {
-          "key": "c",
-          "type": "application",
-          "value": "/System/Applications/Calendar.app"
-        },
-        {
-          "key": "i",
-          "type": "application",
-          "value": "/System/Applications/iPhone Mirroring.app"
-        }
-      ],
-      "iconPath": "cat",
-      "key": "A",
-      "label": "Apps",
-      "type": "group"
+      "key" : "D",
+      "type" : "folder",
+      "value" : "/Users/zizal/Downloads"
     },
     {
-      "key": "F",
-      "type": "folder",
-      "value": "/Users/zizal/Downloads"
+      "key" : "O",
+      "type" : "application",
+      "value" : "/Applications/Obsidian.app"
     },
     {
-      "key": "O",
-      "type": "application",
-      "value": "/Applications/Obsidian.app"
+      "key" : "C",
+      "type" : "application",
+      "value" : "/System/Applications/Calculator.app"
     },
     {
-      "key": "C",
-      "type": "application",
-      "value": "/System/Applications/Calculator.app"
+      "key" : "o",
+      "type" : "application",
+      "value" : "/Applications/OrbStack.app"
     },
     {
-      "key": "o",
-      "type": "application",
-      "value": "/Applications/OrbStack.app"
+      "key" : "f",
+      "type" : "folder",
+      "value" : "/Applications"
     },
     {
-      "key": "f",
-      "type": "folder",
-      "value": "/Applications"
+      "key" : "c",
+      "type" : "application",
+      "value" : "/Applications/Discord.app"
     },
     {
-      "key": "c",
-      "type": "application",
-      "value": "/Applications/Discord.app"
+      "key" : "m",
+      "label" : " Music",
+      "type" : "application",
+      "value" : "/System/Applications/Music.app"
     },
     {
-      "key": "s",
-      "type": "application",
-      "value": "/Applications/Slack.app"
+      "key" : "a",
+      "type" : "application",
+      "value" : "/Applications/Arc.app"
     },
     {
-      "key": "m",
-      "label": " Music",
-      "type": "application",
-      "value": "/System/Applications/Music.app"
+      "key" : "g",
+      "type" : "application",
+      "value" : "/Applications/Ghostty.app"
     },
     {
-      "key": "a",
-      "type": "application",
-      "value": "/Applications/Arc.app"
+      "key" : "i",
+      "type" : "application",
+      "value" : "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
     },
     {
-      "key": "g",
-      "type": "application",
-      "value": "/Applications/Ghostty.app"
+      "key" : "e",
+      "label" : "Android Emulator",
+      "type" : "command",
+      "value" : "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/platform-tools && nohup $ANDROID_HOME/platform-tools/adb devices > /dev/null 2>&1 && osascript -e 'display notification \"Use Android Studio to launch emulator\" with title \"Android Tools\"'"
     },
     {
-      "key": "i",
-      "type": "application",
-      "value": "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+      "key" : "h",
+      "type" : "application",
+      "value" : "/Applications/Hotspot Shield.app"
     },
     {
-      "key": "e",
-      "type": "command",
-      "label": "Android Emulator",
-      "value": "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/platform-tools && nohup $ANDROID_HOME/platform-tools/adb devices > /dev/null 2>&1 && osascript -e 'display notification \"Use Android Studio to launch emulator\" with title \"Android Tools\"'"
+      "key" : "b",
+      "type" : "application",
+      "value" : "/Applications/Bruno.app"
     },
     {
-      "key": "h",
-      "type": "application",
-      "value": "/Applications/Hotspot Shield.app"
+      "key" : "d",
+      "type" : "application",
+      "value" : "/Applications/DataGrip.app"
     },
     {
-      "key": "b",
-      "type": "application",
-      "value": "/Applications/Bruno.app"
+      "key" : "w",
+      "type" : "application",
+      "value" : "/Applications/WhatsApp.app"
     },
     {
-      "key": "d",
-      "type": "application",
-      "value": "/Applications/DataGrip.app"
+      "key" : "t",
+      "type" : "application",
+      "value" : "/Applications/Microsoft Teams.app"
     },
     {
-      "key": "w",
-      "type": "application",
-      "value": "/Applications/WhatsApp.app"
+      "key" : "x",
+      "type" : "application",
+      "value" : "/Applications/Xcode.app"
     },
     {
-      "key": "t",
-      "type": "application",
-      "value": "/Applications/Transporter.app"
-    },
-    {
-      "key": "x",
-      "type": "application",
-      "value": "/Applications/Xcode.app"
+      "key" : "T",
+      "type" : "application",
+      "value" : "/Applications/Tachimanga.app"
     }
   ],
-  "type": "group"
+  "type" : "group"
 }
