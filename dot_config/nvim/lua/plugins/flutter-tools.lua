@@ -16,6 +16,11 @@ return {
       enabled = false,
     },
 
+    dev_tools = {
+      autostart = true,
+      auto_open_browser = false,
+    },
+
     debugger = {
       enabled = true,
       exception_breakpoints = {},
@@ -44,4 +49,13 @@ return {
       },
     },
   },
+
+  config = function(_, opts)
+    local flutter_tools = require("flutter-tools")
+    flutter_tools.setup(opts)
+
+    -- flutter-tools registers commands lazily after entering Dart/pubspec buffers.
+    -- Register them at startup so global Flutter keymaps work from dashboards too.
+    flutter_tools.setup_project({})
+  end,
 }

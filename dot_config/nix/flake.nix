@@ -6,9 +6,14 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    brew-src = {
+      url = "github:Homebrew/brew/5.1.10";
+      flake = false;
+    };
+    nix-homebrew.inputs.brew-src.follows = "brew-src";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
     let
       username = "zizal";
       hostname = "Cesars-MacBook-Pro";
@@ -138,6 +143,7 @@
             "jq"
             "pipx"
             "trash-cli"
+            "diff-so-fancy"
             "git"
             "mas"
             "cocoapods"
@@ -161,8 +167,8 @@
 
          masApps = {
             # Xcode = 497799835;
-            Transporter = 1450874784;
-            Hotspot-Shield = 771076721;
+            # Transporter = 1450874784;
+            # Hotspot-Shield = 771076721;
           };
           onActivation = {
             autoUpdate = true;
@@ -186,6 +192,10 @@
             nix-homebrew = {
               enable = true;
               enableRosetta = true;
+              package = inputs.brew-src // {
+                name = "brew-5.1.10";
+                version = "5.1.10";
+              };
               user = username;
               autoMigrate = true;
             };

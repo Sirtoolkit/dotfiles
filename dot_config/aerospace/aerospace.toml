@@ -181,8 +181,12 @@ if.app-id = 'com.apple.Music'
 run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
-if.app-id = 'com.mangacrush.ios'
+if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
+if.app-id = 'com.mangacrush.ios'
+run = 'move-node-to-workspace 8'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Simulator'
