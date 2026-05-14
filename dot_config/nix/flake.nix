@@ -108,6 +108,7 @@
             "google-drive"
             "gcloud-cli"
             "claude-code@latest"
+            "redis-insight"
             "codex"
             "logseq"
             "lens"

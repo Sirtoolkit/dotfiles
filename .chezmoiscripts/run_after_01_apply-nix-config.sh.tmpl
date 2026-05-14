@@ -229,20 +229,55 @@ cleanup_broken_nix_shell_links() {
     fi
 }
 
+nix_daemon_target_from_status() {
+    local daemon_status="$1"
+
+    printf '%s\n' "$daemon_status" | sed -n \
+        -e 's|.*exec \(/nix/[^ ]*/bin/nix-daemon\).*|\1|p' \
+        -e 's|^[[:space:]]*program = \(/nix/[^ ]*/bin/nix-daemon\)$|\1|p' \
+        -e 's|^[[:space:]]*\(/nix/[^ ]*/bin/nix-daemon\)$|\1|p' | head -n 1
+}
+
+nix_daemon_accepts_connections() {
+    sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="${NIX_SSL_CERT_FILE:-}" SSL_CERT_FILE="${SSL_CERT_FILE:-}" \
+        "$NIX_BIN" --extra-experimental-features 'nix-command flakes' store info >/dev/null 2>&1
+}
+
+wait_for_nix_daemon() {
+    local attempts="${1:-20}"
+    local attempt=1
+
+    while [ "$attempt" -le "$attempts" ]; do
+        if nix_daemon_accepts_connections; then
+            return 0
+        fi
+
+        sleep 1
+        attempt=$((attempt + 1))
+    done
+
+    return 1
+}
+
 repair_nix_launchd_services() {
     local daemon_status=""
+    local daemon_target=""
     local daemon_needs_reload=0
     local activate_target=""
 
     if [ -f "$NIX_DAEMON_PLIST" ]; then
         daemon_status=$(launchctl print "system/$NIX_DAEMON_LABEL" 2>/dev/null || true)
 
+        if [ -z "$daemon_status" ] || ! printf '%s\n' "$daemon_status" | grep -q "state = running"; then
+            daemon_needs_reload=1
+        fi
+
         if printf '%s\n' "$daemon_status" | grep -q "last exit code = 126"; then
             daemon_needs_reload=1
         fi
 
-        if printf '%s\n' "$daemon_status" | grep -q "/nix/store/" && \
-           ! printf '%s\n' "$daemon_status" | grep -q "/nix/var/nix/profiles/default/bin/nix-daemon"; then
+        daemon_target=$(nix_daemon_target_from_status "$daemon_status")
+        if [ -n "$daemon_target" ] && [ ! -e "$daemon_target" ]; then
             daemon_needs_reload=1
         fi
 
@@ -252,6 +287,11 @@ repair_nix_launchd_services() {
             sudo launchctl bootstrap system "$NIX_DAEMON_PLIST"
             sudo launchctl kickstart -k "system/$NIX_DAEMON_LABEL"
             printf "%b\n" "${GREEN}✓ nix-daemon listo${NC}"
+        fi
+
+        if [ -x "$NIX_BIN" ] && ! wait_for_nix_daemon 20; then
+            printf "%b\n" "${RED}✗ nix-daemon no aceptó conexiones después de esperar.${NC}"
+            return 1
         fi
     fi
 
