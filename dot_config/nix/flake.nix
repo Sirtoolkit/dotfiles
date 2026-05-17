@@ -68,6 +68,7 @@
               "/Applications/WhatsApp.app"
               "/Applications/Arc.app"
               "/Applications/DataGrip.app"
+              "/Applications/Claude.app"
               "/Applications/Ghostty.app"
               "/Applications/Microsoft Teams.app"
             ];
@@ -108,8 +109,8 @@
             "google-drive"
             "gcloud-cli"
             "claude-code@latest"
+            "claude"
             "redis-insight"
-            "codex"
             "logseq"
             "lens"
           ];

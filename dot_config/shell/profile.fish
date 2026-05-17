@@ -47,6 +47,13 @@ function orb --wraps orb
     orb $argv
 end
 
+# Shorebird
+set -l shorebird_home "$HOME/.config/shorebird"
+if set -q XDG_CONFIG_HOME
+    set shorebird_home "$XDG_CONFIG_HOME/shorebird"
+end
+set -gx PATH "$shorebird_home/bin" "$HOME/.shorebird/bin" $PATH
+
 # Dart
 set -gx PATH "$HOME/.pub-cache/bin" $PATH
 
