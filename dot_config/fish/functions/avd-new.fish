@@ -201,7 +201,7 @@ function avd-new
         read launch_now
         if string match -r '^[Yy]$' "$launch_now"
             echo "🚀 Launching '$avd_name' in the background..."
-            nohup emulator @$avd_name > /dev/null 2>&1 &
+            nohup emulator @$avd_name -dns-server 8.8.8.8,8.8.4.4 > /dev/null 2>&1 &
         else
             echo "👍 Okay. You can launch it later with 'emulator @$avd_name'"
         end

@@ -45,10 +45,9 @@ run = """
       echo "$selection 1" > "$usage_file"
     fi
     full_model="${selection}:cloud"
-    echo "$full_model" > "$HOME/.config/ollama/model"
-    echo "✓ Modelo guardado: $full_model"
-    echo "🚀 Lanzando claude..."
-    ollama launch claude --model "$full_model"
+    echo "✓ Modelo seleccionado: $full_model"
+    echo "🚀 Lanzando claude con Ollama..."
+    env ANTHROPIC_AUTH_TOKEN=ollama ANTHROPIC_BASE_URL=http://localhost:11434 claude --model "$full_model"
   fi
 """
 

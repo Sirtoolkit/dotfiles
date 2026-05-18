@@ -34,9 +34,20 @@ function avd-run
 		return 0
 	end
 
+	# Ensure hardware keyboard is enabled before launch
+	set avd_home "$ANDROID_AVD_HOME"
+	if test -z "$avd_home"
+		set avd_home "$HOME/.android/avd"
+	end
+	set config_file "$avd_home/$avd_name.avd/config.ini"
+	if test -f "$config_file"
+		sed -i '' '/^hw.keyboard=/d' "$config_file"
+		echo "hw.keyboard=yes" >> "$config_file"
+	end
+
 	echo "🚀 Launching '$avd_name' in the background..."
 	# Execute in the background, detached from the terminal
-	nohup emulator @$avd_name > /dev/null 2>&1 &
+	nohup emulator @$avd_name -dns-server 8.8.8.8,8.8.4.4 > /dev/null 2>&1 &
 
 	return 0
 end
