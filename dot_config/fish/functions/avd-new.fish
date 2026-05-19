@@ -197,6 +197,18 @@ function avd-new
 
     if test $status -eq 0
         echo "✅ Emulator '$avd_name' created successfully!"
+
+        # Enable hardware keyboard in the freshly created AVD
+        set -l avd_home "$ANDROID_AVD_HOME"
+        if test -z "$avd_home"
+            set avd_home "$HOME/.android/avd"
+        end
+        set -l config_file "$avd_home/$avd_name.avd/config.ini"
+        if test -f "$config_file"
+            sed -i '' '/^hw.keyboard=/d' "$config_file"
+            echo "hw.keyboard=yes" >> "$config_file"
+        end
+
         echo -n "    Do you want to launch it now? (y/n): "
         read launch_now
         if string match -r '^[Yy]$' "$launch_now"
