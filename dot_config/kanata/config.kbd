@@ -4,7 +4,7 @@
 
 ;; 1. MAPA FÍSICO (Agregamos 'o' para el combo de música y 'spc')
 (defsrc
-  caps a s d f h j k l ; u i o e r lsft rsft spc
+  caps a s d f h j k l ; u i o p e r lsft rsft spc
 )
 
 ;; 2. ALIAS Y MODIFICADORES
@@ -53,7 +53,7 @@
   @ldr
   @a_mod @s_mod @d_mod @f_mod h
   @j_mod @k_mod @l_mod @;_mod
-  (chord combos u) (chord combos i) o
+  (chord combos u) (chord combos i) o p
   (chord combos e) (chord combos r)
   (chord combos lsft) (chord combos rsft)
   @spc_media
@@ -63,9 +63,9 @@
 (deflayer media
   _                                 ;; caps
   brdn brup vold volu               ;; a s d f (Mano Izq: Brillo Pantalla y Volumen)
-  left down up rght _               ;; h j k l ; (Mano Der: ¡Flechas vim!)
-  prev pp next                      ;; u i o   (Música: Anterior / Play-Pause / Sig)
-  _    mute                         ;; e r     (Puse el Mute en la 'R')
-  _    _                            ;; lsft rsft
+  left down up rght _               ;; h j k l ; (Flechas vim)
+  f5   f4   f8   f9                 ;; u i o p (herdr: prev_tab / next_tab / prev_ws / next_ws)
+  prev next                         ;; e r     (Música prev/next, encima del volumen)
+  pp   mute                         ;; lsft rsft (Play-Pause y Mute en los shifts)
   _                                 ;; spc
 )

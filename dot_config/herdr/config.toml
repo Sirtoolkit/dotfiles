@@ -1,0 +1,40 @@
+[theme]
+name = "gruvbox"
+
+[keys]
+prefix = "ctrl+a"
+
+zoom = "z"
+detach = "d"
+rename_tab = ","
+close_tab = "&"
+previous_tab = "f5"
+next_tab = "f4"
+previous_workspace = "f8"
+next_workspace = "f9"
+
+[keys.indexed]
+workspaces = "ctrl+shift"
+tabs = "ctrl"
+
+[ui]
+mouse_capture = true
+confirm_close = false
+prompt_new_tab_name = false
+show_agent_labels_on_pane_borders = true
+agent_panel_scope = "all"
+accent = "cyan"
+
+[experimental]
+kitty_graphics = false
+allow_nested = false
+
+[[keys.command]]
+key = "g"
+type = "pane"
+command = "lazygit"
+
+[[keys.command]]
+key = "m"
+type = "pane"
+command = "mole"
