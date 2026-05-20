@@ -73,6 +73,15 @@
               "/Applications/Microsoft Teams.app"
             ];
           };
+
+          CustomUserPreferences = {
+            "com.apple.symbolichotkeys" = {
+              AppleSymbolicHotKeys = {
+                "36" = { enabled = false; };
+                "37" = { enabled = false; };
+              };
+            };
+          };
         };
 
         environment.systemPackages = with pkgs; [

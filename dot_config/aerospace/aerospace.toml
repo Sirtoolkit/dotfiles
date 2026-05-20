@@ -64,7 +64,6 @@ alt-ctrl-down = 'move-node-to-monitor down'
 
 alt-shift-c = 'reload-config'
 alt-shift-f = 'layout floating tiling'
-f11 = 'fullscreen'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 alt-shift-m = 'mode manage'

@@ -12,6 +12,8 @@ previous_tab = "f5"
 next_tab = "f4"
 previous_workspace = "f8"
 next_workspace = "f9"
+previous_agent = "f10"
+next_agent = "f11"
 
 [keys.indexed]
 workspaces = "ctrl+shift"
@@ -26,7 +28,7 @@ agent_panel_scope = "all"
 accent = "cyan"
 
 [experimental]
-kitty_graphics = false
+kitty_graphics = true
 allow_nested = false
 
 [[keys.command]]

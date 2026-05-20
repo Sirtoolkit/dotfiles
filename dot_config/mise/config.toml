@@ -276,6 +276,7 @@ grep = "grep --color=auto"
 
 c = "clear"
 t = "tmux"
+h = "herdr"
 e = "exit"
 olc = "mise run olc"
 
