@@ -27,12 +27,12 @@ if [ -z "$PNPM_HOME" ]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 fi
 
-# Añadir al PATH
-if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
-  export PATH="$PNPM_HOME:$PATH"
+# pnpm v11 usa $PNPM_HOME/bin como global bin dir
+if [[ ":$PATH:" != *":$PNPM_HOME/bin:"* ]]; then
+  export PATH="$PNPM_HOME/bin:$PATH"
 fi
 
-mkdir -p "$PNPM_HOME"
+mkdir -p "$PNPM_HOME/bin"
 
 # Instalar paquetes globales
 packages="nx:nx opencommit expo:expo @nestjs/cli:nest @mixedbread/mgrep:mgrep"

@@ -174,6 +174,7 @@
             "fish"
             "azure-cli"
             "kubectl"
+            "appium"
           ];
 
          masApps = {

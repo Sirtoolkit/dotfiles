@@ -62,7 +62,7 @@ set -gx PATH "$HOME/.config/composer/vendor/bin" $PATH
 
 # pnpm
 set -gx PNPM_HOME "$HOME/Library/pnpm"
-set -gx PATH "$PNPM_HOME" $PATH
+set -gx PATH "$PNPM_HOME/bin" $PATH
 
 # Locale
 set -gx LANG en_US.UTF-8
