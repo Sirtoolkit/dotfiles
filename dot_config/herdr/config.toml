@@ -28,10 +28,3 @@ name = "gruvbox"
 mouse_capture = true
 confirm_close = false
 prompt_new_tab_name = false
-
-# [experimental]
-# allow_nested = true
-# kitty_graphics = true
-
-# [terminal]
-# default_shell = "nu"
