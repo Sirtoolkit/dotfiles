@@ -8,6 +8,11 @@ new_workspace = "prefix+shift+n"
 new_worktree = "prefix+shift+g"
 rename_workspace = "prefix+shift+w"
 close_workspace = "prefix+shift+d"
+previous_workspace = "f8"
+next_workspace = "f9"
+
+previous_agent = "f10"
+next_agent = "f11"
 
 new_tab = "prefix+c"
 previous_tab = "prefix+p"

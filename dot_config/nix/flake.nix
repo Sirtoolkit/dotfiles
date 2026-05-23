@@ -79,6 +79,8 @@
               AppleSymbolicHotKeys = {
                 "36" = { enabled = false; };
                 "37" = { enabled = false; };
+                "64" = { enabled = false; };
+                "65" = { enabled = false; };
               };
             };
           };
