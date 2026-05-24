@@ -47,15 +47,9 @@
       "value" : "/Applications/Ghostty.app"
     },
     {
-      "key" : "i",
+      "key" : "e",
       "type" : "application",
       "value" : "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
-    },
-    {
-      "key" : "e",
-      "label" : "Android Emulator",
-      "type" : "command",
-      "value" : "export ANDROID_HOME=\"/opt/homebrew/share/android-commandlinetools\" && export ANDROID_AVD_HOME=\"$HOME/.config/.android/avd\" && export PATH=$PATH:$ANDROID_HOME/platform-tools && nohup $ANDROID_HOME/platform-tools/adb devices > /dev/null 2>&1 && osascript -e 'display notification \"Use Android Studio to launch emulator\" with title \"Android Tools\"'"
     },
     {
       "key" : "h",
@@ -91,6 +85,11 @@
       "key" : "T",
       "type" : "application",
       "value" : "/Applications/Tachimanga.app"
+    },
+    {
+      "key" : "i",
+      "type" : "application",
+      "value" : "/Applications/Claude.app"
     }
   ],
   "type" : "group"

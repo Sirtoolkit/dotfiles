@@ -132,6 +132,7 @@ enter = 'mode main'
 c = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
+
 f = [
   'layout floating tiling',
   'mode main',
@@ -172,11 +173,11 @@ if.app-id = 'com.microsoft.teams2'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
-if.app-id = 'com.usebruno.app'
+if.app-id = 'com.anthropic.claudefordesktop'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-id = 'com.apple.Music'
+if.app-id = 'com.usebruno.app'
 run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
@@ -186,6 +187,10 @@ run = 'move-node-to-workspace 7'
 [[on-window-detected]]
 if.app-id = 'com.mangacrush.ios'
 run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Music'
+run = 'move-node-to-workspace 9'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Simulator'
