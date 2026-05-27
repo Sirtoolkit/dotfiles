@@ -53,11 +53,18 @@
           NSGlobalDomain = {
             NSAutomaticWindowAnimationsEnabled = false;
             AppleKeyboardUIMode = 3;
+            AppleSpacesSwitchOnActivate = false;
+          };
+
+          trackpad = {
+            TrackpadThreeFingerHorizSwipeGesture = 0;
+            TrackpadFourFingerHorizSwipeGesture = 0;
           };
 
           dock = {
             autohide = true;
             expose-group-apps = false;
+            mru-spaces = false;
             show-recents = false;
             orientation = "left";
             tilesize = 48;
@@ -81,7 +88,18 @@
                 "37" = { enabled = false; };
                 "64" = { enabled = false; };
                 "65" = { enabled = false; };
+                "32" = { enabled = false; };
+                "33" = { enabled = false; };
+                "79" = { enabled = false; };
+                "81" = { enabled = false; };
+                "118" = { enabled = false; };
+                "119" = { enabled = false; };
+                "120" = { enabled = false; };
+                "121" = { enabled = false; };
               };
+            };
+            "com.apple.dock" = {
+              workspaces-auto-swoosh = false;
             };
           };
         };
@@ -177,6 +195,7 @@
             "azure-cli"
             "kubectl"
             "appium"
+            "herdr"
           ];
 
          masApps = {
