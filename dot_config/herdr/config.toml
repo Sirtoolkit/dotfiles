@@ -1,5 +1,4 @@
-onboarding = true
-
+onboarding = false
 [keys]
 prefix = "ctrl+a"
 previous_workspace = "f8"
@@ -9,7 +8,7 @@ previous_agent = "f10"
 next_agent = "f11"
 
 [[keys.command]]
-key = "prefix+g"
+key = "prefix+L"
 type = "pane"
 command = "lazygit"
 
@@ -28,3 +27,4 @@ name = "gruvbox"
 mouse_capture = true
 confirm_close = false
 prompt_new_tab_name = false
+show_agent_labels_on_pane_borders = true
