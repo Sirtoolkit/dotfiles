@@ -196,6 +196,7 @@
             "kubectl"
             "appium"
             "herdr"
+            "git-delta"
           ];
 
          masApps = {

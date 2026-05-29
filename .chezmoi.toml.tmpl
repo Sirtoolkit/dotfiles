@@ -1,0 +1,8 @@
+{{- $workName  := promptStringOnce . "git.work.name"   "Nombre para commits de trabajo" -}}
+{{- $workEmail := promptStringOnce . "git.work.email"  "Correo de GitHub de trabajo" -}}
+{{- $workGhUser := promptStringOnce . "git.work.ghUser" "Usuario de la cuenta gh de trabajo" -}}
+
+[data.git.work]
+    name = {{ $workName | quote }}
+    email = {{ $workEmail | quote }}
+    ghUser = {{ $workGhUser | quote }}

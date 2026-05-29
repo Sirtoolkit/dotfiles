@@ -189,6 +189,11 @@ gws = 'wt switch'
 gwm = 'wt merge'
 glg = "lazygit"
 
+# Perfiles de GitHub (personal vs trabajo)
+gwho = 'echo "$(git config user.name) <$(git config user.email)>"'  # identidad del repo actual
+ghsw = 'gh auth switch'        # alternar cuenta gh activa
+ghst = 'gh auth status'        # ver cuentas gh logueadas / activa
+
 ba = 'brew autoremove'
 bcfg = 'brew config'
 bci = 'brew info --cask'
@@ -284,6 +289,7 @@ czp = 'chezmoi apply'
 czpf = 'CHEZMOI_FORCE_NIX=1 chezmoi apply'
 czf = 'chezmoi apply --include=files'
 cza = 'chezmoi add'
+czinit = 'chezmoi init --apply Sirtoolkit'   # máquina nueva: clona dotfiles + aplica (pregunta datos de trabajo)
 co = 'claude'
 
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'

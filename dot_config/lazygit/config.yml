@@ -1,0 +1,18 @@
+# ~/.config/lazygit/config.yml
+
+gui:
+  theme:
+    activeBorderColor:
+      - green
+      - bold
+  showIcons: true
+git:
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
+  commit:
+    signOff: false
+keybinding:
+  universal:
+    quit: 'q'
+    return: '<esc>'

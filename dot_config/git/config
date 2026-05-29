@@ -1,6 +1,8 @@
 [user]
 	name = Cesar Posada
 	email = cesarleonardo537@gmail.com
+[includeIf "gitdir:~/workspace/work/"]
+	path = ~/.config/git/config-work
 [color]
 	diff = auto
 	status = auto
@@ -9,7 +11,20 @@
 [core]
 	excludesfile = ~/.config/git/gitignore
 	editor = nvim
-	pager = diff-so-fancy | less --tabs=4 -RF
+  pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    light = false
+    line-numbers = true
+    syntax-theme = gruvbox-dark
+    ; file-style = cyan
+    ; file-decoration-style = cyan ul
+    hunk-header-style = line-number syntax
+    hunk-header-decoration-style = cyan box
+    keep-plus-minus-markers = false
+
 [format]
 	pretty=format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
 [push]
@@ -35,3 +50,7 @@
 	program = gpg
 [advice]
 	diverging = false
+[credential "https://github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential

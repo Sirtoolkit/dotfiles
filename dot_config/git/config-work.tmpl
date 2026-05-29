@@ -1,0 +1,11 @@
+# Identidad de TRABAJO — se activa automáticamente para repos en ~/workspace/work/
+# (ver el bloque [includeIf] en ~/.config/git/config)
+# Valores inyectados por chezmoi desde el config local (fuera del repo).
+[user]
+	name = {{ .git.work.name | quote }}
+	email = {{ .git.work.email | quote }}
+[credential "https://github.com"]
+	# Fuerza el token de la cuenta gh de trabajo, sin importar cuál esté "activa"
+	username = {{ .git.work.ghUser | quote }}
+[credential "https://gist.github.com"]
+	username = {{ .git.work.ghUser | quote }}
