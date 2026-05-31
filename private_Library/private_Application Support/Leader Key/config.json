@@ -37,9 +37,9 @@
       "value" : "/System/Applications/Music.app"
     },
     {
-      "key" : "a",
+      "key" : "B",
       "type" : "application",
-      "value" : "/Applications/Arc.app"
+      "value" : "/Applications/Bruno.app"
     },
     {
       "key" : "g",
@@ -59,7 +59,7 @@
     {
       "key" : "b",
       "type" : "application",
-      "value" : "/Applications/Bruno.app"
+      "value" : "/Applications/Helium.app"
     },
     {
       "key" : "d",

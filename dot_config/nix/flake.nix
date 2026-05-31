@@ -73,7 +73,7 @@
               "/Applications/Obsidian.app"
               "/Applications/Hotspot Shield.app"
               "/Applications/WhatsApp.app"
-              "/Applications/Arc.app"
+              "/Applications/Helium.app"
               "/Applications/DataGrip.app"
               "/Applications/Claude.app"
               "/Applications/Ghostty.app"
@@ -117,7 +117,6 @@
 
           casks = [
             "nikitabobko/tap/aerospace"
-            "arc"
             "ghostty"
             "whatsapp"
             "leader-key"
@@ -140,8 +139,8 @@
             "claude-code@latest"
             "claude"
             "redis-insight"
-            "logseq"
             "lens"
+            "helium-browser"
           ];
 
           brews = [
