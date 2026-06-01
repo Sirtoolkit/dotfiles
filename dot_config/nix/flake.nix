@@ -140,7 +140,7 @@
             "claude"
             "redis-insight"
             "lens"
-            "helium-browser"
+            "brave-browser"
           ];
 
           brews = [
@@ -148,6 +148,8 @@
             "FelixKratz/formulae/borders"
             "go-task/tap/go-task"
             "Azure/kubelogin/kubelogin"
+            "kopecmaciej/vi-mongo/vi-mongo"
+            "lazysql"
             "mole"
             "bat"
             "btop"
