@@ -73,7 +73,7 @@
               "/Applications/Obsidian.app"
               "/Applications/Hotspot Shield.app"
               "/Applications/WhatsApp.app"
-              "/Applications/Helium.app"
+              "/Applications/Brave Browser.app"
               "/Applications/DataGrip.app"
               "/Applications/Claude.app"
               "/Applications/Ghostty.app"
