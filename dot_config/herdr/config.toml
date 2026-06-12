@@ -8,11 +8,6 @@ previous_agent = "f10"
 next_agent = "f11"
 
 [[keys.command]]
-key = "prefix+L"
-type = "pane"
-command = "lazygit"
-
-[[keys.command]]
 key = "prefix+m"
 type = "pane"
 command = "mole"
