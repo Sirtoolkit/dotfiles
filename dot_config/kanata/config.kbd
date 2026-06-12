@@ -1,41 +1,57 @@
 (defcfg
   process-unmapped-keys yes
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+  )
 )
 
-;; 1. MAPA FÍSICO (Agregamos 'o' para el combo de música y 'spc')
+;; Teclado interno de la Mac.
+;; Kanata aqui solo hace remaps fisicos pequenos. Las capas de apps se quitaron
+;; porque eran incomodas en el teclado interno.
+
 (defsrc
-  caps a s d f h j k l ; u i o p e r lsft rsft spc
+  caps tab
+  q w e r t y u i o p
+  a s d f g h j k l ;
+  z x c v b n m , . /
+  lsft rsft spc
 )
 
-;; 2. ALIAS Y MODIFICADORES
 (defalias
-  ;; Home Row Mods (600ms)
+  ;; Home Row Mods
   a_mod (tap-hold-release 200 600 a lmet)
   s_mod (tap-hold-release 200 600 s lalt)
   d_mod (tap-hold-release 200 600 d lctl)
   f_mod (tap-hold-release 200 600 f lsft)
-
   j_mod (tap-hold-release 200 600 j rsft)
   k_mod (tap-hold-release 200 600 k rctl)
   l_mod (tap-hold-release 200 600 l ralt)
   ;_mod (tap-hold-release 200 600 ; rmet)
 
-  ;; Leader Key (Caps Lock)
-  ldr (tap-hold 200 600 (multi lmet lctl lalt lsft spc) (multi lmet lctl lalt lsft))
+  ;; Caps queda como Hyper Key original. No usarlo como router.
+  capshyp (tap-hold 200 600 (multi lmet lctl lalt lsft spc) (multi lmet lctl lalt lsft))
 
-  ;; Auto-Shift
   cw (caps-word 2000)
 
-  ;; Espacio: Escribe espacio al tocar, activa 'media' al mantener
-  spc_media (tap-hold 200 200 spc (layer-toggle media))
+  ;; M: tap = m normal, hold = media.
+  m_media (tap-hold 200 200 m (layer-toggle media))
+
+  ;; O: tap = o normal, hold = Herdr.
+  ;; Acciones en mano izquierda: o+a/s/d/f => F8/F9/F10/F11.
+  o_herdr (tap-hold 200 200 o (layer-toggle herdr))
+
+  ;; B: tap = b normal, hold = utilidades macOS.
+  ;; b+a/s/f => screenshot full / screenshot seleccion / lock screen.
+  b_utils (tap-hold 200 200 b (layer-toggle utils))
 )
 
-;; 3. COMBOS (Chords)
 (defchords combos 50
   ;; Escape
   (u)   u
   (i)   i
   (u i) esc
+
+  ;; O ya activa Herdr al mantener; mantener u+i como Escape.
 
   ;; Tabulador
   (e)   e
@@ -48,24 +64,43 @@
   (lsft rsft) @cw
 )
 
-;; 4. CAPA PRINCIPAL
 (deflayer default
-  @ldr
-  @a_mod @s_mod @d_mod @f_mod h
-  @j_mod @k_mod @l_mod @;_mod
-  (chord combos u) (chord combos i) o p
-  (chord combos e) (chord combos r)
-  (chord combos lsft) (chord combos rsft)
-  @spc_media
+  @capshyp tab
+  q w (chord combos e) (chord combos r) t y (chord combos u) (chord combos i) @o_herdr p
+  @a_mod @s_mod @d_mod @f_mod g h @j_mod @k_mod @l_mod @;_mod
+  z x c v @b_utils n @m_media , . /
+  (chord combos lsft) (chord combos rsft) spc
 )
 
-;; 5. CAPA DE NAVEGACIÓN Y MULTIMEDIA (Se activa manteniendo el Espacio)
-(deflayer media
-  _                                 ;; caps
-  brdn brup vold volu               ;; a s d f (Mano Izq: Brillo Pantalla y Volumen)
-  left down up rght _               ;; h j k l ; (Flechas vim)
-  f8   f9   f10  f11                ;; u i o p (herdr: tabs / workspaces / agents)
-  prev next                         ;; e r     (Música prev/next, encima del volumen)
-  pp   mute                         ;; lsft rsft (Play-Pause y Mute en los shifts)
-  _                                 ;; spc
+(deflayermap (media)
+  ___ XX
+  a brdn
+  s brup
+  d vold
+  f volu
+  z bldn
+  x blup
+  h left
+  j down
+  k up
+  l rght
+  e prev
+  r next
+  lsft mute
+  rsft pp
+)
+
+
+(deflayermap (utils)
+  ___ XX
+  a (multi lmet lsft 3)
+  s (multi lmet lsft 4)
+  f (multi lctl lmet q)
+)
+(deflayermap (herdr)
+  ___ XX
+  a f8
+  s f9
+  d f10
+  f f11
 )

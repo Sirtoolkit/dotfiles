@@ -40,9 +40,6 @@ if status is-interactive
     # zoxide - fast, load immediately
     command -v zoxide >/dev/null && zoxide init fish | source
 
-    # direnv - needed for interactive shells
-    command -v direnv >/dev/null && direnv hook fish | source
-
     # starship - prompt (load immediately, only ~3ms)
     command -v starship >/dev/null && starship init fish | source
 

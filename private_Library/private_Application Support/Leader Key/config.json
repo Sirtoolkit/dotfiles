@@ -1,96 +1,91 @@
 {
-  "actions" : [
+  "actions": [
     {
-      "key" : "D",
-      "type" : "folder",
-      "value" : "/Users/zizal/Downloads"
+      "key": "D",
+      "type": "folder",
+      "value": "/Users/zizal/Downloads"
     },
     {
-      "key" : "O",
-      "type" : "application",
-      "value" : "/Applications/Obsidian.app"
+      "key": "O",
+      "type": "application",
+      "value": "/Applications/Obsidian.app"
     },
     {
-      "key" : "C",
-      "type" : "application",
-      "value" : "/System/Applications/Calculator.app"
+      "key": "C",
+      "type": "application",
+      "value": "/System/Applications/Calculator.app"
     },
     {
-      "key" : "o",
-      "type" : "application",
-      "value" : "/Applications/OrbStack.app"
+      "key": "o",
+      "type": "application",
+      "value": "/Applications/OrbStack.app"
     },
     {
-      "key" : "f",
-      "type" : "folder",
-      "value" : "/Applications"
+      "key": "f",
+      "type": "folder",
+      "value": "/Applications"
     },
     {
-      "key" : "c",
-      "type" : "application",
-      "value" : "/Applications/Discord.app"
+      "key": "d",
+      "type": "application",
+      "value": "/Applications/Discord.app"
     },
     {
-      "key" : "m",
-      "label" : " Music",
-      "type" : "application",
-      "value" : "/System/Applications/Music.app"
+      "key": "m",
+      "label": " Music",
+      "type": "application",
+      "value": "/System/Applications/Music.app"
     },
     {
-      "key" : "B",
-      "type" : "application",
-      "value" : "/Applications/Bruno.app"
+      "key": "B",
+      "type": "application",
+      "value": "/Applications/Bruno.app"
     },
     {
-      "key" : "g",
-      "type" : "application",
-      "value" : "/Applications/Ghostty.app"
+      "key": "t",
+      "type": "application",
+      "value": "/Applications/Ceryon.app"
     },
     {
-      "key" : "e",
-      "type" : "application",
-      "value" : "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+      "key": "e",
+      "type": "application",
+      "value": "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
     },
     {
-      "key" : "h",
-      "type" : "application",
-      "value" : "/Applications/Hotspot Shield.app"
+      "key": "h",
+      "type": "application",
+      "value": "/Applications/Hotspot Shield.app"
     },
     {
-      "key" : "b",
-      "type" : "application",
-      "value" : "/Applications/Brave Browser.app"
+      "key": "b",
+      "type": "application",
+      "value": "/Applications/Brave Browser.app"
     },
     {
-      "key" : "d",
-      "type" : "application",
-      "value" : "/Applications/DataGrip.app"
+      "key": "w",
+      "type": "application",
+      "value": "/Applications/WhatsApp.app"
     },
     {
-      "key" : "w",
-      "type" : "application",
-      "value" : "/Applications/WhatsApp.app"
+      "key": "c",
+      "type": "application",
+      "value": "/Applications/Microsoft Teams.app"
     },
     {
-      "key" : "t",
-      "type" : "application",
-      "value" : "/Applications/Microsoft Teams.app"
+      "key": "x",
+      "type": "application",
+      "value": "/Applications/Xcode.app"
     },
     {
-      "key" : "x",
-      "type" : "application",
-      "value" : "/Applications/Xcode.app"
+      "key": "T",
+      "type": "application",
+      "value": "/Applications/Tachimanga.app"
     },
     {
-      "key" : "T",
-      "type" : "application",
-      "value" : "/Applications/Tachimanga.app"
-    },
-    {
-      "key" : "i",
-      "type" : "application",
-      "value" : "/Applications/Claude.app"
+      "key": "i",
+      "type": "application",
+      "value": "/Applications/Claude.app"
     }
   ],
-  "type" : "group"
+  "type": "group"
 }

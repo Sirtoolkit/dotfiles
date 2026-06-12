@@ -69,15 +69,14 @@
             orientation = "left";
             tilesize = 48;
             persistent-apps = [
-              "/Applications/Bruno.app"
-              "/Applications/Obsidian.app"
               "/Applications/Hotspot Shield.app"
               "/Applications/WhatsApp.app"
-              "/Applications/Brave Browser.app"
-              "/Applications/DataGrip.app"
+              "/Applications/Bruno.app"
               "/Applications/Claude.app"
-              "/Applications/Ghostty.app"
+              "/Applications/Obsidian.app"
               "/Applications/Microsoft Teams.app"
+              "/Applications/Ceryon.app"
+              "/Applications/Brave Browser.app"
             ];
           };
 
@@ -101,8 +100,41 @@
             "com.apple.dock" = {
               workspaces-auto-swoosh = false;
             };
+            # AltTab replaces Cmd+Tab (set as hold modifier via the blob in
+            # postActivation below). `exceptions` hides apps from the switcher:
+            # Simulator is ours; the rest mirror AltTab's built-in defaults.
+            # NOTE: AltTab stores booleans/enums as *strings* and this list as a
+            # JSON string; other types get silently reset to defaults.
+            "com.lwouis.alt-tab-macos" = {
+              exceptions = builtins.toJSON [
+                { bundleIdentifier = "com.apple.iphonesimulator"; hide = "1"; ignore = "0"; }
+                { bundleIdentifier = "com.apple.finder"; hide = "2"; ignore = "0"; }
+                { bundleIdentifier = "com.apple.ScreenSharing"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.microsoft.rdc.macos"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.teamviewer.TeamViewer"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "org.virtualbox.app.VirtualBoxVM"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.parallels."; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.citrix.XenAppViewer"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.citrix.receiver.icaviewer.mac"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.nicesoftware.dcvviewer"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.vmware.fusion"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.utmapp.UTM"; hide = "0"; ignore = "2"; }
+                { bundleIdentifier = "com.McAfee.McAfeeSafariHost"; hide = "1"; ignore = "0"; }
+              ];
+            };
           };
         };
+
+        # AltTab v11+ stores shortcuts as { string, secureData } where secureData is
+        # an NSKeyedArchiver blob of SRShortcut — not expressible via
+        # CustomUserPreferences (toPlist has no <data> type), so we write it here.
+        # Blob = Shortcut(keyEquivalent: "⌘"), generated with AltTab's vendored
+        # ShortcutRecorder (v11.3.0) and roundtrip-verified with its exact codec.
+        # Result: holding ⌘ + Tab triggers AltTab, which swallows the event before
+        # the native app switcher sees it.
+        system.activationScripts.postActivation.text = ''
+          launchctl asuser "$(id -u -- ${username})" sudo --user=${username} -- defaults write com.lwouis.alt-tab-macos holdShortcut '<dict><key>string</key><string>⌘</string><key>secureData</key><data>YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMSAAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGmCwwZGhscVSRudWxs1g0ODxAREhMUFRQXGF1tb2RpZmllckZsYWdzXxAbY2hhcmFjdGVyc0lnbm9yaW5nTW9kaWZpZXJzViRjbGFzc1pjaGFyYWN0ZXJzV2tleUNvZGVXdmVyc2lvboADgASABYAEgAKAABH//xIAEAAAUNIdHh8gWiRjbGFzc25hbWVYJGNsYXNzZXNaU1JTaG9ydGN1dKIfIVhOU09iamVjdAAIABEAGgAkACkAMgA3AEkATABRAFMAWgBgAG0AewCZAKAAqwCzALsAvQC/AMEAwwDFAMcAygDPANAA1QDgAOkA9AD3AAAAAAAAAgEAAAAAAAAAIgAAAAAAAAAAAAAAAAAAAQA=</data></dict>'
+        '';
 
         environment.systemPackages = with pkgs; [
           qmk
@@ -117,7 +149,7 @@
 
           casks = [
             "nikitabobko/tap/aerospace"
-            "ghostty"
+            "alt-tab"
             "whatsapp"
             "leader-key"
             "discord"
@@ -127,20 +159,21 @@
             "microsoft-teams"
             "bruno"
             "obsidian"
-            "slack"
-            "datagrip"
             "raycast"
             "flutter"
             "clockify"
-            "crossover"
-            "google-chrome"
             "google-drive"
             "gcloud-cli"
-            "claude-code@latest"
             "claude"
             "redis-insight"
             "lens"
             "brave-browser"
+            # "google-chrome"
+            # "ghostty"
+            # "crossover"
+            # "claude-code@latest"
+            # "slack"
+            # "datagrip"
           ];
 
           brews = [
@@ -148,8 +181,6 @@
             "FelixKratz/formulae/borders"
             "go-task/tap/go-task"
             "Azure/kubelogin/kubelogin"
-            "kopecmaciej/vi-mongo/vi-mongo"
-            "lazysql"
             "mole"
             "bat"
             "btop"
@@ -161,10 +192,8 @@
             "usage"
             "gh"
             "infisical"
-            "tmux"
             "yazi"
             "lazygit"
-            "lazyssh"
             "neovim"
             "starship"
             "zoxide"
@@ -173,23 +202,17 @@
             "ripgrep"
             "fd"
             "jq"
-            "pipx"
             "trash-cli"
             "diff-so-fancy"
             "git"
-            "mas"
             "cocoapods"
-            "fastlane"
             "act"
             "atuin"
-            "balena-cli"
             "carapace"
-            "direnv"
             "chezmoi"
             "tree-sitter"
             "openvpn"
             "worktrunk"
-            "ollama"
             "kanata"
             "rtk"
             "fish"
@@ -198,6 +221,13 @@
             "appium"
             "herdr"
             "git-delta"
+            # "pipx"
+            # "lazyssh"
+            # "tmux"
+            # "fastlane"
+            # "balena-cli"
+            # "ollama"
+            # "mas"
           ];
 
          masApps = {
