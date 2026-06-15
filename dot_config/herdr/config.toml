@@ -23,3 +23,12 @@ mouse_capture = true
 confirm_close = false
 prompt_new_tab_name = false
 show_agent_labels_on_pane_borders = true
+agent_panel_scope = "current"
+redraw_on_focus_gained = false
+reduced_motion = true
+animations = false
+max_render_fps = 30
+background_render_fps = 5
+
+[advanced]
+scrollback_limit_bytes = 5000000

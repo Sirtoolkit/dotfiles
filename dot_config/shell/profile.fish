@@ -40,13 +40,6 @@ if test -d /opt/homebrew/share/android-commandlinetools
     set -gx PATH "$ANDROID_HOME/emulator" $PATH
 end
 
-# OrbStack lazy load
-function orb --wraps orb
-    functions -e orb
-    source ~/.orbstack/shell/init.fish 2>/dev/null; or true
-    orb $argv
-end
-
 # Shorebird
 set -l shorebird_home "$HOME/.config/shorebird"
 if set -q XDG_CONFIG_HOME

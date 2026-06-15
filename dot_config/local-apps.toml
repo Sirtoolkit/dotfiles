@@ -1,0 +1,21 @@
+# Local workspace apps installed as standalone global commands.
+# Run `local-apps sync` after pulling/changing a repo; build directories can be deleted after sync.
+bin_dir = "~/.local/bin"
+
+[apps.cursive]
+path = "~/workspace/apps/cursive"
+command = "cursive"
+binary = "target/release/cursive"
+build = ["cargo", "build", "--release", "--locked", "-p", "cursive-tui", "--bin", "cursive"]
+
+[apps.herdr]
+path = "~/workspace/apps/herdr"
+command = "herdr"
+binary = "target/release/herdr"
+build = ["cargo", "build", "--release", "--locked"]
+
+[apps.vsql]
+path = "~/workspace/apps/vsql"
+command = "vsql"
+binary = ".build/vsql"
+build = ["make", "build"]

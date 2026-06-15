@@ -6,19 +6,9 @@
       "value": "/Users/zizal/Downloads"
     },
     {
-      "key": "O",
-      "type": "application",
-      "value": "/Applications/Obsidian.app"
-    },
-    {
       "key": "C",
       "type": "application",
       "value": "/System/Applications/Calculator.app"
-    },
-    {
-      "key": "o",
-      "type": "application",
-      "value": "/Applications/OrbStack.app"
     },
     {
       "key": "f",

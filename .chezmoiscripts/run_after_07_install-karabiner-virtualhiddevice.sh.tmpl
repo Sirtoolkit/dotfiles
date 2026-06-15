@@ -1,6 +1,7 @@
 #!{{ lookPath "bash" }}
 
 {{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:$PATH"
 
 # Colores para output
 if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
@@ -29,20 +30,17 @@ DAEMON_BIN="/Library/Application Support/org.pqrs/Karabiner-DriverKit-VirtualHID
 LAUNCHD_PLIST="/Library/LaunchDaemons/org.pqrs.karabiner.virtualhiddevice-daemon.plist"
 CURRENT_USER="$(whoami)"
 SUDOERS_FILE="/etc/sudoers.d/kanata-${CURRENT_USER}"
+if [ -x "/opt/homebrew/bin/kanata" ]; then
+    KANATA_SOURCE_BIN="/opt/homebrew/bin/kanata"
+else
+    KANATA_SOURCE_BIN="$(command -v kanata || true)"
+fi
+KANATA_STABLE_BIN="/usr/local/bin/kanata"
+KANATA_STABLE_UPDATED=0
+
 
 printf "\n%b\n" "${BLUE}→ Karabiner${NC}"
 
-karabiner_setup_complete() {
-    [ -d "$MANAGER_APP" ] || return 1
-    [ -f "$LAUNCHD_PLIST" ] || return 1
-    [ -f "$SUDOERS_FILE" ] || return 1
-    return 0
-}
-
-if karabiner_setup_complete; then
-    printf "%b\n" "${GREEN}✓ VirtualHID listo${NC}"
-    exit 0
-fi
 
 # Verificar si ya está instalado
 if [ -d "$MANAGER_APP" ]; then
@@ -124,13 +122,39 @@ EOF
     fi
 fi
 
+# Instalar kanata en una ruta estable para permisos TCC de macOS.
+# Evita depender de /opt/homebrew/Cellar/kanata/<version>/bin/kanata.
+if [ -n "$KANATA_SOURCE_BIN" ] && [ -x "$KANATA_SOURCE_BIN" ]; then
+    if [ "$KANATA_SOURCE_BIN" != "$KANATA_STABLE_BIN" ] && { [ ! -x "$KANATA_STABLE_BIN" ] || ! cmp -s "$KANATA_SOURCE_BIN" "$KANATA_STABLE_BIN"; }; then
+        printf "%b\n" "${BLUE}→ Instalando kanata estable en ${KANATA_STABLE_BIN}${NC}"
+        sudo install -m 0755 "$KANATA_SOURCE_BIN" "$KANATA_STABLE_BIN"
+        KANATA_STABLE_UPDATED=1
+        printf "%b\n" "${GREEN}✓ kanata estable listo${NC}"
+    else
+        printf "%b\n" "${GREEN}✓ kanata estable listo${NC}"
+    fi
+else
+    printf "%b\n" "${YELLOW}⚠ kanata no encontrado; se omite ruta estable${NC}"
+fi
+
 # Configurar sudoers para kanata sin password
-if [ ! -f "$SUDOERS_FILE" ]; then
+SUDOERS_TMP="$(mktemp)"
+{
+    printf '%s\n' "${CURRENT_USER} ALL=(ALL) NOPASSWD: ${KANATA_STABLE_BIN}"
+    printf '%s\n' "${CURRENT_USER} ALL=(ALL) NOPASSWD: /usr/bin/pkill kanata"
+} > "$SUDOERS_TMP"
+
+if [ ! -f "$SUDOERS_FILE" ] || ! sudo cmp -s "$SUDOERS_TMP" "$SUDOERS_FILE"; then
     printf "%b\n" "${BLUE}→ Configurando sudoers de kanata${NC}"
-    echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /opt/homebrew/bin/kanata" | sudo tee "$SUDOERS_FILE" > /dev/null
-    echo "${CURRENT_USER} ALL=(ALL) NOPASSWD: /usr/bin/pkill kanata" | sudo tee -a "$SUDOERS_FILE" > /dev/null
-    sudo chmod 440 "$SUDOERS_FILE"
+    sudo install -m 0440 -o root -g wheel "$SUDOERS_TMP" "$SUDOERS_FILE"
     printf "%b\n" "${GREEN}✓ sudoers de kanata listo${NC}"
+fi
+rm -f "$SUDOERS_TMP"
+
+if [ "$KANATA_STABLE_UPDATED" -eq 1 ]; then
+    printf "%b\n" "${YELLOW}⚠ macOS requiere aprobar ${KANATA_STABLE_BIN} en Input Monitoring y Accessibility${NC}"
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent" >/dev/null 2>&1 || true
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility" >/dev/null 2>&1 || true
 fi
 
 printf "%b\n" "${GREEN}✓ Karabiner listo${NC}"

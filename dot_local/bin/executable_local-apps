@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+"""Build configured local apps and copy standalone commands into ~/.local/bin."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+CONFIG_PATH = Path(os.environ.get("LOCAL_APPS_CONFIG", "~/.config/local-apps.toml")).expanduser()
+STATE_DIR = Path(os.environ.get("LOCAL_APPS_STATE_DIR", "~/.local/state/local-apps")).expanduser()
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - for older Python installs
+    import tomli as tomllib  # type: ignore[no-redef]
+
+
+def fail(message: str) -> None:
+    print(f"local-apps: {message}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def warn(message: str) -> None:
+    print(f"local-apps: warning: {message}", file=sys.stderr)
+
+
+def expand_path(value: str, base: Path | None = None) -> Path:
+    expanded = Path(os.path.expandvars(os.path.expanduser(value)))
+    if base is not None and not expanded.is_absolute():
+        expanded = base / expanded
+    return expanded
+
+
+def load_config() -> dict[str, Any]:
+    if not CONFIG_PATH.exists():
+        fail(f"config not found: {CONFIG_PATH}")
+    with CONFIG_PATH.open("rb") as handle:
+        config = tomllib.load(handle)
+    if not isinstance(config.get("apps"), dict):
+        fail("config must contain an [apps] table")
+    return config
+
+
+def app_names(config: dict[str, Any], selected: list[str]) -> list[str]:
+    apps = config["apps"]
+    if not selected:
+        return sorted(apps)
+    missing = [name for name in selected if name not in apps]
+    if missing:
+        fail("unknown app(s): " + ", ".join(missing))
+    return selected
+
+
+def require_string(app: dict[str, Any], name: str, key: str) -> str:
+    value = app.get(key)
+    if not isinstance(value, str):
+        fail(f"apps.{name}.{key} must be a string")
+    return value
+
+
+def build_command(name: str, app: dict[str, Any]) -> list[str]:
+    build = app.get("build", [])
+    if isinstance(build, str):
+        fail(f"apps.{name}.build must be an array, not a string")
+    if not isinstance(build, list) or not all(isinstance(arg, str) for arg in build):
+        fail(f"apps.{name}.build must be an array of strings")
+    return build
+
+
+def app_paths(config: dict[str, Any], name: str) -> tuple[dict[str, Any], Path, Path, Path]:
+    app = config["apps"][name]
+    if not isinstance(app, dict):
+        fail(f"apps.{name} must be a table")
+
+    command = require_string(app, name, "command")
+    if "/" in command or command in ("", ".", ".."):
+        fail(f"apps.{name}.command must be a command name, got: {command!r}")
+
+    repo = expand_path(require_string(app, name, "path"))
+    source = expand_path(require_string(app, name, "binary"), repo)
+    bin_dir = expand_path(str(config.get("bin_dir", "~/.local/bin")))
+    destination = bin_dir / command
+    return app, repo, source, destination
+
+
+def git_head(repo: Path) -> str:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+    return result.stdout.strip()
+
+
+def fingerprint(name: str, app: dict[str, Any], repo: Path) -> dict[str, Any]:
+    return {
+        "name": name,
+        "path": str(repo),
+        "command": require_string(app, name, "command"),
+        "binary": require_string(app, name, "binary"),
+        "build": build_command(name, app),
+        "git_head": git_head(repo),
+    }
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def state_path(name: str) -> Path:
+    safe = "".join(ch if ch.isalnum() or ch in "._-" else "_" for ch in name)
+    return STATE_DIR / f"{safe}.json"
+
+
+def read_state(name: str) -> dict[str, Any] | None:
+    path = state_path(name)
+    if not path.exists():
+        return None
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def write_state(name: str, installed: Path, app_fingerprint: dict[str, Any]) -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    data = {
+        "fingerprint": app_fingerprint,
+        "installed": str(installed),
+        "installed_sha256": file_sha256(installed),
+    }
+    temp = state_path(name).with_suffix(f".tmp-{os.getpid()}")
+    with temp.open("w", encoding="utf-8") as handle:
+        json.dump(data, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+    os.replace(temp, state_path(name))
+
+
+def build_app(name: str, app: dict[str, Any], repo: Path) -> None:
+    build = build_command(name, app)
+    if not build:
+        return
+    print(f"==> building {name}: {' '.join(build)}")
+    subprocess.run(build, cwd=repo, check=True)
+
+
+def install_app(name: str, app: dict[str, Any], repo: Path, source: Path, destination: Path) -> None:
+    if not repo.is_dir():
+        fail(f"apps.{name}.path is not a directory: {repo}")
+
+    source = source.resolve()
+    if not source.is_file():
+        fail(f"apps.{name}.binary not found after build: {source}")
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists() and destination.is_dir():
+        fail(f"refusing to replace directory command: {destination}")
+
+    temp = destination.parent / f".{destination.name}.tmp-{os.getpid()}"
+    try:
+        shutil.copy2(source, temp)
+        os.replace(temp, destination)
+    finally:
+        if temp.exists():
+            temp.unlink()
+    write_state(name, destination, fingerprint(name, app, repo))
+    print(f"==> installed {destination.name} from {source}")
+
+
+def installed_current(name: str, app_fp: dict[str, Any], source: Path, destination: Path) -> bool:
+    if destination.is_symlink() or not destination.is_file():
+        return False
+    state = read_state(name)
+    if state is None or state.get("fingerprint") != app_fp:
+        return False
+    installed_sha = state.get("installed_sha256")
+    if isinstance(installed_sha, str):
+        try:
+            if file_sha256(destination) != installed_sha:
+                return False
+        except OSError:
+            return False
+    if source.is_file() and source.stat().st_mtime_ns > destination.stat().st_mtime_ns:
+        return False
+    return True
+
+
+def sync(config: dict[str, Any], selected: list[str], no_build: bool) -> None:
+    for name in app_names(config, selected):
+        app, repo, source, destination = app_paths(config, name)
+        if not no_build:
+            build_app(name, app, repo)
+        install_app(name, app, repo, source, destination)
+
+
+def ensure(config: dict[str, Any], selected: list[str], skip_missing: bool) -> None:
+    for name in app_names(config, selected):
+        app, repo, source, destination = app_paths(config, name)
+        if skip_missing and not repo.is_dir():
+            warn(f"skipping {name}; repo not found: {repo}")
+            continue
+        app_fp = fingerprint(name, app, repo)
+        if installed_current(name, app_fp, source, destination):
+            print(f"==> ok {destination.name}")
+            continue
+        build_app(name, app, repo)
+        install_app(name, app, repo, source, destination)
+
+
+def list_apps(config: dict[str, Any], selected: list[str]) -> None:
+    for name in app_names(config, selected):
+        app, repo, source, destination = app_paths(config, name)
+        installed = destination.is_file() and not destination.is_symlink()
+        state = read_state(name)
+        managed = bool(state and state.get("installed") == str(destination))
+        print(
+            f"{name}: command={destination} source={source} "
+            f"installed={str(installed).lower()} managed={str(managed).lower()}"
+        )
+
+
+def unlink(config: dict[str, Any], selected: list[str]) -> None:
+    for name in app_names(config, selected):
+        _, _, _, destination = app_paths(config, name)
+        if destination.is_symlink() or destination.is_file():
+            destination.unlink()
+            print(f"==> removed {destination}")
+        elif destination.exists():
+            fail(f"refusing to remove directory command: {destination}")
+        state = state_path(name)
+        if state.exists():
+            state.unlink()
+
+
+def main(argv: list[str]) -> int:
+    global CONFIG_PATH
+    parser = argparse.ArgumentParser(description="Manage global commands for local workspace apps.")
+    parser.add_argument("--config", default=str(CONFIG_PATH), help="config path")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    sync_parser = subparsers.add_parser("sync", help="build apps and install command binaries")
+    sync_parser.add_argument("apps", nargs="*", help="optional app names")
+    sync_parser.add_argument("--no-build", action="store_true", help="only reinstall already-built binaries")
+
+    ensure_parser = subparsers.add_parser("ensure", help="install missing or stale command binaries")
+    ensure_parser.add_argument("apps", nargs="*", help="optional app names")
+    ensure_parser.add_argument("--skip-missing", action="store_true", help="skip apps whose repos are missing")
+
+    list_parser = subparsers.add_parser("list", help="show configured commands")
+    list_parser.add_argument("apps", nargs="*", help="optional app names")
+
+    unlink_parser = subparsers.add_parser("unlink", help="remove installed command binaries")
+    unlink_parser.add_argument("apps", nargs="*", help="optional app names")
+
+    args = parser.parse_args(argv)
+    CONFIG_PATH = Path(args.config).expanduser()
+    config = load_config()
+
+    if args.command == "sync":
+        sync(config, args.apps, args.no_build)
+    elif args.command == "ensure":
+        ensure(config, args.apps, args.skip_missing)
+    elif args.command == "list":
+        list_apps(config, args.apps)
+    elif args.command == "unlink":
+        unlink(config, args.apps)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

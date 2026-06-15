@@ -71,7 +71,7 @@ run = """
     echo "Error: Karabiner-VirtualHIDDevice-Daemon no está corriendo. Ejecuta 'chezmoi apply' primero."
     exit 1
   fi
-  sudo kanata -c ~/.config/kanata/config.kbd > /dev/null &
+  sudo /usr/local/bin/kanata -c ~/.config/kanata/config.kbd > /dev/null &
   echo "✓ Kanata iniciado"
 """
 

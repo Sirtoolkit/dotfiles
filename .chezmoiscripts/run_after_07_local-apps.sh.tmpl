@@ -1,0 +1,46 @@
+#!{{ lookPath "sh" }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+# Ensure local workspace apps are present after chezmoi applies dotfiles.
+set -e
+
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    YELLOW=''
+    NC=''
+fi
+
+log_info() {
+    printf "%b\n" "${BLUE}→ $1${NC}"
+}
+
+log_success() {
+    printf "%b\n" "${GREEN}✓ $1${NC}"
+}
+
+log_warning() {
+    printf "%b\n" "${YELLOW}⚠ $1${NC}"
+}
+
+LOCAL_APPS="${HOME}/.local/bin/local-apps"
+
+printf "\n"
+log_info "Local apps"
+
+if [ ! -x "$LOCAL_APPS" ]; then
+    log_warning "local-apps no está instalado todavía; ejecuta chezmoi apply otra vez"
+    exit 0
+fi
+
+if "$LOCAL_APPS" ensure --skip-missing; then
+    log_success "Comandos locales al día"
+else
+    log_warning "No se pudieron sincronizar todos los comandos locales; ejecuta 'local-apps ensure' para ver el error"
+fi
+{{ end -}}
