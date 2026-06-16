@@ -36,9 +36,9 @@
   ;; M: tap = m normal, hold = media.
   m_media (tap-hold 200 200 m (layer-toggle media))
 
-  ;; O: tap = o normal, hold = Herdr.
+  ;; O: tap = o normal, hold = Cauce.
   ;; Acciones en mano izquierda: o+a/s/d/f => F8/F9/F10/F11.
-  o_herdr (tap-hold 200 200 o (layer-toggle herdr))
+  o_cauce (tap-hold 200 200 o (layer-toggle cauce))
 
   ;; B: tap = b normal, hold = utilidades macOS.
   ;; b+a/s/f => screenshot full / screenshot seleccion / lock screen.
@@ -51,7 +51,7 @@
   (i)   i
   (u i) esc
 
-  ;; O ya activa Herdr al mantener; mantener u+i como Escape.
+  ;; O ya activa Cauce al mantener; mantener u+i como Escape.
 
   ;; Tabulador
   (e)   e
@@ -66,7 +66,7 @@
 
 (deflayer default
   @capshyp tab
-  q w (chord combos e) (chord combos r) t y (chord combos u) (chord combos i) @o_herdr p
+  q w (chord combos e) (chord combos r) t y (chord combos u) (chord combos i) @o_cauce p
   @a_mod @s_mod @d_mod @f_mod g h @j_mod @k_mod @l_mod @;_mod
   z x c v @b_utils n @m_media , . /
   (chord combos lsft) (chord combos rsft) spc
@@ -97,7 +97,7 @@
   s (multi lmet lsft 4)
   f (multi lctl lmet q)
 )
-(deflayermap (herdr)
+(deflayermap (cauce)
   ___ XX
   a f8
   s f9

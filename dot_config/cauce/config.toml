@@ -13,7 +13,7 @@ type = "pane"
 command = "mole"
 
 [worktrees]
-directory = "~/.herdr/worktrees"
+directory = "~/.cauce/worktrees"
 
 [theme]
 name = "gruvbox"

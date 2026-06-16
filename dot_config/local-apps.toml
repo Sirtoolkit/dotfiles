@@ -8,10 +8,10 @@ command = "cursive"
 binary = "target/release/cursive"
 build = ["cargo", "build", "--release", "--locked", "-p", "cursive-tui", "--bin", "cursive"]
 
-[apps.herdr]
-path = "~/workspace/apps/herdr"
-command = "herdr"
-binary = "target/release/herdr"
+[apps.cauce]
+path = "~/workspace/apps/cauce"
+command = "cauce"
+binary = "target/release/cauce"
 build = ["cargo", "build", "--release", "--locked"]
 
 [apps.vsql]
