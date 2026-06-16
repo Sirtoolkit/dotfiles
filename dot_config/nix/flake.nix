@@ -149,12 +149,9 @@
             "clockify"
             "google-drive"
             "gcloud-cli"
-            "claude"
             "redis-insight"
             "lens"
             "brave-browser"
-            # "crossover"
-            # "claude-code@latest"
           ];
 
           brews = [
@@ -205,7 +202,6 @@
             "docker"
             "docker-compose"
             "docker-buildx"
-            # "herdr"
           ];
 
          masApps = {
