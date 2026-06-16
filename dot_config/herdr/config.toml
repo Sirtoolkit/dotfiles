@@ -32,3 +32,6 @@ background_render_fps = 5
 
 [advanced]
 scrollback_limit_bytes = 5000000
+
+[experimental]
+kitty_graphics = true

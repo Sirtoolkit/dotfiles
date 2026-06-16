@@ -40,11 +40,6 @@ PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 alt-e = 'macos-native-minimize'
 alt-m = 'layout tiles accordion'
 
-# alt-left = 'workspace --wrap-around prev'
-# alt-right = 'workspace --wrap-around next'
-# alt-up = 'focus-monitor --wrap-around up'
-# alt-down = 'focus-monitor --wrap-around down'
-
 alt-shift-left = 'move-workspace-to-monitor left'
 alt-shift-right = 'move-workspace-to-monitor right'
 alt-shift-up = 'move-workspace-to-monitor up'
@@ -161,32 +156,28 @@ if.app-id = 'app.crynta.ceryon'
 run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
-if.app-id = 'com.jetbrains.datagrip'
+if.app-id = 'com.microsoft.teams2'
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
-if.app-id = 'com.microsoft.teams2'
+if.app-id = 'com.anthropic.claudefordesktop'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
-if.app-id = 'com.anthropic.claudefordesktop'
+if.app-id = 'com.usebruno.app'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-id = 'com.usebruno.app'
+if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
-if.app-id = 'net.whatsapp.WhatsApp'
+if.app-id = 'com.mangacrush.ios'
 run = 'move-node-to-workspace 7'
 
 [[on-window-detected]]
-if.app-id = 'com.mangacrush.ios'
-run = 'move-node-to-workspace 8'
-
-[[on-window-detected]]
 if.app-id = 'com.apple.Music'
-run = 'move-node-to-workspace 9'
+run = 'move-node-to-workspace 8'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Simulator'
