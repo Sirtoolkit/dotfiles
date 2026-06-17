@@ -9,7 +9,7 @@ go = "latest"
 bun = "latest"
 firebase = "latest"
 fluttergen = "latest"
-"github:can1357/oh-my-pi" = "latest"
+pi = "latest"
 
 [tasks."wt:new"]
 quiet = true
