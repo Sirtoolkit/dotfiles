@@ -19,8 +19,17 @@ else
     NC=''
 fi
 
-# Configurar ANDROID_HOME
-export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+# Configurar ANDROID_HOME según el prefijo real de Homebrew.
+BREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
+if [ -z "$BREW_PREFIX" ]; then
+    if [ "$(uname -m)" = "arm64" ]; then
+        BREW_PREFIX="/opt/homebrew"
+    else
+        BREW_PREFIX="/usr/local"
+    fi
+fi
+
+export ANDROID_HOME="$BREW_PREFIX/share/android-commandlinetools"
 export ANDROID_AVD_HOME="$HOME/.config/.android/avd"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 

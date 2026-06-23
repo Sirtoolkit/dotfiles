@@ -160,24 +160,16 @@ if.app-id = 'com.microsoft.teams2'
 run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
-if.app-id = 'com.anthropic.claudefordesktop'
+if.app-id = 'net.whatsapp.WhatsApp'
 run = 'move-node-to-workspace 4'
 
 [[on-window-detected]]
-if.app-id = 'com.usebruno.app'
+if.app-id = 'com.apple.Music'
 run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
-if.app-id = 'net.whatsapp.WhatsApp'
-run = 'move-node-to-workspace 6'
-
-[[on-window-detected]]
 if.app-id = 'com.mangacrush.ios'
-run = 'move-node-to-workspace 7'
-
-[[on-window-detected]]
-if.app-id = 'com.apple.Music'
-run = 'move-node-to-workspace 8'
+run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Simulator'

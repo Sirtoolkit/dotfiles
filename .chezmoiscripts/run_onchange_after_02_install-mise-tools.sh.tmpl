@@ -1,0 +1,103 @@
+#!{{ lookPath "sh" }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+
+# Rerun this script whenever mise's declarative config changes.
+# chezmoi:onchange-mise-config {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+# Colores para output
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    YELLOW=''
+    NC=''
+fi
+
+# Source Nix environment if installed (needed for non-interactive shells)
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
+
+# Ensure Nix is in PATH if installed
+if [ -d "/nix" ] && [ -x "/nix/var/nix/profiles/default/bin/nix" ]; then
+    export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+fi
+
+if ! command -v mise >/dev/null 2>&1; then
+  printf "\n%b\n" "${BLUE}→ Mise${NC}"
+  printf "%b\n" "${YELLOW}⚠ mise no está instalado; se omiten sus herramientas${NC}"
+  exit 0
+fi
+
+MISE_LOG=""
+MISE_MISSING=""
+MISE_PRUNE_LOG=""
+cleanup_mise_tmp() {
+    [ -n "$MISE_LOG" ] && rm -f "$MISE_LOG"
+    [ -n "$MISE_MISSING" ] && rm -f "$MISE_MISSING"
+    [ -n "$MISE_PRUNE_LOG" ] && rm -f "$MISE_PRUNE_LOG"
+}
+trap cleanup_mise_tmp EXIT
+
+CONFIG_FILE="${HOME}/.config/mise/config.toml"
+
+printf "\n%b\n" "${BLUE}→ Mise${NC}"
+
+if [ -f "$CONFIG_FILE" ]; then
+    printf "%b\n" "${BLUE}→ Sincronizando herramientas de mise${NC}"
+    
+    # Verificar que Nix está disponible (dependencia previa)
+    if ! command -v nix >/dev/null 2>&1; then
+        printf "%b\n" "${YELLOW}⚠ Nix no disponible todavía; se omite Mise${NC}"
+        exit 0
+    fi
+
+    MISE_LOG="$(mktemp)"
+    MISE_MISSING="$(mktemp)"
+
+    if mise ls --global --missing --no-header >"$MISE_MISSING" 2>/dev/null && [ ! -s "$MISE_MISSING" ]; then
+        MISE_COMMAND="up"
+        printf "%b\n" "${BLUE}→ Todas las herramientas ya están instaladas; actualizando con mise up${NC}"
+    else
+        MISE_COMMAND="install"
+        printf "%b\n" "${BLUE}→ Instalando herramientas faltantes con mise install${NC}"
+        if [ -s "$MISE_MISSING" ]; then
+            printf "%b\n" "${YELLOW}Herramientas faltantes detectadas:${NC}"
+            cat "$MISE_MISSING"
+        fi
+    fi
+
+    if mise "$MISE_COMMAND" >"$MISE_LOG" 2>&1; then
+        printf "%b\n" "${GREEN}✓ Herramientas de mise al día${NC}"
+    else
+        printf "%b\n" "${YELLOW}⚠ mise $MISE_COMMAND terminó con advertencias; últimas líneas:${NC}"
+        tail -10 "$MISE_LOG"
+    fi
+    rm -f "$MISE_LOG" "$MISE_MISSING"
+    MISE_LOG=""
+    MISE_MISSING=""
+
+    printf "%b\n" "${BLUE}→ Eliminando herramientas de mise no declaradas${NC}"
+    MISE_PRUNE_LOG="$(mktemp)"
+    if mise prune --tools --yes >"$MISE_PRUNE_LOG" 2>&1; then
+        printf "%b\n" "${GREEN}✓ Herramientas no declaradas podadas${NC}"
+    else
+        printf "%b\n" "${YELLOW}⚠ mise prune terminó con advertencias; últimas líneas:${NC}"
+        tail -10 "$MISE_PRUNE_LOG"
+    fi
+    rm -f "$MISE_PRUNE_LOG"
+    MISE_PRUNE_LOG=""
+    
+    # Re-generar shims
+    mise reshim 2>/dev/null || true
+    
+    printf "%b\n" "${GREEN}✓ Mise listo${NC}"
+else
+    printf "%b\n" "${YELLOW}⚠ No se encontró config de mise en $CONFIG_FILE${NC}"
+fi
+{{ end -}}

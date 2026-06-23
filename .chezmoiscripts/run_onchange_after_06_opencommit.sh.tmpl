@@ -1,5 +1,7 @@
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-set -e
+set -euo pipefail
+umask 077
 
 # Colores para output
 if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
@@ -24,10 +26,15 @@ if ! command -v dcli >/dev/null 2>&1; then
 fi
 
 # Obtener API key
-cd ~
 API_KEY=$(dcli n "title=Openrouter API KEY" 2>/dev/null || echo "")
+OPENCOMMIT_FILE="$HOME/.opencommit"
+OPENCOMMIT_TMP="$(mktemp)"
+cleanup_opencommit_tmp() {
+    [ -n "${OPENCOMMIT_TMP:-}" ] && rm -f "$OPENCOMMIT_TMP"
+}
+trap cleanup_opencommit_tmp EXIT
 
-cat > "$HOME/.opencommit" << 'EOF'
+cat > "$OPENCOMMIT_TMP" << 'EOF'
 OCO_TOKENS_MAX_INPUT=8192
 OCO_TOKENS_MAX_OUTPUT=1000
 OCO_DESCRIPTION=false
@@ -47,9 +54,19 @@ EOF
 
 # Agregar API key
 if [ -n "$API_KEY" ]; then
-    echo "OCO_API_KEY=$API_KEY" >> "$HOME/.opencommit"
+    printf "OCO_API_KEY=%s\n" "$API_KEY" >> "$OPENCOMMIT_TMP"
 else
-    echo "OCO_API_KEY=" >> "$HOME/.opencommit"
+    printf "OCO_API_KEY=\n" >> "$OPENCOMMIT_TMP"
+fi
+
+chmod 600 "$OPENCOMMIT_TMP"
+if [ -f "$OPENCOMMIT_FILE" ] && cmp -s "$OPENCOMMIT_TMP" "$OPENCOMMIT_FILE"; then
+    printf "%b\n" "${GREEN}✓ opencommit sin cambios${NC}"
+else
+    mv "$OPENCOMMIT_TMP" "$OPENCOMMIT_FILE"
+    OPENCOMMIT_TMP=""
+    printf "%b\n" "${GREEN}✓ opencommit actualizado${NC}"
 fi
 
 printf "%b\n" "${GREEN}✓ opencommit listo${NC}"
+{{ end -}}

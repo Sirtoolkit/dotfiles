@@ -1,3 +1,9 @@
+{{- $nixUser := .chezmoi.username -}}
+{{- $nixHost := .chezmoi.hostname -}}
+{{- $nixSystem := "aarch64-darwin" -}}
+{{- if eq .chezmoi.arch "amd64" -}}
+{{- $nixSystem = "x86_64-darwin" -}}
+{{- end -}}
 {
   description = "Example nix-darwin system flake";
 
@@ -7,7 +13,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     brew-src = {
-      url = "github:Homebrew/brew/5.1.10";
+      url = "github:Homebrew/brew";
       flake = false;
     };
     nix-homebrew.inputs.brew-src.follows = "brew-src";
@@ -15,8 +21,10 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, ... }:
     let
-      username = "zizal";
-      hostname = "Cesars-MacBook-Pro";
+      system = {{ $nixSystem | quote }};
+      username = {{ $nixUser | quote }};
+      hostname = {{ $nixHost | quote }};
+      brewVersion = inputs.brew-src.shortRev or "latest";
 
       configuration = { pkgs, lib, config, ... }: {
         nixpkgs.config.allowUnfree = true;
@@ -72,7 +80,6 @@
               "/Applications/Hotspot Shield.app"
               "/Applications/WhatsApp.app"
               "/Applications/Bruno.app"
-              "/Applications/Claude.app"
               "/Applications/Microsoft Teams.app"
               "/Applications/Ceryon.app"
               "/Applications/Brave Browser.app"
@@ -123,106 +130,109 @@
           launchctl asuser "$(id -u -- ${username})" sudo --user=${username} -- defaults write com.lwouis.alt-tab-macos holdShortcut '<dict><key>string</key><string>⌘</string><key>secureData</key><data>YnBsaXN0MDDUAQIDBAUGBwpYJHZlcnNpb25ZJGFyY2hpdmVyVCR0b3BYJG9iamVjdHMSAAGGoF8QD05TS2V5ZWRBcmNoaXZlctEICVRyb290gAGmCwwZGhscVSRudWxs1g0ODxAREhMUFRQXGF1tb2RpZmllckZsYWdzXxAbY2hhcmFjdGVyc0lnbm9yaW5nTW9kaWZpZXJzViRjbGFzc1pjaGFyYWN0ZXJzV2tleUNvZGVXdmVyc2lvboADgASABYAEgAKAABH//xIAEAAAUNIdHh8gWiRjbGFzc25hbWVYJGNsYXNzZXNaU1JTaG9ydGN1dKIfIVhOU09iamVjdAAIABEAGgAkACkAMgA3AEkATABRAFMAWgBgAG0AewCZAKAAqwCzALsAvQC/AMEAwwDFAMcAygDPANAA1QDgAOkA9AD3AAAAAAAAAgEAAAAAAAAAIgAAAAAAAAAAAAAAAAAAAQA=</data></dict>'
         '';
 
+        system.activationScripts.preActivation.text = ''
+          if [ -x "${config.homebrew.prefix}/bin/brew" ]; then
+            for formula in \
+              azure/kubelogin/kubelogin \
+              dashlane/tap/dashlane-cli \
+              felixkratz/formulae/borders \
+              go-task/tap/go-task
+            do
+              PATH="${config.homebrew.prefix}/bin:$PATH" sudo --user=${lib.escapeShellArg username} --set-home \
+                brew trust --formula "$formula" >/dev/null 2>&1 || true
+            done
+          fi
+        '';
+
         environment.systemPackages = with pkgs; [
+          bat
+          btop
+          delta
+          eza
+          fd
+          fzf
+          jq
+          lazygit
           qmk
+          ripgrep
+          yazi
         ];
 
         homebrew = {
           enable = true;
           taps = [
-            "nikitabobko/tap"
             "azure/kubelogin"
+            "dashlane/tap"
+            "felixkratz/formulae"
+            "go-task/tap"
+            "nikitabobko/tap"
           ];
 
           casks = [
             "nikitabobko/tap/aerospace"
             "alt-tab"
-            "whatsapp"
             "leader-key"
-            "discord"
             "android-commandlinetools"
             "windows-app"
-            "microsoft-teams"
             "bruno"
             "raycast"
             "flutter"
-            "clockify"
             "google-drive"
-            "gcloud-cli"
             "redis-insight"
             "lens"
             "brave-browser"
+            # "microsoft-teams"
           ];
 
           brews = [
+            "azure/kubelogin/kubelogin"
             "dashlane/tap/dashlane-cli"
-            "FelixKratz/formulae/borders"
+            "felixkratz/formulae/borders"
             "go-task/tap/go-task"
-            "Azure/kubelogin/kubelogin"
             "mole"
-            "bat"
-            "btop"
             "tldr"
             "mise"
             "coreutils"
             "findutils"
             "wget"
-            "usage"
-            "gh"
-            "infisical"
-            "yazi"
-            "lazygit"
-            "neovim"
-            "starship"
-            "zoxide"
-            "fzf"
-            "eza"
-            "ripgrep"
-            "fd"
-            "jq"
             "trash-cli"
             "diff-so-fancy"
             "git"
             "cocoapods"
-            "act"
-            "atuin"
-            "carapace"
             "chezmoi"
             "tree-sitter"
             "openvpn"
-            "worktrunk"
             "kanata"
-            "rtk"
             "fish"
-            "azure-cli"
-            "kubectl"
             "appium"
-            "git-delta"
-            "colima"
             "docker"
             "docker-compose"
             "docker-buildx"
+            "starship"
+            "neovim"
+            "zoxide"
           ];
 
-         masApps = {
-            # Xcode = 497799835;
-            # Transporter = 1450874784;
-            # Hotspot-Shield = 771076721;
-          };
           onActivation = {
             autoUpdate = true;
             upgrade = true;
-            cleanup = "zap";
+            cleanup = "none";
+            extraFlags = [ "--jobs=1" ];
           };
         };
 
         nix.settings.experimental-features = "nix-command flakes";
         system.configurationRevision = self.rev or self.dirtyRev or null;
         system.stateVersion = 6;
-        nixpkgs.hostPlatform = "aarch64-darwin";
+        nixpkgs.hostPlatform = system;
       };
     in
     {
+      apps.${system}.darwin-rebuild = {
+        type = "app";
+        program = "${nix-darwin.packages.${system}.darwin-rebuild}/bin/darwin-rebuild";
+      };
+
       darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
@@ -230,10 +240,10 @@
           {
             nix-homebrew = {
               enable = true;
-              enableRosetta = true;
+              enableRosetta = system == "aarch64-darwin";
               package = inputs.brew-src // {
-                name = "brew-5.1.10";
-                version = "5.1.10";
+                name = "brew-${brewVersion}";
+                version = brewVersion;
               };
               user = username;
               autoMigrate = true;

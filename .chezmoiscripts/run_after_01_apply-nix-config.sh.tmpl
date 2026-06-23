@@ -1,3 +1,4 @@
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 # Habilitar modo estricto: detiene el script si hay errores o variables no definidas
 set -euo pipefail
@@ -10,7 +11,7 @@ if [ -z "$REAL_HOME" ]; then
     REAL_HOME=$(dscl . -read /Users/"$REAL_USER" NFSHomeDirectory | awk '{print $2}')
 fi
 NIX_CONF_DIR="$REAL_HOME/.config/nix"
-HOSTNAME=$(scutil --get LocalHostName)
+HOSTNAME={{ .chezmoi.hostname | quote }}
 STATE_HOME="${XDG_STATE_HOME:-$REAL_HOME/.local/state}"
 CHEZMOI_STATE_DIR="$STATE_HOME/chezmoi"
 NIX_STATE_FILE="$CHEZMOI_STATE_DIR/nix-apply.sha256"
@@ -42,22 +43,33 @@ trap cleanup EXIT
 compute_file_sha256() {
     local target_file="$1"
 
-    /sbin/sha256sum "$target_file" | awk '{print $1}'
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$target_file" | awk '{print $1}'
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$target_file" | awk '{print $1}'
+    else
+        openssl dgst -sha256 -r "$target_file" | awk '{print $1}'
+    fi
 }
 
 write_current_nix_fingerprint() {
     local output_file="$1"
     local script_hash=""
     local flake_hash="missing"
+    local flake_lock_hash="missing"
 
     script_hash=$(compute_file_sha256 "$0")
     if [ -f "$NIX_CONF_DIR/flake.nix" ]; then
         flake_hash=$(compute_file_sha256 "$NIX_CONF_DIR/flake.nix")
     fi
+    if [ -f "$NIX_CONF_DIR/flake.lock" ]; then
+        flake_lock_hash=$(compute_file_sha256 "$NIX_CONF_DIR/flake.lock")
+    fi
 
     {
         printf "script=%s\n" "$script_hash"
         printf "flake=%s\n" "$flake_hash"
+        printf "flake_lock=%s\n" "$flake_lock_hash"
     } >"$output_file"
 }
 
@@ -385,14 +397,14 @@ nix_healthcheck() {
 
     sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_FILE="$SSL_CERT_FILE" \
         "$NIX_BIN" --extra-experimental-features 'nix-command flakes' \
-        derivation show github:NixOS/nixpkgs/nixpkgs-unstable#hello \
+        derivation show --impure --expr 'derivation { name = "chezmoi-healthcheck"; system = builtins.currentSystem; builder = "/bin/sh"; args = [ "-c" "echo ok > $out" ]; }' \
         >"$healthcheck_log" 2>&1 || healthcheck_status=$?
 
     if [ "$healthcheck_status" -eq 0 ]; then
         return 0
     fi
 
-    if grep -q '"derivations"' "$healthcheck_log" && grep -q '"hello-' "$healthcheck_log"; then
+    if grep -q '"derivations"' "$healthcheck_log" && grep -q 'chezmoi-healthcheck' "$healthcheck_log"; then
         return 0
     fi
 
@@ -429,11 +441,11 @@ preflight_nix_installation() {
         printf "%b\n" "${BLUE}Detectado Nix roto: $match_line${NC}"
         rm -f "$healthcheck_log"
         reinstall_broken_nix
-    elif grep -q '"derivations"' "$healthcheck_log" && grep -q '"hello-' "$healthcheck_log"; then
+    elif grep -q '"derivations"' "$healthcheck_log" && grep -q 'chezmoi-healthcheck' "$healthcheck_log"; then
         rm -f "$healthcheck_log"
         return 0
     else
-        printf "%b\n" "${RED}✗ La instalación base de Nix no pudo evaluar un derivation mínimo.${NC}"
+        printf "%b\n" "${RED}✗ La instalación base de Nix no pudo evaluar un derivation local mínimo.${NC}"
         cat "$healthcheck_log"
         rm -f "$healthcheck_log"
         exit 1
@@ -497,20 +509,17 @@ if [ ! -d "$NIX_CONF_DIR" ]; then
 fi
 
 if [ ! -f "$NIX_CONF_DIR/flake.nix" ]; then
-    cd "$NIX_CONF_DIR"
-    sudo -u "$REAL_USER" env NIX_SSL_CERT_FILE="$NIX_SSL_CERT_FILE" SSL_CERT_FILE="$SSL_CERT_FILE" \
-        "$NIX_BIN" flake init -t github:nix-darwin/nix-darwin
-    # Uso de '|' como delimitador seguro en sed para evitar conflictos con '/'
-    sudo -u "$REAL_USER" sed -i '' "s|simple|$HOSTNAME|g" flake.nix
+    printf "%b\n" "${RED}✗ No se encontró $NIX_CONF_DIR/flake.nix.${NC}"
+    printf "%b\n" "${RED}  Este repo debe generar ese archivo antes de aplicar nix-darwin.${NC}"
+    exit 1
 fi
 
 # 8. Aplicar la configuración aislando el entorno de ejecución
 if ! command -v darwin-rebuild >/dev/null 2>&1; then
     printf "%b\n" "${BLUE}→ Aplicando nix-darwin por primera vez${NC}"
     
-    # Usamos sudo -i con sh -c para garantizar que root cargue el daemon de Nix
-    # antes de ejecutar el comando, previniendo errores de "command not found"
-    sudo -i sh -c "export NIX_SSL_CERT_FILE='$NIX_SSL_CERT_FILE' SSL_CERT_FILE='$SSL_CERT_FILE'; . $NIX_DAEMON_PROFILE && nix run github:nix-darwin/nix-darwin/master#darwin-rebuild --extra-experimental-features 'nix-command flakes' -- switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
+    # Usamos el flake local para respetar flake.lock y evitar referencias remotas sin pin.
+    sudo -i sh -c "export NIX_SSL_CERT_FILE='$NIX_SSL_CERT_FILE' SSL_CERT_FILE='$SSL_CERT_FILE'; . $NIX_DAEMON_PROFILE && nix --extra-experimental-features 'nix-command flakes' run '$NIX_CONF_DIR#darwin-rebuild' -- switch --flake '$NIX_CONF_DIR#$HOSTNAME'"
 else
     printf "%b\n" "${BLUE}→ Aplicando nix-darwin${NC}"
     
@@ -521,3 +530,4 @@ fi
 save_nix_fingerprint_state
 
 printf "%b\n" "${GREEN}✓ Nix / nix-darwin listo${NC}"
+{{ end -}}

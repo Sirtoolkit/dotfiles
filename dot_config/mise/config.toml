@@ -1,15 +1,26 @@
 [tools]
 node = "lts"
-terraform = "latest"
+uv = "latest"
 rust = "latest"
 python = "latest"
 java = "17"
 pnpm = "latest"
 go = "latest"
-bun = "latest"
 firebase = "latest"
 fluttergen = "latest"
+worktrunk = "latest"
+rtk = "latest"
+github-cli = "latest"
+colima = "latest"
+atuin = "latest"
+infisical = "latest"
+carapace = "latest"
+kubectl = "latest"
+azure = "latest"
+usage = "latest"
 pi = "latest"
+claude = "latest"
+codex = "latest"
 
 [tasks."wt:new"]
 quiet = true
@@ -289,7 +300,9 @@ czp = 'chezmoi apply'
 czpf = 'CHEZMOI_FORCE_NIX=1 chezmoi apply'
 czf = 'chezmoi apply --include=files'
 cza = 'chezmoi add'
-czinit = 'chezmoi init --apply Sirtoolkit' # máquina nueva: clona dotfiles + aplica (pregunta datos de trabajo)
+cznixup = 'cd ~/.config/nix && nix flake update && chezmoi add ~/.config/nix/flake.lock'
+czbrewup = 'cd ~/.config/nix && nix flake update brew-src && chezmoi add ~/.config/nix/flake.lock'
+czinit = 'chezmoi init --apply Sirtoolkit'                                                         # máquina nueva: clona dotfiles + aplica (pregunta datos de trabajo)
 co = 'claude'
 
 qc-lily = 'qmk compile -kb lily58 -km my_lily58'

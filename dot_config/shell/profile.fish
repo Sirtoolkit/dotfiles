@@ -11,17 +11,21 @@ if command -v mise >/dev/null
     set -gx MISE_FISH_AUTO_ACTIVATE 0
     set -gx PATH "$HOME/.local/share/mise/shims" $PATH
 
-    # In interactive shells, activate mise immediately so shell hooks work
+    # Use shims only. Full activation installs command-not-found hooks that can
+    # resolve "latest" tool versions over the network while rendering prompts.
     if status is-interactive
-        command mise activate fish | source
+        command mise activate fish --shims | source
     else
-        # Lazy load mise on first use for non-interactive shells
+        # Keep non-interactive shells cheap and deterministic.
         function mise --wraps mise
             functions -e mise
-            command mise activate fish | source
             command mise $argv
         end
     end
+end
+
+if status is-interactive; and test -f "$config_home/shell/aliases.fish"
+    source "$config_home/shell/aliases.fish"
 end
 
 # Flutter root (lazy function)

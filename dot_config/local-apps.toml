@@ -14,8 +14,8 @@ command = "cauce"
 binary = "target/release/cauce"
 build = ["cargo", "build", "--release", "--locked"]
 
-[apps.vsql]
-path = "~/workspace/apps/vsql"
-command = "vsql"
-binary = ".build/vsql"
+[apps.csql]
+path = "~/workspace/apps/csql"
+command = "csql"
+binary = ".build/csql"
 build = ["make", "build"]

@@ -1,3 +1,4 @@
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 set -e
 
@@ -35,7 +36,7 @@ fi
 mkdir -p "$PNPM_HOME/bin"
 
 # Instalar paquetes globales
-packages="nx:nx opencommit expo:expo @nestjs/cli:nest @mixedbread/mgrep:mgrep"
+packages="nx:nx opencommit expo:expo pake-cli @nestjs/cli:nest @mixedbread/mgrep:mgrep"
 
 for package_info in $packages; do
   IFS=':' read -r package cmd <<< "$package_info"
@@ -49,3 +50,4 @@ for package_info in $packages; do
 done
 
 printf "%b\n" "${GREEN}✓ PNPM global listo${NC}"
+{{ end -}}
