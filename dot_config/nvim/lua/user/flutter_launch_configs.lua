@@ -41,7 +41,9 @@ local function strip_jsonc_comments(input)
       while i <= len do
         char = input:sub(i, i)
         next_char = input:sub(i + 1, i + 1)
-        if char == "\n" then table.insert(output, "\n") end
+        if char == "\n" then
+          table.insert(output, "\n")
+        end
         if char == "*" and next_char == "/" then
           i = i + 2
           break
@@ -108,27 +110,39 @@ end
 local function decode_jsonc(input)
   local json = strip_trailing_commas(strip_jsonc_comments(input))
   local ok, decoded = pcall(vim.json.decode, json, { luanil = { object = true, array = true } })
-  if not ok then return nil, decoded end
+  if not ok then
+    return nil, decoded
+  end
   return decoded
 end
 
 local function find_launch_json(cwd)
   local dir = vim.fn.fnamemodify(cwd or vim.fn.getcwd(), ":p")
-  if dir:sub(-1) == "/" then dir = dir:sub(1, -2) end
+  if dir:sub(-1) == "/" then
+    dir = dir:sub(1, -2)
+  end
 
   while dir and dir ~= "" do
     local candidate = dir .. "/.vscode/launch.json"
-    if vim.fn.filereadable(candidate) == 1 then return candidate end
+    if vim.fn.filereadable(candidate) == 1 then
+      return candidate
+    end
 
     local parent = vim.fn.fnamemodify(dir, ":h")
-    if parent == dir then break end
+    if parent == dir then
+      break
+    end
     dir = parent
   end
 end
 
 local function normalize_args(args)
-  if args == nil then return nil end
-  if type(args) == "table" then return args end
+  if args == nil then
+    return nil
+  end
+  if type(args) == "table" then
+    return args
+  end
   return { tostring(args) }
 end
 
@@ -173,7 +187,9 @@ end
 
 function M.vscode_configurations(paths, opts)
   local launch_path = find_launch_json(opts and opts.cwd)
-  if not launch_path then return {} end
+  if not launch_path then
+    return {}
+  end
 
   local content = table.concat(vim.fn.readfile(launch_path), "\n")
   local decoded, err = decode_jsonc(content)
@@ -183,7 +199,9 @@ function M.vscode_configurations(paths, opts)
   end
 
   local configurations = decoded.configurations
-  if type(configurations) ~= "table" then return {} end
+  if type(configurations) ~= "table" then
+    return {}
+  end
 
   local dap_configurations = {}
   for _, config in ipairs(configurations) do
@@ -197,7 +215,9 @@ end
 
 function M.configurations(paths, opts)
   local vscode_configurations = M.vscode_configurations(paths, opts)
-  if #vscode_configurations > 0 then return vscode_configurations end
+  if #vscode_configurations > 0 then
+    return vscode_configurations
+  end
   return M.default_configurations(paths)
 end
 

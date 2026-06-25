@@ -224,7 +224,7 @@ return {
         follow_current_file = { enabled = true },
         filtered_items = { hide_gitignored = git_available },
         hijack_netrw_behavior = "disabled",
-        use_libuv_file_watcher = vim.fn.has("win32") ~= 1,
+        use_libuv_file_watcher = false,
       },
       event_handlers = {
         {

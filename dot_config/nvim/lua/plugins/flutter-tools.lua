@@ -1,6 +1,17 @@
 return {
   "akinsho/flutter-tools.nvim",
-  lazy = false,
+  ft = { "dart" },
+  cmd = {
+    "FlutterRun",
+    "FlutterDebug",
+    "FlutterReload",
+    "FlutterRestart",
+    "FlutterQuit",
+    "FlutterPubGet",
+    "FlutterOpenDevTools",
+    "FlutterDevices",
+    "FlutterEmulators",
+  },
   dependencies = {
     "nvim-lua/plenary.nvim",
     "stevearc/dressing.nvim",
@@ -17,7 +28,7 @@ return {
     },
 
     dev_tools = {
-      autostart = true,
+      autostart = false,
       auto_open_browser = false,
     },
 
@@ -44,6 +55,10 @@ return {
           analysisExcludedFolders = {
             vim.fn.expand("$HOME/.pub-cache"),
             vim.fn.expand("/opt/flutter/"),
+            vim.fn.getcwd() .. "/.dart_tool",
+            vim.fn.getcwd() .. "/build",
+            vim.fn.getcwd() .. "/ios/Pods",
+            vim.fn.getcwd() .. "/android/.gradle",
           },
         },
       },
@@ -51,11 +66,6 @@ return {
   },
 
   config = function(_, opts)
-    local flutter_tools = require("flutter-tools")
-    flutter_tools.setup(opts)
-
-    -- flutter-tools registers commands lazily after entering Dart/pubspec buffers.
-    -- Register them at startup so global Flutter keymaps work from dashboards too.
-    flutter_tools.setup_project({})
+    require("flutter-tools").setup(opts)
   end,
 }

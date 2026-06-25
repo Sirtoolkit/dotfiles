@@ -19,6 +19,7 @@ return {
     on_create = function(_)
       vim.opt_local.foldcolumn = "0"
       vim.opt_local.signcolumn = "no"
+      vim.opt_local.scrollback = 1000
     end,
   },
 }

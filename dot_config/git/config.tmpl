@@ -51,6 +51,6 @@
 [advice]
 	diverging = false
 [credential "https://github.com"]
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !{{ .chezmoi.homeDir }}/.local/share/mise/shims/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !{{ .chezmoi.homeDir }}/.local/share/mise/shims/gh auth git-credential

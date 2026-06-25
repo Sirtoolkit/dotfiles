@@ -3,5 +3,5 @@
 -- Add any additional options here
 vim.g.lazyvim_php_lsp = "intelephense"
 vim.g.lazyvim_check_order = false
-vim.g.lazyvim_eslint_auto_format = true
+vim.g.lazyvim_eslint_auto_format = false
 vim.g.lazyvim_prettier_needs_config = true
