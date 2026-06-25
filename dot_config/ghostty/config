@@ -16,5 +16,12 @@ window-save-state = always
 macos-titlebar-style=transparent
 window-colorspace = "display-p3"
 
+# VS Code-like IntelliSense shortcuts for terminal Neovim
+# ctrl+space: Trigger Suggest -> sends Ctrl-x Ctrl-o to Neovim/blink.cmp
+keybind = ctrl+space=text:\x18\x0f
+# cmd+shift+space / ctrl+shift+space: Trigger Parameter Hints -> sends Ctrl-k
+keybind = cmd+shift+space=text:\x0b
+keybind = ctrl+shift+space=text:\x0b
+
 # other
 copy-on-select = clipboard
