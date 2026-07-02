@@ -18,17 +18,24 @@ carapace = "latest"
 kubectl = "latest"
 azure = "latest"
 usage = "latest"
-pi = "latest"
-claude = "latest"
-codex = "latest"
+'github:can1357/oh-my-pi' = 'latest'
+# pi = "latest"
+# claude = "latest"
+# codex = "latest"
 
 [tasks."wt:new"]
 quiet = true
-run = "wt switch --create feat/{{arg(i=0)}} --base=@"
+usage = '''
+arg "<name>" help="Feature branch name suffix"
+'''
+run = 'wt switch --create "feat/${usage_name?}" --base=@'
 
 [tasks."wt:remove"]
 quiet = true
-run = "wt remove -D {{arg(i=0)}}"
+usage = '''
+arg "<branch>" help="Branch/worktree to remove"
+'''
+run = 'wt remove -D "${usage_branch?}"'
 
 [tasks.olc]
 description = "Ollama Cloud - Seleccionar y guardar modelo desde el catálogo"
