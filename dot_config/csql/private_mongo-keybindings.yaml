@@ -1,7 +1,6 @@
 global:
     closeApp:
         keys: [Ctrl+c]
-        runes: [q]
         description: Close application
     toggleFullScreenHelp:
         runes: ['?']

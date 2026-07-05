@@ -2,6 +2,12 @@
 # Run `local-apps sync` after pulling/changing a repo; build directories can be deleted after sync.
 bin_dir = "~/.local/bin"
 
+[apps.ceryon]
+path = "~/workspace/apps/ceryon"
+type = "app"
+bundle = "src-tauri/target/release/bundle/macos/Ceryon.app"
+build = ["pnpm", "tauri", "build", "--bundles", "app"]
+
 [apps.cursive]
 path = "~/workspace/apps/cursive"
 command = "cursive"

@@ -1,0 +1,23 @@
+version: 9d97187
+log:
+    path: /tmp/csql.log
+    level: info
+    prettyPrint: true
+editor:
+    command: "nvim"
+    env: EDITOR
+    enabled: true
+ui:
+    schemaPanelWidth: 30
+    vimMode: true
+mcp:
+    enabled: true
+    port: 0
+    allowRead: false
+    allowWrite: false
+security:
+    method: keyring
+showConnectionPage: true
+styles:
+    nerdFont: true
+    currentStyle: gruvbox.yaml

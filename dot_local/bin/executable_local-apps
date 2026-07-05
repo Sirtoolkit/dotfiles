@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -74,20 +75,43 @@ def build_command(name: str, app: dict[str, Any]) -> list[str]:
     return build
 
 
-def app_paths(config: dict[str, Any], name: str) -> tuple[dict[str, Any], Path, Path, Path]:
+def app_type(app: dict[str, Any]) -> str:
+    value = app.get("type", "command")
+    if not isinstance(value, str):
+        fail(f"app type must be a string, got: {value!r}")
+    if value not in ("command", "app"):
+        fail(f"app type must be 'command' or 'app', got: {value!r}")
+    return value
+
+
+def app_paths(
+    config: dict[str, Any], name: str
+) -> tuple[dict[str, Any], Path, Path, Path, str]:
     app = config["apps"][name]
     if not isinstance(app, dict):
         fail(f"apps.{name} must be a table")
 
+    kind = app_type(app)
+    repo = expand_path(require_string(app, name, "path"))
+
+    if kind == "app":
+        command = app.get("command", name)
+        if not isinstance(command, str):
+            fail(f"apps.{name}.command must be a string")
+        if "/" in command or command in ("", ".", ".."):
+            fail(f"apps.{name}.command must be a command name, got: {command!r}")
+        source = expand_path(require_string(app, name, "bundle"), repo)
+        install_dir = expand_path(str(app.get("install_dir", "/Applications")))
+        destination = install_dir / source.name
+        return app, repo, source, destination, kind
+
     command = require_string(app, name, "command")
     if "/" in command or command in ("", ".", ".."):
         fail(f"apps.{name}.command must be a command name, got: {command!r}")
-
-    repo = expand_path(require_string(app, name, "path"))
     source = expand_path(require_string(app, name, "binary"), repo)
     bin_dir = expand_path(str(config.get("bin_dir", "~/.local/bin")))
     destination = bin_dir / command
-    return app, repo, source, destination
+    return app, repo, source, destination, kind
 
 
 def git_head(repo: Path) -> str:
@@ -105,14 +129,21 @@ def git_head(repo: Path) -> str:
 
 
 def fingerprint(name: str, app: dict[str, Any], repo: Path) -> dict[str, Any]:
-    return {
+    kind = app_type(app)
+    fp: dict[str, Any] = {
         "name": name,
         "path": str(repo),
-        "command": require_string(app, name, "command"),
-        "binary": require_string(app, name, "binary"),
+        "type": kind,
         "build": build_command(name, app),
         "git_head": git_head(repo),
     }
+    if kind == "app":
+        fp["bundle"] = require_string(app, name, "bundle")
+        fp["install_dir"] = str(app.get("install_dir", "/Applications"))
+    else:
+        fp["command"] = require_string(app, name, "command")
+        fp["binary"] = require_string(app, name, "binary")
+    return fp
 
 
 def file_sha256(path: Path) -> str:
@@ -142,11 +173,12 @@ def read_state(name: str) -> dict[str, Any] | None:
 
 def write_state(name: str, installed: Path, app_fingerprint: dict[str, Any]) -> None:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
-    data = {
+    data: dict[str, Any] = {
         "fingerprint": app_fingerprint,
         "installed": str(installed),
-        "installed_sha256": file_sha256(installed),
     }
+    if installed.is_file():
+        data["installed_sha256"] = file_sha256(installed)
     temp = state_path(name).with_suffix(f".tmp-{os.getpid()}")
     with temp.open("w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2, sort_keys=True)
@@ -159,7 +191,12 @@ def build_app(name: str, app: dict[str, Any], repo: Path) -> None:
     if not build:
         return
     print(f"==> building {name}: {' '.join(build)}")
-    subprocess.run(build, cwd=repo, check=True)
+    env = os.environ.copy()
+    # Tauri's CLI treats --ci as a boolean flag; a CI=1 env var gets passed as
+    # --ci=1 and rejected by newer clap parsers. Drop it for tauri builds.
+    if "tauri" in build and env.get("CI") == "1":
+        env.pop("CI", None)
+    subprocess.run(build, cwd=repo, check=True, env=env)
 
 
 def install_app(name: str, app: dict[str, Any], repo: Path, source: Path, destination: Path) -> None:
@@ -185,12 +222,42 @@ def install_app(name: str, app: dict[str, Any], repo: Path, source: Path, destin
     print(f"==> installed {destination.name} from {source}")
 
 
-def installed_current(name: str, app_fp: dict[str, Any], source: Path, destination: Path) -> bool:
-    if destination.is_symlink() or not destination.is_file():
-        return False
+def path_mtime_ns(path: Path) -> int:
+    """Newest mtime under a path; files report their own mtime."""
+    if path.is_file():
+        return path.stat().st_mtime_ns
+    if not path.is_dir():
+        return 0
+    newest = 0
+    for root, dirs, files in os.walk(path):
+        for entry in dirs + files:
+            try:
+                newest = max(newest, (Path(root) / entry).stat().st_mtime_ns)
+            except OSError:
+                pass
+    return newest
+
+
+def installed_current(
+    name: str,
+    app_fp: dict[str, Any],
+    source: Path,
+    destination: Path,
+    kind: str = "command",
+) -> bool:
+    if kind == "app":
+        if destination.is_symlink() or not destination.is_dir():
+            return False
+    else:
+        if destination.is_symlink() or not destination.is_file():
+            return False
     state = read_state(name)
     if state is None or state.get("fingerprint") != app_fp:
         return False
+    if kind == "app":
+        if path_mtime_ns(source) > path_mtime_ns(destination):
+            return False
+        return True
     installed_sha = state.get("installed_sha256")
     if isinstance(installed_sha, str):
         try:
@@ -203,48 +270,101 @@ def installed_current(name: str, app_fp: dict[str, Any], source: Path, destinati
     return True
 
 
+def install_app_bundle(
+    name: str, app: dict[str, Any], repo: Path, source: Path, destination: Path
+) -> None:
+    if not repo.is_dir():
+        fail(f"apps.{name}.path is not a directory: {repo}")
+
+    source = source.resolve()
+    if not source.is_dir():
+        fail(f"apps.{name}.bundle not found after build: {source}")
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        if destination.is_symlink() or destination.is_file():
+            destination.unlink()
+        elif destination.is_dir():
+            shutil.rmtree(destination)
+        else:
+            fail(f"refusing to replace unknown entry type: {destination}")
+
+    try:
+        subprocess.run(["ditto", str(source), str(destination)], check=True)
+    except subprocess.CalledProcessError:
+        # /Applications requires admin privileges on most Macs; ask once.
+        subprocess.run(
+            [
+                "osascript",
+                "-e",
+                "do shell script "
+                f'"ditto {shlex.quote(str(source))} {shlex.quote(str(destination))}" '
+                "with administrator privileges",
+            ],
+            check=True,
+        )
+    write_state(name, destination, fingerprint(name, app, repo))
+    print(f"==> installed {destination.name} from {source}")
+
+
 def sync(config: dict[str, Any], selected: list[str], no_build: bool) -> None:
     for name in app_names(config, selected):
-        app, repo, source, destination = app_paths(config, name)
+        app, repo, source, destination, kind = app_paths(config, name)
         if not no_build:
             build_app(name, app, repo)
-        install_app(name, app, repo, source, destination)
+        if kind == "app":
+            install_app_bundle(name, app, repo, source, destination)
+        else:
+            install_app(name, app, repo, source, destination)
 
 
 def ensure(config: dict[str, Any], selected: list[str], skip_missing: bool) -> None:
     for name in app_names(config, selected):
-        app, repo, source, destination = app_paths(config, name)
+        app, repo, source, destination, kind = app_paths(config, name)
         if skip_missing and not repo.is_dir():
             warn(f"skipping {name}; repo not found: {repo}")
             continue
         app_fp = fingerprint(name, app, repo)
-        if installed_current(name, app_fp, source, destination):
+        if installed_current(name, app_fp, source, destination, kind=kind):
             print(f"==> ok {destination.name}")
             continue
         build_app(name, app, repo)
-        install_app(name, app, repo, source, destination)
+        if kind == "app":
+            install_app_bundle(name, app, repo, source, destination)
+        else:
+            install_app(name, app, repo, source, destination)
 
 
 def list_apps(config: dict[str, Any], selected: list[str]) -> None:
     for name in app_names(config, selected):
-        app, repo, source, destination = app_paths(config, name)
-        installed = destination.is_file() and not destination.is_symlink()
-        state = read_state(name)
-        managed = bool(state and state.get("installed") == str(destination))
-        print(
-            f"{name}: command={destination} source={source} "
-            f"installed={str(installed).lower()} managed={str(managed).lower()}"
-        )
+        app, repo, source, destination, kind = app_paths(config, name)
+        if kind == "app":
+            installed = destination.is_dir() and not destination.is_symlink()
+            print(
+                f"{name}: app={destination} source={source} "
+                f"installed={str(installed).lower()}"
+            )
+        else:
+            installed = destination.is_file() and not destination.is_symlink()
+            state = read_state(name)
+            managed = bool(state and state.get("installed") == str(destination))
+            print(
+                f"{name}: command={destination} source={source} "
+                f"installed={str(installed).lower()} managed={str(managed).lower()}"
+            )
 
 
 def unlink(config: dict[str, Any], selected: list[str]) -> None:
     for name in app_names(config, selected):
-        _, _, _, destination = app_paths(config, name)
+        _, _, _, destination, kind = app_paths(config, name)
         if destination.is_symlink() or destination.is_file():
             destination.unlink()
             print(f"==> removed {destination}")
+        elif destination.is_dir():
+            shutil.rmtree(destination)
+            print(f"==> removed {destination}")
         elif destination.exists():
-            fail(f"refusing to remove directory command: {destination}")
+            fail(f"refusing to remove unknown entry type: {destination}")
         state = state_path(name)
         if state.exists():
             state.unlink()

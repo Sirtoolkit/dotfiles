@@ -1,0 +1,13 @@
+# Colima
+.colima
+.config/colima
+.lima/colima
+
+# OrbStack
+.orbstack
+Library/Application Support/dev.orbstack.OrbStack
+Library/Application Support/OrbStack
+Library/Caches/dev.orbstack.OrbStack
+Library/Logs/OrbStack
+Library/Preferences/dev.orbstack.OrbStack.plist
+Library/LaunchAgents/dev.orbstack.OrbStack.Helper.plist

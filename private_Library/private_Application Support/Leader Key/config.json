@@ -70,11 +70,6 @@
       "key": "T",
       "type": "application",
       "value": "/Applications/Tachimanga.app"
-    },
-    {
-      "key": "i",
-      "type": "application",
-      "value": "/Applications/Claude.app"
     }
   ],
   "type": "group"

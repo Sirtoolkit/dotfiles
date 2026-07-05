@@ -1,0 +1,4 @@
+skip-commit-generation-prompt = true
+
+[post-start]
+copy_included_ignored = "wt step copy-ignored --require-include"

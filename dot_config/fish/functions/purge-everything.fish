@@ -80,8 +80,6 @@ function purge-everything
         ~/.mason \
         ~/.kube \
         ~/.docker \
-        ~/.colima \
-        ~/.lima \
         ~/.bundle \
         ~/.gem \
         ~/.nix-profile \

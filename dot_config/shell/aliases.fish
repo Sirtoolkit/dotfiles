@@ -192,7 +192,6 @@ alias c='clear'
 alias t='tmux'
 alias h='cauce'
 alias e='exit'
-alias olc='mise run olc'
 
 alias czp='chezmoi apply'
 function czpf
@@ -207,7 +206,6 @@ function czbrewup
     cd ~/.config/nix; and nix flake update brew-src; and chezmoi add ~/.config/nix/flake.lock
 end
 alias czinit='chezmoi init --apply Sirtoolkit'
-alias co='claude'
 
 alias qc-lily='qmk compile -kb lily58 -km my_lily58'
 alias qf-lily='qmk flash -kb lily58 -km my_lily58'

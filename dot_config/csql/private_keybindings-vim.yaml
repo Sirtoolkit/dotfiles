@@ -178,6 +178,12 @@ data:
     copyRow:
         runes: [C]
         description: Copy row
+    copyRowsJSON:
+        runes: ["y"]
+        description: Copy rows JSON
+    copyRowsCSV:
+        runes: ["Y"]
+        description: Copy rows CSV
     toggleOrderBar:
         runes: [s]
         description: Order bar
@@ -233,6 +239,18 @@ peeker:
     toggleFullScreen:
         runes: [f]
         description: Full screen
+    toggleValueMode:
+        runes: [p]
+        description: Toggle pretty/raw
+    toggleValueWrap:
+        runes: [w]
+        description: Toggle wrap
+    copyCurrentValue:
+        runes: [c]
+        description: Copy current value
+    copyRawValue:
+        runes: [C]
+        description: Copy raw value
 sqlQueryEditor:
     fullscreen:
         keys: [Alt+z]
