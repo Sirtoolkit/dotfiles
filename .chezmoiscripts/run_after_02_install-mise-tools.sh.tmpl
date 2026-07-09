@@ -2,8 +2,7 @@
 
 {{ if eq .chezmoi.os "darwin" -}}
 
-# Rerun this script whenever mise's declarative config changes.
-# chezmoi:onchange-mise-config {{ include "dot_config/mise/config.toml" | sha256sum }}
+# Ejecutar en cada apply para que las herramientas "latest" se actualicen con mise up.
 
 # Colores para output
 if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
@@ -34,13 +33,9 @@ if ! command -v mise >/dev/null 2>&1; then
   exit 0
 fi
 
-MISE_LOG=""
 MISE_MISSING=""
-MISE_PRUNE_LOG=""
 cleanup_mise_tmp() {
-    [ -n "$MISE_LOG" ] && rm -f "$MISE_LOG"
     [ -n "$MISE_MISSING" ] && rm -f "$MISE_MISSING"
-    [ -n "$MISE_PRUNE_LOG" ] && rm -f "$MISE_PRUNE_LOG"
 }
 trap cleanup_mise_tmp EXIT
 
@@ -57,7 +52,6 @@ if [ -f "$CONFIG_FILE" ]; then
         exit 0
     fi
 
-    MISE_LOG="$(mktemp)"
     MISE_MISSING="$(mktemp)"
 
     if mise ls --global --missing --no-header >"$MISE_MISSING" 2>/dev/null && [ ! -s "$MISE_MISSING" ]; then
@@ -72,26 +66,20 @@ if [ -f "$CONFIG_FILE" ]; then
         fi
     fi
 
-    if mise "$MISE_COMMAND" >"$MISE_LOG" 2>&1; then
+    if mise "$MISE_COMMAND"; then
         printf "%b\n" "${GREEN}✓ Herramientas de mise al día${NC}"
     else
-        printf "%b\n" "${YELLOW}⚠ mise $MISE_COMMAND terminó con advertencias; últimas líneas:${NC}"
-        tail -10 "$MISE_LOG"
+        printf "%b\n" "${YELLOW}⚠ mise $MISE_COMMAND terminó con advertencias${NC}"
     fi
-    rm -f "$MISE_LOG" "$MISE_MISSING"
-    MISE_LOG=""
+    rm -f "$MISE_MISSING"
     MISE_MISSING=""
 
     printf "%b\n" "${BLUE}→ Eliminando herramientas de mise no declaradas${NC}"
-    MISE_PRUNE_LOG="$(mktemp)"
-    if mise prune --tools --yes >"$MISE_PRUNE_LOG" 2>&1; then
+    if mise prune --tools --yes; then
         printf "%b\n" "${GREEN}✓ Herramientas no declaradas podadas${NC}"
     else
-        printf "%b\n" "${YELLOW}⚠ mise prune terminó con advertencias; últimas líneas:${NC}"
-        tail -10 "$MISE_PRUNE_LOG"
+        printf "%b\n" "${YELLOW}⚠ mise prune terminó con advertencias${NC}"
     fi
-    rm -f "$MISE_PRUNE_LOG"
-    MISE_PRUNE_LOG=""
     
     # Re-generar shims
     mise reshim 2>/dev/null || true
