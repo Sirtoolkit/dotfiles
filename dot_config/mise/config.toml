@@ -12,7 +12,6 @@ worktrunk = "latest"
 rtk = "latest"
 github-cli = "latest"
 atuin = "latest"
-infisical = "latest"
 carapace = "latest"
 kubectl = "latest"
 azure = "latest"
@@ -70,4 +69,3 @@ experimental = true
 disable_hints = ["false"]
 python.uv_venv_auto = true
 idiomatic_version_file_enable_tools = []
-
