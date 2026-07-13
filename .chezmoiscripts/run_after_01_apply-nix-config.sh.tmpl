@@ -3,12 +3,20 @@
 # Habilitar modo estricto: detiene el script si hay errores o variables no definidas
 set -euo pipefail
 
-# 1. Identificar datos del usuario real de forma 100% segura (sin eval)
-REAL_USER=$(id -un)
-REAL_HOME="${HOME:-}"
+# 1. Datos del usuario real: chezmoi los resuelve al renderizar la plantilla,
+#    evitando que un `id`/`dscl` inestable (p. ej. "id: cannot find name for
+#    user ID 501") aborte el script bajo `set -euo pipefail`.
+REAL_USER={{ .chezmoi.username | quote }}
+REAL_HOME={{ .chezmoi.homeDir | quote }}
+# Fallbacks defensivos por si la plantilla llegara vacía.
+if [ -z "$REAL_USER" ]; then
+    REAL_USER=$(id -un 2>/dev/null || echo "${USER:-${LOGNAME:-}}")
+fi
 if [ -z "$REAL_HOME" ]; then
-    # Fallback para entornos donde HOME no esté definido.
-    REAL_HOME=$(dscl . -read /Users/"$REAL_USER" NFSHomeDirectory | awk '{print $2}')
+    REAL_HOME="${HOME:-}"
+    if [ -z "$REAL_HOME" ] && [ -n "$REAL_USER" ]; then
+        REAL_HOME=$(dscl . -read /Users/"$REAL_USER" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+    fi
 fi
 NIX_CONF_DIR="$REAL_HOME/.config/nix"
 HOSTNAME={{ .chezmoi.hostname | quote }}

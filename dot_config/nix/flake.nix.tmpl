@@ -168,6 +168,8 @@
             "felixkratz/formulae"
             "go-task/tap"
             "nikitabobko/tap"
+            "y3owk1n/tap"
+            "augani/dory"
           ];
 
           casks = [
@@ -181,12 +183,12 @@
             "bruno"
             "raycast"
             "flutter"
-            "google-drive"
             "redis-insight"
             "lens"
             "brave-browser"
             "keyboardcleantool"
             "microsoft-teams"
+            "claude"
           ];
 
           brews = [
@@ -220,8 +222,8 @@
           onActivation = {
             autoUpdate = true;
             upgrade = true;
-            cleanup = "none";
-            extraFlags = [ "--jobs=1" ];
+            cleanup = "zap";
+            extraFlags = [ "--jobs=1" "--force" ];
           };
         };
 

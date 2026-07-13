@@ -45,23 +45,27 @@ run = """
 """
 
 [tasks.krun]
-description = "Run kanata keyboard remapper"
+description = "Restart kanata daemon"
 quiet = true
 run = """
   if ! pgrep -x "Karabiner-VirtualHIDDevice-Daemon" > /dev/null 2>&1; then
     echo "Error: Karabiner-VirtualHIDDevice-Daemon no está corriendo. Ejecuta 'chezmoi apply' primero."
     exit 1
   fi
-  sudo /usr/local/bin/kanata -c ~/.config/kanata/config.kbd > /dev/null &
-  echo "✓ Kanata iniciado"
+  if launchctl print system/com.local.kanata >/dev/null 2>&1; then
+    sudo /bin/launchctl kickstart -k system/com.local.kanata
+  else
+    sudo /bin/launchctl bootstrap system /Library/LaunchDaemons/com.local.kanata.plist
+  fi
+  echo "✓ Kanata (daemon) reiniciado"
 """
 
 [tasks.kkill]
-description = "Kill kanata process"
+description = "Stop kanata daemon"
 quiet = true
 run = """
-  sudo pkill kanata
-  echo "✓ Kanata detenido"
+  sudo /bin/launchctl bootout system/com.local.kanata
+  echo "✓ Kanata (daemon) detenido"
 """
 
 [settings]

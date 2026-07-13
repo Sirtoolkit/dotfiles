@@ -1,0 +1,132 @@
+#!{{ lookPath "bash" }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:$PATH"
+
+# Colores para output
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    BLUE='\033[0;34m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    RED='\033[0;31m'
+    NC='\033[0m'
+else
+    BLUE=''
+    GREEN=''
+    YELLOW=''
+    RED=''
+    NC=''
+fi
+
+# kanata como LaunchDaemon de root.
+# Motivo: al lanzar kanata desde una terminal (o con sudo), macOS atribuye el
+# permiso de Input Monitoring / Accessibility al proceso "responsable" (la app
+# que lo lanza, p. ej. Ceryon), no a kanata. Lanzándolo con launchd, kanata es
+# su propio proceso responsable y los permisos se le conceden a él directamente
+# y persisten. Ver kanata Discussions #1019 y #1537.
+#
+# El script es idempotente y evita pedir sudo en ejecuciones sin cambios:
+# - el plist es 0644 (world-readable) -> se compara con `cmp` normal;
+# - el estado de carga se consulta con `launchctl print` (no requiere sudo);
+# - el sudoers 0440 se compara contra una marca-hash en el state del usuario;
+# solo se usa sudo cuando algo cambia de verdad.
+CURRENT_USER="$(whoami)"
+KANATA_BIN="/opt/homebrew/bin/kanata"
+KANATA_CFG="{{ .chezmoi.homeDir }}/.config/kanata/config.kbd"
+DAEMON_LABEL="com.local.kanata"
+DAEMON_PLIST="/Library/LaunchDaemons/${DAEMON_LABEL}.plist"
+DAEMON_SUDOERS="/etc/sudoers.d/kanata-daemon-${CURRENT_USER}"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+SUDOERS_STAMP="$STATE_DIR/kanata-daemon-sudoers.sha256"
+
+printf "\n%b\n" "${BLUE}→ kanata (LaunchDaemon)${NC}"
+
+if [ ! -x "$KANATA_BIN" ]; then
+    printf "%b\n" "${YELLOW}⚠ kanata no está en ${KANATA_BIN}; se omite el daemon${NC}"
+    exit 0
+fi
+if [ ! -f "$KANATA_CFG" ]; then
+    printf "%b\n" "${YELLOW}⚠ Config no encontrada en ${KANATA_CFG}; se omite el daemon${NC}"
+    exit 0
+fi
+
+# 1) sudoers para gestionar el daemon sin contraseña (usado por mise krun/kkill).
+#    Se (re)instala solo si su contenido cambió respecto a la marca-hash.
+SUDOERS_TMP="$(mktemp)"
+{
+    printf '%s\n' "${CURRENT_USER} ALL=(ALL) NOPASSWD: /bin/launchctl bootstrap system ${DAEMON_PLIST}"
+    printf '%s\n' "${CURRENT_USER} ALL=(ALL) NOPASSWD: /bin/launchctl bootout system/${DAEMON_LABEL}"
+    printf '%s\n' "${CURRENT_USER} ALL=(ALL) NOPASSWD: /bin/launchctl kickstart -k system/${DAEMON_LABEL}"
+} > "$SUDOERS_TMP"
+desired_sudo_hash="$(shasum -a 256 "$SUDOERS_TMP" | awk '{print $1}')"
+current_sudo_hash="$(cat "$SUDOERS_STAMP" 2>/dev/null || true)"
+if [ ! -f "$DAEMON_SUDOERS" ] || [ "$desired_sudo_hash" != "$current_sudo_hash" ]; then
+    printf "%b\n" "${BLUE}→ Configurando sudoers del daemon de kanata${NC}"
+    if sudo install -m 0440 -o root -g wheel "$SUDOERS_TMP" "$DAEMON_SUDOERS"; then
+        mkdir -p "$STATE_DIR"
+        printf '%s\n' "$desired_sudo_hash" > "$SUDOERS_STAMP"
+        printf "%b\n" "${GREEN}✓ sudoers del daemon listo${NC}"
+    else
+        printf "%b\n" "${RED}✗ No se pudo instalar el sudoers del daemon${NC}"
+    fi
+fi
+rm -f "$SUDOERS_TMP"
+
+# 2) Generar el plist (root:wheel, rutas absolutas sin ~) e instalarlo si cambió.
+DAEMON_TMP="$(mktemp)"
+cat > "$DAEMON_TMP" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>${DAEMON_LABEL}</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>${KANATA_BIN}</string>
+        <string>--cfg</string>
+        <string>${KANATA_CFG}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+    <key>StandardOutPath</key>
+    <string>/var/log/kanata.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/kanata.log</string>
+</dict>
+</plist>
+PLIST
+
+plist_changed=0
+if [ ! -f "$DAEMON_PLIST" ] || ! cmp -s "$DAEMON_TMP" "$DAEMON_PLIST"; then
+    printf "%b\n" "${BLUE}→ Instalando ${DAEMON_PLIST}${NC}"
+    sudo install -m 0644 -o root -g wheel "$DAEMON_TMP" "$DAEMON_PLIST"
+    plist_changed=1
+fi
+rm -f "$DAEMON_TMP"
+
+# 3) Asegurar que el daemon esté cargado y corriendo.
+if ! launchctl print "system/${DAEMON_LABEL}" >/dev/null 2>&1; then
+    printf "%b\n" "${BLUE}→ Cargando el daemon${NC}"
+    sudo /bin/launchctl bootstrap system "$DAEMON_PLIST" 2>/dev/null || true
+    printf "%b\n" "${GREEN}✓ daemon cargado${NC}"
+elif [ "$plist_changed" -eq 1 ]; then
+    printf "%b\n" "${BLUE}→ Recargando el daemon (plist cambió)${NC}"
+    sudo /bin/launchctl bootout system "$DAEMON_PLIST" 2>/dev/null || true
+    sudo /bin/launchctl bootstrap system "$DAEMON_PLIST" 2>/dev/null || true
+    printf "%b\n" "${GREEN}✓ daemon recargado${NC}"
+else
+    printf "%b\n" "${GREEN}✓ daemon ya cargado${NC}"
+fi
+
+# 4) Permisos TCC: el proceso responsable es kanata (lo lanza launchd).
+printf "%b\n" "${YELLOW}⚠ Concede permisos a kanata UNA sola vez (persisten):${NC}"
+printf "%b\n" "${YELLOW}  Privacy & Security → Input Monitoring y Accessibility → + → Cmd+Shift+G → ${KANATA_BIN}${NC}"
+printf "%b\n" "${YELLOW}  Después: mise run krun${NC}"
+
+printf "%b\n" "${GREEN}✓ kanata daemon listo${NC}"
+{{ end -}}
