@@ -1,10 +1,10 @@
-version: 9d97187
+version: 04b11d4
 log:
     path: /tmp/csql.log
     level: info
     prettyPrint: true
 editor:
-    command: "nvim"
+    command: nvim
     env: EDITOR
     enabled: true
 ui:
@@ -15,6 +15,13 @@ mcp:
     port: 0
     allowRead: false
     allowWrite: false
+mcpServers:
+    - connection: Mongo QA - Pepsichat
+      engine: mongo
+      port: 9741
+      allowRead: true
+      allowWrite: false
+      enabled: true
 security:
     method: keyring
 showConnectionPage: true

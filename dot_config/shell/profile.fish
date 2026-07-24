@@ -61,6 +61,11 @@ set -gx PATH "$HOME/.config/composer/vendor/bin" $PATH
 set -gx PNPM_HOME "$HOME/Library/pnpm"
 set -gx PATH "$PNPM_HOME/bin" $PATH
 
+# Dory (docker CLI shims)
+if test -d "$HOME/.dory/bin"
+    set -gx PATH "$HOME/.dory/bin" $PATH
+end
+
 # Locale
 set -gx LANG en_US.UTF-8
 set -gx LC_ALL en_US.UTF-8

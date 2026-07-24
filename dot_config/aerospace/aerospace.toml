@@ -1,3 +1,11 @@
+# Config version for compatibility and deprecations
+# See: https://nikitabobko.github.io/AeroSpace/guide#config-version
+config-version = 2
+
+# In config-version 1 this was inferred from keybinding right-hand sides.
+# In v2 it defaults to empty, so declare explicitly to keep workspaces 1-10 alive.
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
 after-login-command = []
 
 after-startup-command = [
